@@ -1,0 +1,9 @@
+{
+    "evaluate_name":"example_global",
+    "mode":"global",
+    "config_setting":"flow/designs/nangate45/gcd/config.mk",
+    "def_path":"flow/results/nangate45/gcd/base/3_3_place_gp.odb.def",
+    "baseline_data_file":"",
+    "parallel":1
+
+}

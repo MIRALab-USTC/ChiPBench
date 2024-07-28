@@ -1,0 +1,233 @@
+VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+UNITS
+    DATABASE MICRONS 2000 ;
+END UNITS
+
+MACRO macro_6x6
+  FOREIGN macro_6x6 0 0 ;
+  CLASS BLOCK ;
+  SIZE 49.49 BY 39.995 ;
+  PIN VSS
+    USE GROUND ;
+    DIRECTION INOUT ;
+    PORT
+      LAYER metal4 ;
+        RECT  1.14 37.715 48.45 37.885 ;
+        RECT  1.14 34.915 48.45 35.085 ;
+        RECT  1.14 32.115 48.45 32.285 ;
+        RECT  1.14 29.315 48.45 29.485 ;
+        RECT  1.14 26.515 48.45 26.685 ;
+        RECT  1.14 23.715 48.45 23.885 ;
+        RECT  1.14 20.915 48.45 21.085 ;
+        RECT  1.14 18.115 48.45 18.285 ;
+        RECT  1.14 15.315 48.45 15.485 ;
+        RECT  1.14 12.515 48.45 12.685 ;
+        RECT  1.14 9.715 48.45 9.885 ;
+        RECT  1.14 6.915 48.45 7.085 ;
+        RECT  1.14 4.115 48.45 4.285 ;
+        RECT  1.14 1.315 48.45 1.485 ;
+    END
+  END VSS
+  PIN VDD
+    USE POWER ;
+    DIRECTION INOUT ;
+    PORT
+      LAYER metal4 ;
+        RECT  1.14 36.315 48.45 36.485 ;
+        RECT  1.14 33.515 48.45 33.685 ;
+        RECT  1.14 30.715 48.45 30.885 ;
+        RECT  1.14 27.915 48.45 28.085 ;
+        RECT  1.14 25.115 48.45 25.285 ;
+        RECT  1.14 22.315 48.45 22.485 ;
+        RECT  1.14 19.515 48.45 19.685 ;
+        RECT  1.14 16.715 48.45 16.885 ;
+        RECT  1.14 13.915 48.45 14.085 ;
+        RECT  1.14 11.115 48.45 11.285 ;
+        RECT  1.14 8.315 48.45 8.485 ;
+        RECT  1.14 5.515 48.45 5.685 ;
+        RECT  1.14 2.715 48.45 2.885 ;
+    END
+  END VDD
+  PIN addr[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  48.185 0 48.325 0.14 ;
+    END
+  END addr[0]
+  PIN addr[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  49.42 36.155 49.49 36.225 ;
+    END
+  END addr[1]
+  PIN addr[2]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  43.145 39.855 43.285 39.995 ;
+    END
+  END addr[2]
+  PIN addr[3]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  19.065 39.855 19.205 39.995 ;
+    END
+  END addr[3]
+  PIN addr[4]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 6.755 0.07 6.825 ;
+    END
+  END addr[4]
+  PIN addr[5]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 12.635 0.07 12.705 ;
+    END
+  END addr[5]
+  PIN clk
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  49.42 12.355 49.49 12.425 ;
+    END
+  END clk
+  PIN cs
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 24.675 0.07 24.745 ;
+    END
+  END cs
+  PIN di[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  49.42 30.275 49.49 30.345 ;
+    END
+  END di[0]
+  PIN di[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  0.585 0 0.725 0.14 ;
+    END
+  END di[1]
+  PIN di[2]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  12.345 0 12.485 0.14 ;
+    END
+  END di[2]
+  PIN di[3]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  49.42 6.195 49.49 6.265 ;
+    END
+  END di[3]
+  PIN di[4]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  24.105 0 24.245 0.14 ;
+    END
+  END di[4]
+  PIN di[5]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  7.305 39.855 7.445 39.995 ;
+    END
+  END di[5]
+  PIN doq[0]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  49.42 24.115 49.49 24.185 ;
+    END
+  END doq[0]
+  PIN doq[1]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 30.555 0.07 30.625 ;
+    END
+  END doq[1]
+  PIN doq[2]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  30.825 39.855 30.965 39.995 ;
+    END
+  END doq[2]
+  PIN doq[3]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  36.425 0 36.565 0.14 ;
+    END
+  END doq[3]
+  PIN doq[4]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 18.515 0.07 18.585 ;
+    END
+  END doq[4]
+  PIN doq[5]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 36.435 0.07 36.505 ;
+    END
+  END doq[5]
+  PIN we
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  49.42 18.235 49.49 18.305 ;
+    END
+  END we
+  OBS
+    LAYER metal1 ;
+     RECT  0 -0.085 3.42 39.995 ;
+     RECT  3.42 0 49.49 39.995 ;
+    LAYER metal2 ;
+     RECT  0 0 49.49 39.995 ;
+    LAYER metal3 ;
+     RECT  0 0 49.49 39.995 ;
+    LAYER metal4 ;
+     RECT  0 0 49.49 39.995 ;
+  END
+END macro_6x6
+END LIBRARY

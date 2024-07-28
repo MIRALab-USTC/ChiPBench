@@ -1,0 +1,153 @@
+VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+UNITS
+    DATABASE MICRONS 2000 ;
+END UNITS
+
+MACRO RAM16X1D
+  FOREIGN RAM16X1D 0 0 ;
+  CLASS BLOCK ;
+  SIZE 23.5 BY 17.05 ;
+  PIN VSS
+    USE GROUND ;
+    DIRECTION INOUT ;
+    PORT
+      LAYER metal4 ;
+        RECT  1.14 15.315 22.42 15.485 ;
+        RECT  1.14 12.515 22.42 12.685 ;
+        RECT  1.14 9.715 22.42 9.885 ;
+        RECT  1.14 6.915 22.42 7.085 ;
+        RECT  1.14 4.115 22.42 4.285 ;
+        RECT  1.14 1.315 22.42 1.485 ;
+    END
+  END VSS
+  PIN VDD
+    USE POWER ;
+    DIRECTION INOUT ;
+    PORT
+      LAYER metal4 ;
+        RECT  1.14 13.915 22.42 14.085 ;
+        RECT  1.14 11.115 22.42 11.285 ;
+        RECT  1.14 8.315 22.42 8.485 ;
+        RECT  1.14 5.515 22.42 5.685 ;
+        RECT  1.14 2.715 22.42 2.885 ;
+    END
+  END VDD
+  PIN A0
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  23.43 10.115 23.5 10.185 ;
+    END
+  END A0
+  PIN A1
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  16.825 0 16.965 0.14 ;
+    END
+  END A1
+  PIN A2
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  18.505 16.91 18.645 17.05 ;
+    END
+  END A2
+  PIN A3
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 8.995 0.07 9.065 ;
+    END
+  END A3
+  PIN D
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  0.585 0 0.725 0.14 ;
+    END
+  END D
+  PIN DPO
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  23.43 1.715 23.5 1.785 ;
+    END
+  END DPO
+  PIN DPRA0
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 4.795 0.07 4.865 ;
+    END
+  END DPRA0
+  PIN DPRA1
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  10.665 16.91 10.805 17.05 ;
+    END
+  END DPRA1
+  PIN DPRA2
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  23.43 14.035 23.5 14.105 ;
+    END
+  END DPRA2
+  PIN DPRA3
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  8.425 0 8.565 0.14 ;
+    END
+  END DPRA3
+  PIN SPO
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 12.915 0.07 12.985 ;
+    END
+  END SPO
+  PIN WCLK
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  2.265 16.91 2.405 17.05 ;
+    END
+  END WCLK
+  PIN WE
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  23.43 5.915 23.5 5.985 ;
+    END
+  END WE
+  OBS
+    LAYER metal1 ;
+     RECT  0 -0.085 3.23 17.05 ;
+     RECT  3.23 0 23.5 17.05 ;
+    LAYER metal2 ;
+     RECT  0 0 23.5 17.05 ;
+    LAYER metal3 ;
+     RECT  0 0 23.5 17.05 ;
+    LAYER metal4 ;
+     RECT  0 0 23.5 17.05 ;
+  END
+END RAM16X1D
+END LIBRARY
