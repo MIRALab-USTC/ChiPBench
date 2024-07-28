@@ -1,1 +1,1 @@
-# ChipBench
+# ChiPBench
