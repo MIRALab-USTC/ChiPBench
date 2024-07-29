@@ -15,6 +15,12 @@ This project benchmarks placement algorithms based on [OpenROAD-flow-scripts](ht
 
 We utilize the OpenROAD-flow-scripts provided by The-OpenROAD-Project. The installation process is detailed in the [README_OpenROAD](README_OpenROAD) or the [official repository](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts).
 
+## Dataset
+
+The dataset used in this project is available at [Google Drive](https://drive.google.com/drive/folders/1aNOt25yFUYK9lj-LhoaWaVbsT_vmJPQ1?usp=sharing).
+
+
+
 ## Usage
 
 ### Benchmarking
@@ -25,7 +31,8 @@ To run the benchmarking, follow these steps:
 2. Configure the JSON file as described in the [Configuration](#configuration) section.
 3. Run the benchmarking script:
    ```bash
-   python benchmarking/benchmarking.py config.json
+    source ./env.sh
+    python benchmarking/benchmarking.py config.json
    ```
 
 ### Configuration
