@@ -1,3 +1,3 @@
 [submodule "OpenROAD-flow-scripts"]
 	path = OpenROAD-flow-scripts
-	url = git@github.com:ZhaojieTu/OpenROAD-flow-scripts.git
+	url = https://github.com/ZhaojieTu/OpenROAD-flow-scripts.git
