@@ -40,10 +40,12 @@ def replace_slash_in_file_content(file_path):
         print(f"Path '{file_path}' is not a valid file or not found")
 
 def copy_and_replace(src, dest):
-    
+
     if os.path.exists(dest):
         return
-        shutil.rmtree(dest)  
+    if not os.path.exists(src):
+        os.makedirs(dest)
+        return
     shutil.copytree(src, dest)
 
 
