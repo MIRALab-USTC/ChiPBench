@@ -44,7 +44,8 @@ def copy_and_replace(src, dest):
     if os.path.exists(dest):
         return
     if not os.path.exists(src):
-        os.makedirs(dest)
+        base_dest=os.path.join(dest,"base")
+        os.makedirs(base_dest)
         return
     shutil.copytree(src, dest)
 
