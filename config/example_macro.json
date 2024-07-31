@@ -1,0 +1,17 @@
+{
+    "evaluate_name":"example_macro",
+    "mode":"macro",
+    "case":
+    {
+        "ariane133":"",
+        "ariane136":"",
+        "bp":"",
+        "bp_fe":"",
+        "bp_be":"",
+        "swerv_wrapper":"",
+        "dft48":"",
+        "or1200":""       
+    },
+    "parallel":3
+
+}
