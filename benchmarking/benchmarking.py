@@ -93,7 +93,7 @@ def macro_flow(case_name,def_path,evaluate_name=""):
     result_path=[f"OpenROAD-flow-scripts/flow/results/nangate45/{new_case_name}",f"OpenROAD-flow-scripts/flow/results/nangate45/{case_name}"]
     report_path=[f"OpenROAD-flow-scripts/flow/reports/nangate45/{new_case_name}",f"OpenROAD-flow-scripts/flow/reports/nangate45/{case_name}"]
 
-    def_tmp_path=os.path.join("def_tmp",f"{new_case_name}.def")
+    def_tmp_path=os.path.join("OpenROAD-flow-scripts/def_tmp",f"{new_case_name}.def")
 
     shutil.copy(def_path, def_tmp_path)
     #return log_path,result_path,report_path
@@ -111,7 +111,7 @@ def global_flow(case_name,def_path,evaluate_name=""):
     result_path=[f"OpenROAD-flow-scripts/flow/results/nangate45/{new_case_name}",f"OpenROAD-flow-scripts/flow/results/nangate45/{case_name}"]
     report_path=[f"OpenROAD-flow-scripts/flow/reports/nangate45/{new_case_name}",f"OpenROAD-flow-scripts/flow/reports/nangate45/{case_name}"]
 
-    def_tmp_path=os.path.join("def_tmp",f"{new_case_name}.def")
+    def_tmp_path=os.path.join("OpenROAD-flow-scripts/def_tmp",f"{new_case_name}.def")
 
     shutil.copy(def_path, def_tmp_path)
     #return log_path,result_path,report_path
