@@ -26,7 +26,7 @@ We utilize the OpenROAD-flow-scripts provided by The-OpenROAD-Project. The insta
 
 ## Dataset
 
-The dataset used in this project is available at [Google Drive](https://drive.google.com/drive/folders/1aNOt25yFUYK9lj-LhoaWaVbsT_vmJPQ1?usp=sharing).
+The dataset used in this project is available at [Hugging Face](https://huggingface.co/datasets/ZhaojieTu/ChiPBench-D)
 
 
 
