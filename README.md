@@ -20,7 +20,7 @@ pip install -r requirements.txt
 
 ### OpenROAD-flow-scripts Installation
 
-We utilize the OpenROAD-flow-scripts provided by The-OpenROAD-Project. The installation process is detailed in the [README_OpenROAD](./OpenROAD-flow-scripts/README.md) or the [official repository](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts).
+We utilize the OpenROAD-flow-scripts provided by The-OpenROAD-Project. The installation process is detailed in the [README_OpenROAD](https://github.com/ZhaojieTu/OpenROAD-flow-scripts/blob/master/README.md) or the [official repository](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts).
 
 
 
