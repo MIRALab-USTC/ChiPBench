@@ -11,9 +11,18 @@ This project benchmarks placement algorithms based on [OpenROAD-flow-scripts](ht
 
 ## Installation
 
+```bash
+git clone --recursive https://github.com/ZhaojieTu/ChiPBench
+cd ChiPBench
+pip install -r requirements.txt
+```
+
+
 ### OpenROAD-flow-scripts Installation
 
-We utilize the OpenROAD-flow-scripts provided by The-OpenROAD-Project. The installation process is detailed in the [README_OpenROAD](README_OpenROAD) or the [official repository](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts).
+We utilize the OpenROAD-flow-scripts provided by The-OpenROAD-Project. The installation process is detailed in the [README_OpenROAD](./OpenROAD-flow-scripts/README.md) or the [official repository](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts).
+
+
 
 ## Dataset
 
