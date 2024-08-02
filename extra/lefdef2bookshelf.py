@@ -69,10 +69,13 @@ def remove_blockages_section(input_file, output_file):
         print(f"Error processing file: {e}")
 
 def findmacroid(placedb:PlaceDB.PlaceDB):
-    macroid=list(range(
-           placedb.num_movable_nodes + placedb.num_terminals,
-           placedb.num_movable_nodes + placedb.num_terminals + placedb.num_terminal_NIs,
-        ))
+    node_size_y_mean = placedb.node_size_y.mean()
+    macroid = np.where(placedb.node_size_y > 10*node_size_y_mean)[0]
+
+    # macroid=list(range(
+    #        placedb.num_movable_nodes + placedb.num_terminals,
+    #        placedb.num_movable_nodes + placedb.num_terminals + placedb.num_terminal_NIs,
+    #     ))
     return macroid
 
 def write_nodes(
