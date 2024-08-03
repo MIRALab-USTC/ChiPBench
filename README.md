@@ -40,7 +40,7 @@ To run the benchmarking, follow these steps:
 2. Configure the JSON file as described in the [Configuration](#configuration) section.
 3. Run the benchmarking script:
    ```bash
-    source ./env.sh
+    source ./OpenROAD-flow-scripts/env.sh
     python benchmarking/benchmarking.py config.json
    ```
 
