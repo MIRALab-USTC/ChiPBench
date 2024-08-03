@@ -96,3 +96,11 @@ benchmarking_result
 - `normalized_metrics.json`: Normalized metrics for each case 
   - Normalization is based on baseline values: `normalized_metric = metric/baseline`
 - `average_result.json`: Average normalized metrics for each case
+
+
+## Extra
+
+The [extra](./extra/) directory contains scripts that may be useful. Detailed information can be found in the [README_extra](./extra/README.md).
+
+- **pl2def.py**: Writes node coordinate information from `.pl` files in the Bookshelf format to `.def` files.
+- **lefdef2bookshelf.py**: Converts LEF/DEF files to the Bookshelf format based on DREAMPlace.
