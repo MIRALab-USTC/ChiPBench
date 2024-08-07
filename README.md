@@ -92,7 +92,7 @@ Example: `config_macro.json`:
 | JSON Parameter  | Description                                     | Values                                                 |
 |-----------------|-------------------------------------------------|--------------------------------------------------------|
 | evaluate_name   | The name of the evaluation                      | string                                                 |
-| mode            | Specifies if the evaluation is for macro placement or global placement | `macro_place: "macro" or 1`, `global_place: "global" or 2` |
+| mode            | Specifies if the evaluation is for macro placement ,global placement or mix-sized placement | `macro_place: "macro" or 1`, `global_place: "global" or 2`,  `mix-sized_place: "mixsize" or 3`|
 | case            | Specifies the DEF files for each case to be evaluated; partial evaluation is also allowed | `"case": "case_place.def"`                             |
 | parallel        | Number of cases to run in parallel              | int                                                    |
 
