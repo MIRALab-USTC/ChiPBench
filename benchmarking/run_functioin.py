@@ -146,6 +146,51 @@ EOF
         print(f"An error occurred while running the command: {e}")
         print("Error output:\n", e.stderr)
 
+def run_mixsize_openroad(case_name,def_path,evaluate_name=""):
 
+    new_case_name=f"{evaluate_name}_{case_name}"
+    copy_and_replace(f"OpenROAD-flow-scripts/flow/logs/nangate45/{case_name}",f"OpenROAD-flow-scripts/flow/logs/nangate45/{new_case_name}")
+    copy_and_replace(f"OpenROAD-flow-scripts/flow/results/nangate45/{case_name}",f"OpenROAD-flow-scripts/flow/results/nangate45/{new_case_name}")
+    copy_and_replace(f"OpenROAD-flow-scripts/flow/reports/nangate45/{case_name}",f"OpenROAD-flow-scripts/flow/reports/nangate45/{new_case_name}")
+
+    
+    script_content = f"""
+openroad -no_init -exit <<EOF
+    read_lef {lef_path}
+    read_def {def_path}
+    write_db OpenROAD-flow-scripts/flow/results/nangate45/{new_case_name}/base/2_3_place_mixgp.odb
+EOF
+    """
+
+    
+    script_filename = f"{new_case_name}.tcl"
+    with open(script_filename, 'w') as file:
+        file.write(script_content)
+
+    
+    command=[f"./{script_filename}"]
+    env = os.environ.copy()
+
+    env['DESIGN_NICKNAME'] = new_case_name
+
+
+
+    os.chmod(script_filename, 0o755)
+    print(f"running for {case_name}")
+    
+    subprocess.run(command, shell=True, env=env)
+    os.remove(script_filename)
+    
+
+    try:
+        command2 = f"cd OpenROAD-flow-scripts/flow/ && make do-mixsizeflow DESIGN_CONFIG=./designs/nangate45/{case_name}/config.mk"
+        result = subprocess.run(command2, shell=True, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        
+        
+        
+        
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred while running the command: {e}")
+        print("Error output:\n", e.stderr)
 
     
