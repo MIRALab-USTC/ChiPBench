@@ -5,7 +5,7 @@ import shutil
 import concurrent.futures
 
 from getMetric import getMetrics
-from run_functioin import replace_slash_in_file_content,run_macro_openroad,run_global_openroad,run_macro_openroad
+from run_functioin import replace_slash_in_file_content,run_macro_openroad,run_global_openroad,run_mixsize_openroad
 
 
 openroad_metric_path="benchmarking_result/openroad/metrics.json"
@@ -20,7 +20,10 @@ def normalize_metric(metrics_dict:dict):
         if case_name in openroad_metrics:
             normalized_metric[case_name]={}
             for metric_name,value in metirc.items():
-                normalize_value= value/openroad_metrics[case_name][metric_name]
+                if value is None:
+                    normalize_value=None
+                else:
+                    normalize_value= value/openroad_metrics[case_name][metric_name]
                 normalized_metric[case_name][metric_name]=normalize_value
 
 
@@ -31,10 +34,16 @@ def normalize_metric(metrics_dict:dict):
         for metirc_name,value in metirc.items():
             if metirc_name not in average_metrics:
                 average_metrics[metirc_name]=0
-            average_metrics[metirc_name]+=value
+            if value is None or average_metrics[metirc_name] is None:
+                average_metrics[metirc_name]=None
+            else:
+                average_metrics[metirc_name]+=value
 
     for key in average_metrics.keys():
-        average_metrics[key]/=case_num
+        if average_metrics[key] is None:
+            average_metrics[key] =None
+        else:
+            average_metrics[key]/=case_num
 
     
 
@@ -268,7 +277,7 @@ def mixsize_mode(config:dict):
     if not parallel:
 
         for name,def_path in case.items():
-            log_path,result_path,report_path=global_flow(name,def_path,evaluate_name)
+            log_path,result_path,report_path=mixsize_flow(name,def_path,evaluate_name)
             
             log_paths.append(log_path)
             result_paths.append(result_path)
@@ -276,7 +285,7 @@ def mixsize_mode(config:dict):
     else:
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=parallel) as executor:
-            futures = {executor.submit(global_flow, name, def_path, evaluate_name): name for name, def_path in case.items()}
+            futures = {executor.submit(mixsize_flow, name, def_path, evaluate_name): name for name, def_path in case.items()}
             for future in concurrent.futures.as_completed(futures):
                 log_path, result_path, report_path = future.result()
                 log_paths.append(log_path)
@@ -289,10 +298,10 @@ def mixsize_mode(config:dict):
     final_result_dir=os.path.join("benchmarking_result",evaluate_name)
 
 
-    
+    final_logs_dir=os.path.join(final_result_dir,"logs")
 
 
-    metrics_dict=getMetrics(final_result_dir)
+    metrics_dict=getMetrics(final_logs_dir)
     
     normalized_metrics,average_metrics=normalize_metric(metrics_dict)
 
