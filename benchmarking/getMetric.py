@@ -94,6 +94,7 @@ def get_usage(content):
     table_start_pattern = r'\[INFO GRT-0096\] Final congestion report:'
     match = re.search(table_start_pattern, content)
     if not match:
+        return None
         raise ValueError("Table start pattern not found in the file")
     table_start_index = match.end()
     table_content = content[table_start_index:]
@@ -105,20 +106,42 @@ def get_usage(content):
     total_usage = total_match.group(1)
     return float(total_usage.replace("%", "")) / 100
 
-
+def load_Json(Json):
+    try:
+        with open(Json, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            return data
+    except FileNotFoundError:
+        
+        return {}  
+    
+def load_file(input_file):
+    try:
+        with open(input_file, 'r', encoding='utf-8') as file:
+            data = file.read()
+            return data
+    except FileNotFoundError:
+        
+        return ""  
 
 def get_Metric_in(finalJson, routeJson, placedpLog,gproutefile):
-    with open(finalJson, 'r', encoding='utf-8') as file:
-        final = json.load(file)
 
-    with open(routeJson, 'r', encoding='utf-8') as file:
-        route = json.load(file)
 
-    with open(placedpLog, 'r', encoding='utf-8') as file:
-        place = file.read()
+    final=load_Json(finalJson)
+    route=load_Json(routeJson)
+    place=load_file(placedpLog)
+    gproute=load_file(gproutefile)
+    # with open(finalJson, 'r', encoding='utf-8') as file:
+    #     final = json.load(file)
 
-    with open(gproutefile, 'r', encoding='utf-8') as file:
-        gproute = file.read()
+    # with open(routeJson, 'r', encoding='utf-8') as file:
+    #     route = json.load(file)
+
+    # with open(placedpLog, 'r', encoding='utf-8') as file:
+    #     place = file.read()
+
+    # with open(gproutefile, 'r', encoding='utf-8') as file:
+    #     gproute = file.read()
 
     metric = {}
     metric["HPWL"] = get_cellHpwl(place)
@@ -148,18 +171,29 @@ def get_substring_after_underscore(input_string):
 def find_reports_in_dirs(base_dir):
     report_files = {}
 
-    for root, dirs, files in os.walk(base_dir):
-        # Check if all three required files are in the current directory
-        if all(f in files for f in ['6_report.json', '5_2_route.json', '3_5_place_dp.log']):
-            parent_dir_name = os.path.basename(os.path.dirname(root))
-
-
+    for entry in os.listdir(base_dir):
+        parent_dir_name=entry
+        root = os.path.join(base_dir, entry,"base")
+        if os.path.isdir(root):
             report_files[parent_dir_name] = {
-                "report": os.path.join(root, '6_report.json'),
-                "route": os.path.join(root, '5_2_route.json'),
-                "place": os.path.join(root, '3_5_place_dp.log'),
-                "gp_route": os.path.join(root,"5_1_grt.log")
-            }
+                    "report": os.path.join(root, '6_report.json'),
+                    "route": os.path.join(root, '5_2_route.json'),
+                    "place": os.path.join(root, '3_5_place_dp.log'),
+                    "gp_route": os.path.join(root,"5_1_grt.log")
+                }
+
+    # for root, dirs, files in os.walk(base_dir):
+    #     # Check if all three required files are in the current directory
+    #     if all(f in files for f in ['6_report.json', '5_2_route.json', '3_5_place_dp.log']):
+    #         parent_dir_name = os.path.basename(os.path.dirname(root))
+
+
+    #         report_files[parent_dir_name] = {
+    #             "report": os.path.join(root, '6_report.json'),
+    #             "route": os.path.join(root, '5_2_route.json'),
+    #             "place": os.path.join(root, '3_5_place_dp.log'),
+    #             "gp_route": os.path.join(root,"5_1_grt.log")
+    #         }
 
     return report_files
 
@@ -177,7 +211,9 @@ def get_all_metric_json(report_files):
 
 def getMetrics(dir_path):
     report_files=find_reports_in_dirs(dir_path)
+    #print(report_files)
     metric_dict=get_all_metric_json(report_files)
+    #print(metric_dict)
 
     return metric_dict
 
