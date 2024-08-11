@@ -183,7 +183,7 @@ EOF
     
 
     try:
-        command2 = f"cd OpenROAD-flow-scripts/flow/ && make do-mixsizeflow DESIGN_CONFIG=./designs/nangate45/{case_name}/config.mk"
+        command2 = f"cd OpenROAD-flow-scripts/flow/ && make do-mixsizedflow DESIGN_CONFIG=./designs/nangate45/{case_name}/config.mk"
         result = subprocess.run(command2, shell=True, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         
         
