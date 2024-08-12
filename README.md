@@ -26,7 +26,7 @@ We utilize the OpenROAD-flow-scripts provided by The-OpenROAD-Project. The insta
 
 ## Dataset
 
-The dataset used in this project is available at [Hugging Face](https://huggingface.co/datasets/ZhaojieTu/ChiPBench-D)
+The dataset used in this project is available at [Hugging Face](https://huggingface.co/datasets/MIRA-Lab/ChiPBench-D)
 
 The statistics of our dataset:
 
