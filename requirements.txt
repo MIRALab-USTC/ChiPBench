@@ -1,3 +1,4 @@
 concurrent.futures
 re
 numpy
+watchdog

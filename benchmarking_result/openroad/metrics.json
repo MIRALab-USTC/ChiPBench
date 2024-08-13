@@ -1,4 +1,15 @@
 {
+    "gcd":
+    {
+        "HPWL": 3177043.0,
+        "Wirelength": 3997163,
+        "Congestion": 0.33899999999999997,
+        "Power": 0.627696,
+        "WNS": -1.12723,
+        "TNS": -1163.82,
+        "NVP": 1515,
+        "Area": 202853
+    },
     "swerv_wrapper": {
         "HPWL": 3177043.0,
         "Wirelength": 3997163,
