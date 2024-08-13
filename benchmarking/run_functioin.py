@@ -2,6 +2,10 @@ import json
 import os
 import subprocess
 import shutil
+import re
+from datetime import datetime
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 
 lef_path="Nangate.lef"
 lef_paths=["Nangate.lef",
@@ -16,6 +20,18 @@ lef_paths=["Nangate.lef",
            "OpenROAD-flow-scripts/flow/designs/nangate45/or1200/lef/or1200_spram5.lef",
            ]
 
+stage_dict={
+    "dp":"Detailed Placement",
+    "tapcell":"Tapcell and Welltie insertion",
+    "pdn":"PDN generation",
+    "resized":"Resizing & Buffering",
+    "cts":"CTS",
+    "fillcell":"Filler cell insertion",
+    "grt":"Global Rotue",
+    "route":"Detailed Route",
+    "report":"report"    
+}
+
 def replace_slash_in_file_content(file_path):
     if os.path.isfile(file_path):
         
@@ -29,15 +45,19 @@ def replace_slash_in_file_content(file_path):
                
                 with open(file_path, 'w', encoding='utf-8') as f:
                     f.write(modified_content)
-                print(f"File '{file_path}' has been modified.")
+                #print(f"File '{file_path}' has been modified.")
             else:
-                print(f"No '/' found in the file '{file_path}'.")
+                pass
+                #print(f"No '/' found in the file '{file_path}'.")
         except UnicodeDecodeError:
-            print(f"Skipped non-text file: {file_path}")
+            pass
+            #print(f"Skipped non-text file: {file_path}")
         except Exception as e:
-            print(f"Error processing file {file_path}: {str(e)}")
+            pass
+            #print(f"Error processing file {file_path}: {str(e)}")
     else:
-        print(f"Path '{file_path}' is not a valid file or not found")
+        pass
+        #print(f"Path '{file_path}' is not a valid file or not found")
 
 def copy_and_replace(src, dest):
 
@@ -146,19 +166,40 @@ EOF
         print(f"An error occurred while running the command: {e}")
         print("Error output:\n", e.stderr)
 
+
 def run_mixsize_openroad(case_name,def_path,evaluate_name=""):
+    run_openroad(case_name,def_path,3,evaluate_name)
+    
+def run_openroad(case_name,def_path,mode,evaluate_name=""):
 
     new_case_name=f"{evaluate_name}_{case_name}"
     copy_and_replace(f"OpenROAD-flow-scripts/flow/logs/nangate45/{case_name}",f"OpenROAD-flow-scripts/flow/logs/nangate45/{new_case_name}")
     copy_and_replace(f"OpenROAD-flow-scripts/flow/results/nangate45/{case_name}",f"OpenROAD-flow-scripts/flow/results/nangate45/{new_case_name}")
     copy_and_replace(f"OpenROAD-flow-scripts/flow/reports/nangate45/{case_name}",f"OpenROAD-flow-scripts/flow/reports/nangate45/{new_case_name}")
 
+
+
+
+
+    if mode == 1:
+        flow_cmd="do-macroflow"
+        db_file="2_4_floorplan_macro.odb"
+        
+    elif mode ==2:
+        flow_cmd="do-globalflow"
+        db_file="3_3_place_gp.odb"
+        
+    elif mode ==3:
+        flow_cmd="do-mixsizedflow"
+        db_file="2_3_place_mixgp.odb"
+        
+
     
     script_content = f"""
 openroad -no_init -exit <<EOF
     read_lef {lef_path}
     read_def {def_path}
-    write_db OpenROAD-flow-scripts/flow/results/nangate45/{new_case_name}/base/2_3_place_mixgp.odb
+    write_db OpenROAD-flow-scripts/flow/results/nangate45/{new_case_name}/base/{db_file}
 EOF
     """
 
@@ -173,24 +214,128 @@ EOF
 
     env['DESIGN_NICKNAME'] = new_case_name
 
-
+    
 
     os.chmod(script_filename, 0o755)
-    print(f"running for {case_name}")
     
-    subprocess.run(command, shell=True, env=env)
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f"----- [{timestamp}] Starting benchmarking flow for case: '{case_name}' -----")
+
+    #print(f"--------------running for {case_name}----------------------")
+    
+    print("Converting to db file")
+    subprocess.run(command, shell=True, env=env,stdout=subprocess.DEVNULL)
     os.remove(script_filename)
+    print("Conversion completed")
+
+    directory_to_monitor = f"OpenROAD-flow-scripts/flow/logs/nangate45/{new_case_name}/base"
+    
+    # 启动文件监控
+    observer = monitor_directory(directory_to_monitor)
     
 
     try:
-        command2 = f"cd OpenROAD-flow-scripts/flow/ && make do-mixsizedflow DESIGN_CONFIG=./designs/nangate45/{case_name}/config.mk"
-        result = subprocess.run(command2, shell=True, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        command2 = f"cd OpenROAD-flow-scripts/flow/ && make {flow_cmd} DESIGN_CONFIG=./designs/nangate45/{case_name}/config.mk"
+
+        error_pattern = re.compile(r'make\[\d+\]: \*\*\* \[Makefile:\d+: (.*?)\] Error \d+')
+
+
+        process = subprocess.Popen(
+            command2, shell=True, env=env, 
+            stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True
+        )
         
+        while process.poll() is None:
+            line = process.stderr.readline()
+            if line:
+                match = error_pattern.search(line)
+                if match:
+                    error_detail = match.group(1)
+                    true_error = find_error(error_detail)
+                    if true_error in stage_dict:
+                        error_name=stage_dict[true_error]
+                        print(f"Error: {error_name}")
+                    else:
+                        print(f"Error: {true_error}")
+                    break
+
+        
+        process.wait()
+
+        
+                
         
         
         
     except subprocess.CalledProcessError as e:
         print(f"An error occurred while running the command: {e}")
         print("Error output:\n", e.stderr)
+    finally:
+        observer.stop()
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"----- [{timestamp}] ended flow for case: '{case_name}' -----")
 
+
+    observer.join()    
+
+
+def find_error(error_str):
     
+
+    last_underscore_index = error_str.rfind('_')
+
+    if last_underscore_index != -1:
+        result_str = error_str[last_underscore_index + 1:]
+    else:
+        result_str = error_str
+
+    return result_str
+
+
+
+
+
+def extract_string(s):
+    # 找到最后一个 "_" 的位置
+    last_underscore = s.rfind("_")
+    
+    # 找到第一个 "." 的位置，从 last_underscore 开始找
+    next_dot = s.find(".", last_underscore)
+    
+    if last_underscore != -1 and next_dot != -1:
+        # 提取 "_" 和 "." 之间的字符串
+        return s[last_underscore + 1:next_dot]
+    else:
+        return None  # 返回 None 表示未找到符合条件的字符串
+
+
+
+class FileChangeHandler(FileSystemEventHandler):
+
+    def on_created(self, event):
+        path=os.path.basename(event.src_path)
+        stage_in=extract_string(path)
+
+        if stage_in in stage_dict:
+            stage=stage_dict[stage_in]
+        else:
+            stage=stage_in
+
+        if "tmp" in path:
+            print(f"start: {stage}")
+        else:
+            print(f"finish: {stage}")
+
+        
+
+
+def monitor_directory(directory_path):
+    event_handler = FileChangeHandler()
+    observer = Observer()
+    observer.schedule(event_handler, path=directory_path, recursive=True)
+    observer.start()
+    return observer
+
+
+
+
