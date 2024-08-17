@@ -18,6 +18,14 @@ lef_paths=["Nangate.lef",
            "OpenROAD-flow-scripts/flow/designs/nangate45/or1200/lef/or1200_spram3.lef",
            "OpenROAD-flow-scripts/flow/designs/nangate45/or1200/lef/or1200_spram4.lef",
            "OpenROAD-flow-scripts/flow/designs/nangate45/or1200/lef/or1200_spram5.lef",
+           "OpenROAD-flow-scripts/flow/designs/nangate45/ariane_block/lef/myram.lef",
+           "OpenROAD-flow-scripts/flow/designs/nangate45/toygpu112/lef/SmallBuffer32.lef",
+           "OpenROAD-flow-scripts/flow/designs/nangate45/toygpu112/lef/SmallBuffer64.lef",
+           "OpenROAD-flow-scripts/flow/designs/nangate45/toygpu112/lef/SmallBuffer128.lef",
+           "OpenROAD-flow-scripts/flow/designs/nangate45/toygpu112/lef/SmallBuffer256.lef",
+           "OpenROAD-flow-scripts/flow/designs/nangate45/jpeg/lef/dctub_part1.lef",
+           "OpenROAD-flow-scripts/flow/designs/nangate45/jpeg/lef/dctub_part2.lef",
+           "OpenROAD-flow-scripts/flow/designs/nangate45/jpeg/lef/dctub_part3.lef",
            ]
 
 stage_dict={
