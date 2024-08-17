@@ -1,4 +1,34 @@
 {
+    "ariane_block": {
+        "HPWL": 11265151.7,
+        "Wirelength": 15780672,
+        "Congestion": 0.19949999999999998,
+        "Power": 0.1745236,
+        "WNS": -1.42124,
+        "TNS": -1995.52,
+        "NVP": 3392,
+        "Area": 687925
+    },
+    "jpeg": {
+        "HPWL": 413524.3,
+        "Wirelength": 465562,
+        "Congestion": 0.0253,
+        "Power": 0.0342553,
+        "WNS": -1.09669,
+        "TNS": -260.586,
+        "NVP": 522,
+        "Area": 16491.5
+    },
+    "toygpu112": {
+        "HPWL": 4493744.2,
+        "Wirelength": 5850373,
+        "Congestion": 0.1243,
+        "Power": 0.356661,
+        "WNS": -1.44062,
+        "TNS": -56.2496,
+        "NVP": 105,
+        "Area": 443976
+    },
     "gcd":
     {
         "HPWL": 3177043.0,
