@@ -9,23 +9,6 @@ from watchdog.events import FileSystemEventHandler
 
 lef_path="Nangate.lef"
 lef_paths=["Nangate.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/dft48/lef/memMod_dist_0.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/dft48/lef/memMod_dist_1.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/dft48/lef/memMod_dist_2.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/dft48/lef/memMod_dist_3.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/or1200/lef/memory4.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/or1200/lef/or1200_spram2.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/or1200/lef/or1200_spram3.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/or1200/lef/or1200_spram4.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/or1200/lef/or1200_spram5.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/ariane_block/lef/myram.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/toygpu112/lef/SmallBuffer32.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/toygpu112/lef/SmallBuffer64.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/toygpu112/lef/SmallBuffer128.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/toygpu112/lef/SmallBuffer256.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/jpeg/lef/dctub_part1.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/jpeg/lef/dctub_part2.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/jpeg/lef/dctub_part3.lef",
            ]
 
 stage_dict={
@@ -202,14 +185,17 @@ def run_openroad(case_name,def_path,mode,evaluate_name=""):
         db_file="2_3_place_mixgp.odb"
         
 
-    
+    extra_lef_path= get_all_files_in_directory(f"OpenROAD-flow-scripts/flow/designs/nangate45/{case_name}/lef")
+    lef_paths_new=lef_paths+extra_lef_path
+    read_lef_commands = "\n".join([f"    read_lef {lef_path}" for lef_path in lef_paths_new])
+
     script_content = f"""
-openroad -no_init -exit <<EOF
-    read_lef {lef_path}
-    read_def {def_path}
-    write_db OpenROAD-flow-scripts/flow/results/nangate45/{new_case_name}/base/{db_file}
-EOF
-    """
+    openroad -no_init -exit <<EOF
+    {read_lef_commands}
+        read_def {def_path}
+        write_db OpenROAD-flow-scripts/flow/results/nangate45/{new_case_name}/base/{db_file}
+    EOF
+"""
 
     
     script_filename = f"{new_case_name}.tcl"
@@ -232,13 +218,12 @@ EOF
     #print(f"--------------running for {case_name}----------------------")
     
     print("Converting to db file")
-    subprocess.run(command, shell=True, env=env,stdout=subprocess.DEVNULL)
+    subprocess.run(command, shell=True, env=env)
     os.remove(script_filename)
     print("Conversion completed")
 
     directory_to_monitor = f"OpenROAD-flow-scripts/flow/logs/nangate45/{new_case_name}/base"
     
-    # 启动文件监控
     observer = monitor_directory(directory_to_monitor)
     
 
@@ -300,21 +285,22 @@ def find_error(error_str):
     return result_str
 
 
+def get_all_filenames(directory):
+    filenames = os.listdir(directory)
+    return [f for f in filenames if os.path.isfile(os.path.join(directory, f))]
 
-
+def get_all_files_in_directory(directory_path):
+    return [os.path.abspath(os.path.join(directory_path, file)) for file in os.listdir(directory_path) if os.path.isfile(os.path.join(directory_path, file))]
 
 def extract_string(s):
-    # 找到最后一个 "_" 的位置
     last_underscore = s.rfind("_")
     
-    # 找到第一个 "." 的位置，从 last_underscore 开始找
     next_dot = s.find(".", last_underscore)
     
     if last_underscore != -1 and next_dot != -1:
-        # 提取 "_" 和 "." 之间的字符串
         return s[last_underscore + 1:next_dot]
     else:
-        return None  # 返回 None 表示未找到符合条件的字符串
+        return None 
 
 
 
