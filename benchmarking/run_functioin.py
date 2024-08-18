@@ -162,7 +162,7 @@ def run_mixsize_openroad(case_name,def_path,evaluate_name=""):
     run_openroad(case_name,def_path,3,evaluate_name)
     
 def run_openroad(case_name,def_path,mode,evaluate_name=""):
-
+    create_result_dir(case_name)
     new_case_name=f"{evaluate_name}_{case_name}"
     copy_and_replace(f"OpenROAD-flow-scripts/flow/logs/nangate45/{case_name}",f"OpenROAD-flow-scripts/flow/logs/nangate45/{new_case_name}")
     copy_and_replace(f"OpenROAD-flow-scripts/flow/results/nangate45/{case_name}",f"OpenROAD-flow-scripts/flow/results/nangate45/{new_case_name}")
@@ -331,5 +331,26 @@ def monitor_directory(directory_path):
     return observer
 
 
+# def create_result_dir(case_name):
+#     os.mkdir(f"OpenROAD-flow-scripts/flow/logs/nangate45/{case_name}/base")
+#     shutil.copy
+#     return
 
-
+def create_result_dir(case_name):
+    target_dir = f"OpenROAD-flow-scripts/flow/results/nangate45/{case_name}/base"
+    os.makedirs(target_dir, exist_ok=True)
+    
+    source_dir = f"OpenROAD-flow-scripts/flow/designs/nangate45/{case_name}"
+    sdc_file = None
+    for file_name in os.listdir(source_dir):
+        if file_name.endswith(".sdc"):
+            sdc_file = os.path.join(source_dir, file_name)
+            break  
+    
+    if sdc_file:
+        shutil.copy(sdc_file, os.path.join(target_dir, "1_synth.sdc"))
+        shutil.copy(sdc_file, os.path.join(target_dir, "2_floorplan.sdc"))
+    else:
+        print("Error: No .sdc file found in the source directory.")
+    
+    return
