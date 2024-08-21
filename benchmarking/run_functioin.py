@@ -184,9 +184,12 @@ def run_openroad(case_name,def_path,mode,evaluate_name=""):
         flow_cmd="do-mixsizedflow"
         db_file="2_3_place_mixgp.odb"
         
-
-    extra_lef_path= get_all_files_in_directory(f"OpenROAD-flow-scripts/flow/designs/nangate45/{case_name}/lef")
-    lef_paths_new=lef_paths+extra_lef_path
+    try:
+        extra_lef_path= get_all_files_in_directory(f"OpenROAD-flow-scripts/flow/designs/nangate45/{case_name}/lef")
+    except:
+        extra_lef_path=[]
+    finally:
+        lef_paths_new=lef_paths+extra_lef_path
     read_lef_commands = "\n".join([f"    read_lef {lef_path}" for lef_path in lef_paths_new])
 
     script_content = f"""
