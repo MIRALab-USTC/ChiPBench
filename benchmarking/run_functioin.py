@@ -221,7 +221,7 @@ def run_openroad(case_name,def_path,mode,evaluate_name=""):
     #print(f"--------------running for {case_name}----------------------")
     
     print("Converting to db file")
-    subprocess.run(command, shell=True, env=env)
+    subprocess.run(command, shell=True, env=env,stdout=subprocess.DEVNULL)
     os.remove(script_filename)
     print("Conversion completed")
 
