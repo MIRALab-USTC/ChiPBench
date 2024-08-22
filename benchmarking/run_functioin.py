@@ -9,15 +9,6 @@ from watchdog.events import FileSystemEventHandler
 
 lef_path="Nangate.lef"
 lef_paths=["Nangate.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/dft48/lef/memMod_dist_0.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/dft48/lef/memMod_dist_1.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/dft48/lef/memMod_dist_2.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/dft48/lef/memMod_dist_3.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/or1200/lef/memory4.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/or1200/lef/or1200_spram2.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/or1200/lef/or1200_spram3.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/or1200/lef/or1200_spram4.lef",
-           "OpenROAD-flow-scripts/flow/designs/nangate45/or1200/lef/or1200_spram5.lef",
            ]
 
 stage_dict={
@@ -171,7 +162,7 @@ def run_mixsize_openroad(case_name,def_path,evaluate_name=""):
     run_openroad(case_name,def_path,3,evaluate_name)
     
 def run_openroad(case_name,def_path,mode,evaluate_name=""):
-
+    create_result_dir(case_name)
     new_case_name=f"{evaluate_name}_{case_name}"
     copy_and_replace(f"OpenROAD-flow-scripts/flow/logs/nangate45/{case_name}",f"OpenROAD-flow-scripts/flow/logs/nangate45/{new_case_name}")
     copy_and_replace(f"OpenROAD-flow-scripts/flow/results/nangate45/{case_name}",f"OpenROAD-flow-scripts/flow/results/nangate45/{new_case_name}")
@@ -193,15 +184,21 @@ def run_openroad(case_name,def_path,mode,evaluate_name=""):
         flow_cmd="do-mixsizedflow"
         db_file="2_3_place_mixgp.odb"
         
+    try:
+        extra_lef_path= get_all_files_in_directory(f"OpenROAD-flow-scripts/flow/designs/nangate45/{case_name}/lef")
+    except:
+        extra_lef_path=[]
+    finally:
+        lef_paths_new=lef_paths+extra_lef_path
+    read_lef_commands = "\n".join([f"    read_lef {lef_path}" for lef_path in lef_paths_new])
 
-    
     script_content = f"""
-openroad -no_init -exit <<EOF
-    read_lef {lef_path}
-    read_def {def_path}
-    write_db OpenROAD-flow-scripts/flow/results/nangate45/{new_case_name}/base/{db_file}
-EOF
-    """
+    openroad -no_init -exit <<EOF
+    {read_lef_commands}
+        read_def {def_path}
+        write_db OpenROAD-flow-scripts/flow/results/nangate45/{new_case_name}/base/{db_file}
+    EOF
+"""
 
     
     script_filename = f"{new_case_name}.tcl"
@@ -230,7 +227,6 @@ EOF
 
     directory_to_monitor = f"OpenROAD-flow-scripts/flow/logs/nangate45/{new_case_name}/base"
     
-    # 启动文件监控
     observer = monitor_directory(directory_to_monitor)
     
 
@@ -292,21 +288,22 @@ def find_error(error_str):
     return result_str
 
 
+def get_all_filenames(directory):
+    filenames = os.listdir(directory)
+    return [f for f in filenames if os.path.isfile(os.path.join(directory, f))]
 
-
+def get_all_files_in_directory(directory_path):
+    return [os.path.abspath(os.path.join(directory_path, file)) for file in os.listdir(directory_path) if os.path.isfile(os.path.join(directory_path, file))]
 
 def extract_string(s):
-    # 找到最后一个 "_" 的位置
     last_underscore = s.rfind("_")
     
-    # 找到第一个 "." 的位置，从 last_underscore 开始找
     next_dot = s.find(".", last_underscore)
     
     if last_underscore != -1 and next_dot != -1:
-        # 提取 "_" 和 "." 之间的字符串
         return s[last_underscore + 1:next_dot]
     else:
-        return None  # 返回 None 表示未找到符合条件的字符串
+        return None 
 
 
 
@@ -337,5 +334,26 @@ def monitor_directory(directory_path):
     return observer
 
 
+# def create_result_dir(case_name):
+#     os.mkdir(f"OpenROAD-flow-scripts/flow/logs/nangate45/{case_name}/base")
+#     shutil.copy
+#     return
 
-
+def create_result_dir(case_name):
+    target_dir = f"OpenROAD-flow-scripts/flow/results/nangate45/{case_name}/base"
+    os.makedirs(target_dir, exist_ok=True)
+    
+    source_dir = f"OpenROAD-flow-scripts/flow/designs/nangate45/{case_name}"
+    sdc_file = None
+    for file_name in os.listdir(source_dir):
+        if file_name.endswith(".sdc"):
+            sdc_file = os.path.join(source_dir, file_name)
+            break  
+    
+    if sdc_file:
+        shutil.copy(sdc_file, os.path.join(target_dir, "1_synth.sdc"))
+        shutil.copy(sdc_file, os.path.join(target_dir, "2_floorplan.sdc"))
+    else:
+        print("Error: No .sdc file found in the source directory.")
+    
+    return
