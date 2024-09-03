@@ -181,11 +181,11 @@ def macro_mode(config:dict):
 
     final_result_dir=os.path.join("benchmarking_result",evaluate_name)
 
+    final_logs_dir=os.path.join(final_result_dir,"logs")
 
-    
 
+    metrics_dict=getMetrics(final_logs_dir)
 
-    metrics_dict=getMetrics(final_result_dir)
     
     normalized_metrics,average_metrics=normalize_metric(metrics_dict)
 
@@ -240,10 +240,14 @@ def global_mode(config:dict):
     final_result_dir=os.path.join("benchmarking_result",evaluate_name)
 
 
+    final_logs_dir=os.path.join(final_result_dir,"logs")
+
+
+    metrics_dict=getMetrics(final_logs_dir)
     
 
 
-    metrics_dict=getMetrics(final_result_dir)
+
     
     normalized_metrics,average_metrics=normalize_metric(metrics_dict)
 
