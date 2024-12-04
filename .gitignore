@@ -1,0 +1,101 @@
+*~
+
+# Build working directories
+tools/install
+
+# Build files
+build_openroad.log
+etc/InstallerOpenROAD.sh
+
+# Test working directories
+flow/results
+flow/logs
+flow/reports
+flow/objects
+flow/tech
+
+# Tar archives
+flow/*tar.gz
+flow/run-me*.sh
+flow/vars*.sh
+flow/vars*.tcl
+flow/vars*.gdb
+
+# Common temp files
+flow/pt_shell_command.log
+flow/command.log
+flow/default.svf
+flow/rc_model.bin
+flow/*.tif.gz
+flow/*.def.v
+
+
+# RePlAce deps
+*PORT9.dat
+*POST9.dat
+*POWV9.dat
+# RePlAce debug dir
+plot
+
+# yosys temps
+flow/_tmp_yosys-abc-*
+flow/*_pdn.def
+flow/*.plt
+flow/run.param
+flow/dummy.guide
+flow/macrocell.list
+
+# utdBox router temps
+flow/layer_*.mps
+flow/*.did
+flow/*.log
+flow/*.met
+
+# FlexRoute
+flow/*.opennet
+
+# Platforms
+flow/platforms/*
+!flow/platforms/asap7
+!flow/platforms/ihp-sg13g2
+!flow/platforms/nangate45
+!flow/platforms/sky130hd
+!flow/platforms/sky130hs
+!flow/platforms/sky130io
+!flow/platforms/sky130ram
+!flow/platforms/gf180
+flow/private
+
+# network
+.nfs*
+
+# core dumps
+core
+core.*
+
+*~
+
+# Python bytecode
+__pycache__/
+
+dependencies/
+.vscode/
+.cursor/
+.metals/
+perf.data
+perf.data.old
+
+# documentation specific
+docs/main
+docs/build
+GitGuide.md
+SupportedOS.md
+index2.md
+Manpage.md
+mainREADME.md
+build
+.scala-build/
+.bsp/
+
+# autotuner artifacts
+metadata-base-at.json
