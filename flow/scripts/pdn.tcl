@@ -2,12 +2,7 @@ source $::env(SCRIPTS_DIR)/load.tcl
 load_design 2_5_floorplan_tapcell.odb 1_synth.sdc "Starting PDN generation"
 
 source $::env(PDN_TCL)
-if {[catch {
-  pdngen
-} errorMessage]} {
-    # 打印错误信息
-    puts "ErrorPDN: $errorMessage"
-}
+pdngen
 
 if { [info exists ::env(POST_PDN_TCL)] && [file exists $::env(POST_PDN_TCL)] } {
   source $::env(POST_PDN_TCL)

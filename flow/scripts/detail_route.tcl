@@ -61,7 +61,7 @@ append additional_args " -save_guide_updates -verbose 1"
 # not having to wait too long or generating large useless reports.
 
 set arguments [expr {[info exists ::env(DETAILED_ROUTE_ARGS)] ? $::env(DETAILED_ROUTE_ARGS) : \
- [concat $additional_args {-drc_report_iter_step 1}]}]
+ [concat $additional_args {-drc_report_iter_step 5}]}]
 
 puts "detailed_route arguments: $arguments"
 

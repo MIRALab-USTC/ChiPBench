@@ -98,10 +98,10 @@ proc run_detailed_placement {max_displacement} {
     }
 }
 
-# 初始运行detailed_placement
+
 set success [run_detailed_placement ""]
 
-# 如果失败，按顺序运行带有不同max_displacement值的命令
+
 if {$success} {
     set max_displacement_values {50 100 500 1000 5000 10000}
     foreach max_displacement $max_displacement_values {

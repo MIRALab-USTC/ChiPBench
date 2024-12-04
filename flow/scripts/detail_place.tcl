@@ -42,7 +42,9 @@ proc run_detailed_placement {max_displacement} {
     }
 }
 
+
 set success [run_detailed_placement ""]
+
 
 if {$success} {
     set max_displacement_values {50 100 500 1000 5000 10000 50000 100000 500000 1000000}

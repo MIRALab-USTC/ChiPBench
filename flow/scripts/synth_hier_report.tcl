@@ -7,9 +7,6 @@ close $constr
 
 # Hierarchical synthesis
 synth  -top $::env(DESIGN_NAME)
-
-
-
 if { [info exist ::env(ADDER_MAP_FILE)] && [file isfile $::env(ADDER_MAP_FILE)] } {
   techmap -map $::env(ADDER_MAP_FILE)
 }

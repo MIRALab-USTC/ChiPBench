@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -euo pipefail
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 FLOW_ROOT=$(realpath "${FLOW_HOME}")
@@ -10,7 +10,6 @@ EXCLUDED_VARS+='|RESULTS_ODB|PUBLIC|ISSUE_SCRIPTS'
 EXCLUDED_VARS+='|HOME|PWD|MAIL|SHELL|NPROC|NUM_CORES|FLOW_HOME|\\n'
 EXCLUDED_VARS+='|UNSET_VARIABLES_NAMES|do-step|get_variables|do-copy'
 EXCLUDED_VARS+='|CURDIR|OPEN_GUI|OPEN_GUI_SHORTCUT'
-EXCLUDED_VARS+='|COMMAND_LINE_ARGS'
 
 EXCLUDED_PATTERNS="_EXE$|PATH$|_CMD$|\."
 
@@ -53,14 +52,11 @@ while read -r VAR; do
         echo "set env ${name} ${value}" >> $1.gdb
         continue
     fi
-
-    # convert absolute paths if possible to use FLOW_HOME variable
-    if [[ "${name}" == *"SCRIPTS_DIR"* ]]; then
-        value=$(sed -e "s,${FLOW_ROOT},.,g" <<< "${value}")
+    if [[ ${value} == /* ]]; then
+        # convert absolute paths if possible to use FLOW_HOME variable
+        value=$(sed -e "s,${FLOW_ROOT},\${FLOW_HOME},g" <<< "${value}")
+        value=$(sed -e "s,${ORFS_ROOT},\${FLOW_HOME}/\.\.,g" <<< "${value}")
     fi
-    value=$(sed -e "s,${FLOW_ROOT},\${FLOW_HOME},g" <<< "${value}")
-    value=$(sed -e "s,${ORFS_ROOT},\${FLOW_HOME}/\.\.,g" <<< "${value}")
-
     echo "export ${name}=\"${value}\"" >> $1.sh
     if [[ "${value}" == *'$'* ]]; then
         echo "set env ${name} $(sed -e 's,${FLOW_HOME},getenv("FLOW_HOME"),' <<< ${value})" >> $1.gdb

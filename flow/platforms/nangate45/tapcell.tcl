@@ -1,5 +1,4 @@
 tapcell \
   -distance 120 \
-  -tapcell_master "$::env(TAP_CELL_NAME)" \
-  -endcap_master "$::env(TAP_CELL_NAME)"
-    
+  -tapcell_master "TAPCELL_X1" \
+  -endcap_master "TAPCELL_X1"

@@ -1,12 +1,8 @@
-#!/usr/bin/env bash
-
+#!/bin/bash
 set -ex
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 WORKSPACE=$(pwd)
-YOSYS_EXE=${YOSYS_EXE:-/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys}
-OPENROAD_EXE=${OPENROAD_EXE:-/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad}
-KLAYOUT_CMD=${KLAYOUT_CMD:-/usr/bin/klayout}
 
 XSOCK=/tmp/.X11-unix
 XAUTH=/tmp/.docker.xauth
@@ -30,15 +26,12 @@ docker run -u $(id -u ${USER}):$(id -g ${USER}) \
  -e XAUTHORITY=$XAUTH \
  -e FLOW_HOME=/OpenROAD-flow-scripts/flow/ \
  -e MAKEFILES=/OpenROAD-flow-scripts/flow/Makefile \
- -e YOSYS_EXE=$YOSYS_EXE \
- -e OPENROAD_EXE=$OPENROAD_EXE \
- -e KLAYOUT_CMD=$KLAYOUT_CMD \
- -v $WORKSPACE:/OpenROAD-flow-scripts/flow \
- --network host \
+ -v $WORKSPACE:`pwd` \
  $DOCKER_INTERACTIVE \
- ${OR_IMAGE:-openroad/flow-ubuntu22.04-builder:latest} \
+ ${OR_IMAGE:-openroad/flow-centos7-builder:latest} \
  bash -c "set -ex
  mkdir /tmp/xdg-run
- cd /OpenROAD-flow-scripts/flow
+ . ./env.sh
+ cd $WORKSPACE
  $ARGUMENTS
 "

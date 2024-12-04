@@ -52,14 +52,6 @@ select -name "clk*" -type Inst
 save_image -resolution $resolution $::env(REPORTS_DIR)/final_clocks.webp
 gui::clear_selections
 
-gui::set_display_controls "Instances/*" visible false
-gui::set_display_controls "Nets/*" visible false
-gui::set_display_controls "Heat Maps/Routing Congestion" visible true
-save_image -resolution $resolution $::env(REPORTS_DIR)/final_congestion.webp
-
-gui::set_display_controls "Heat Maps/Routing Congestion" visible false
-gui::clear_selections
-
 # The resizer view: all instances created by the resizer grouped
 gui::set_display_controls "Layers/*" visible false
 gui::set_display_controls "Instances/*" visible true
