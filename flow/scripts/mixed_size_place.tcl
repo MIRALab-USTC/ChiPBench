@@ -36,6 +36,8 @@ if {$result != 0} {
   error $errMsg
 }
 
+fix_macro
+
 estimate_parasitics -placement
 
 if {[env_var_equals CLUSTER_FLOPS 1]} {

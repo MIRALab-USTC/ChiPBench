@@ -132,6 +132,14 @@ proc find_macros {} {
   return $macros
 }
 
+proc fix_macro {} {
+  set macros [find_macros]
+  
+  foreach macro $macros {
+    $macro setPlacementStatus FIRM
+  }
+}
+
 proc erase_non_stage_variables {stage_name} {
   # "$::env(SCRIPTS_DIR)/stage_variables.py stage_name" returns list of
   # variables to erase.
