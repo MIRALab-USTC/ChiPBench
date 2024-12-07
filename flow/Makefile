@@ -641,7 +641,7 @@ $(eval $(call do-step,2_3_place_mixgp,$(RESULTS_DIR)/2_2_floorplan_io.odb $(RESU
 
 .PHONY: do-copy-mixedsize
 do-copy-mixedsize:
-	cp $(RESULTS_DIR)/2_3_place_mixgp.odb $(RESULTS_DIR)/2_4_floorplan_macro.odb
+	cp $(RESULTS_DIR)/2_3_place_mixgp.odb $(RESULTS_DIR)/2_3_floorplan_macro.odb
 
 # .PHONY: do-mix-sized
 # do-mix-sized:
