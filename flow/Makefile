@@ -636,6 +636,36 @@ $(eval $(call do-copy,2_floorplan,2_1_floorplan.sdc,,.sdc))
 #-------------------------------------------------------------------------------
 $(eval $(call do-step,2_3_floorplan_macro,$(RESULTS_DIR)/2_2_floorplan_io.odb $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/1_synth.sdc $(MACRO_PLACEMENT) $(MACRO_PLACEMENT_TCL),macro_place))
 
+# Mixed-size Placement:
+$(eval $(call do-step,2_3_place_mixgp,$(RESULTS_DIR)/2_2_floorplan_io.odb $(RESULTS_DIR)/1_synth.sdc $(LIB_FILES),mixed_size_place))
+
+.PHONY: do-copy-mixedsize
+do-copy-mixedsize:
+	cp $(RESULTS_DIR)/2_3_place_mixgp.odb $(RESULTS_DIR)/2_4_floorplan_macro.odb
+
+# .PHONY: do-mix-sized
+# do-mix-sized:
+# 	$(UNSET_AND_MAKE) do-2_3_place_mixgp do-copy-mixsize do-2_5_floorplan_tapcell do-2_6_floorplan_pdn do-2_floorplan 
+
+# .PHONY: do-mix-sized2
+# do-mix-sized2:
+# 	$(UNSET_AND_MAKE) do-copy-mixsize2 do-3_4_place_resized do-3_5_place_dp do-3_place do-3_place.sdc 
+
+.PHONY: do-mixedsize-place
+do-mixedsize-place:
+	$(UNSET_AND_MAKE) do-copy-mixedsize do-2_4_floorplan_tapcell do-2_5_floorplan_pdn do-2_floorplan do-copy-mixedsize2 do-3_4_place_resized do-3_5_place_dp do-3_place do-3_place.sdc
+
+.PHONY: evaluate_Mixed-SizePlace
+evaluate_Mixed-SizePlace:
+	$(UNSET_AND_MAKE) do-mixedsize-place do-cts do-route do-finish
+
+
+.PHONY: do-copy-mixedsize2
+do-copy-mixedsize2:
+	cp $(RESULTS_DIR)/2_floorplan.odb $(RESULTS_DIR)/3_3_place_gp.odb
+
+
+
 # STEP 4: Tapcell and Welltie insertion
 #-------------------------------------------------------------------------------
 $(eval $(call do-step,2_4_floorplan_tapcell,$(RESULTS_DIR)/2_3_floorplan_macro.odb $(TAPCELL_TCL),tapcell))
@@ -657,6 +687,16 @@ clean_floorplan:
 	rm -f $(RESULTS_DIR)/2_*floorplan*.odb $(RESULTS_DIR)/2_floorplan.sdc $(RESULTS_DIR)/2_*.v $(RESULTS_DIR)/2_*.def
 	rm -f $(REPORTS_DIR)/2_*
 	rm -f $(LOG_DIR)/2_*
+
+
+
+.PHONY: do-floorplan-macro
+do-floorplan-macro:
+	$(UNSET_AND_MAKE) do-2_4_floorplan_tapcell do-2_5_floorplan_pdn do-2_floorplan do-2_floorplan.sdc
+
+.PHONY: evaluate_MacroPlace
+evaluate_MacroPlace: do-floorplan-macro do-place do-cts do-route do-finish
+
 
 # ==============================================================================
 #  ____  _        _    ____ _____
@@ -711,6 +751,13 @@ clean_place:
 	rm -f $(REPORTS_DIR)/3_*
 	rm -f $(LOG_DIR)/3_*
 
+
+.PHONY: do-place-global
+do-place-global:
+	$(UNSET_AND_MAKE) do-3_4_place_resized do-3_5_place_dp do-3_place do-3_place.sdc
+
+.PHONY: evaluate_GlobalPlace
+evaluate_GlobalPlace: do-place-global do-cts do-route do-finish
 
 # ==============================================================================
 #   ____ _____ ____
