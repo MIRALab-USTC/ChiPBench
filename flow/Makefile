@@ -1104,6 +1104,19 @@ klayout:
 run:
 	$(OPENROAD_CMD) -no_splash $(if $(filter %.py,$(RUN_SCRIPT)),-python) $(RUN_SCRIPT)
 
+
+.PHONY: noop
+noop:
+	# just a placeholder to make the makefile happy
+
+
+.PHONY: def2db
+def2db:
+	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
+	cp $(SDC_FILE) $(RESULTS_DIR)/1_synth.sdc
+	cp $(SDC_FILE) $(RESULTS_DIR)/2_floorplan.sdc
+	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/def2db.tcl) 2>&1 | tee $(LOG_DIR)/def2db.log
+
 # Utilities
 #-------------------------------------------------------------------------------
 include $(UTILS_DIR)/utils.mk
