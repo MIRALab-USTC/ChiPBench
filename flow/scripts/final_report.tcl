@@ -62,7 +62,7 @@ if {[env_var_exists_and_non_empty RCX_RULES]} {
 }
 
 report_cell_usage
-
+report_units_metric
 report_metrics 6 "finish"
 
 # Save a final image if openroad is compiled with the gui
