@@ -1,2 +1,2 @@
 export OPENROAD_EXE=$(command -v openroad)
-export YOSYS_CMD=$(command -v yosys)
+export YOSYS_EXE=$(command -v yosys)
