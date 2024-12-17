@@ -1,5 +1,7 @@
 *~
 
+benchmarking_result/*
+
 # Build working directories
 tools/install
 
@@ -53,6 +55,8 @@ flow/*.met
 
 # FlexRoute
 flow/*.opennet
+
+flow/def_tmp
 
 # Platforms
 flow/platforms/*
