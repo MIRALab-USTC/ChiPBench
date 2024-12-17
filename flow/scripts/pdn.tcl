@@ -3,7 +3,9 @@ erase_non_stage_variables floorplan
 load_design 2_4_floorplan_tapcell.odb 2_1_floorplan.sdc
 
 source $::env(PDN_TCL)
-pdngen
+if { [catch {pdngen} result] } {
+    puts "pdngen command failed: $result"
+}
 
 if { [env_var_exists_and_non_empty POST_PDN_TCL] } {
   source $::env(POST_PDN_TCL)
