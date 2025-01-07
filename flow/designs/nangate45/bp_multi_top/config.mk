@@ -38,3 +38,8 @@ export MACRO_PLACE_CHANNEL = 20 20
 
 export PLACE_DENSITY_LB_ADDON = 0.05
 export SKIP_GATE_CLONING      = 1
+
+
+export GLOBAL_ROUTE_ARGS = -allow_congestion -verbose -congestion_iterations 1
+
+export DETAILED_ROUTE_ARGS = -droute_end_iter 2

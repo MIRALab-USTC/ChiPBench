@@ -33,3 +33,7 @@ export TNS_END_PERCENT        = 100
 
 export FASTROUTE_TCL = $(DESIGN_HOME)/$(PLATFORM)/$(DESIGN_NAME)/fastroute.tcl
 
+export GLOBAL_ROUTE_ARGS = -allow_congestion -verbose -congestion_iterations 10
+
+export DETAILED_ROUTE_ARGS = -droute_end_iter 4
+

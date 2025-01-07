@@ -31,3 +31,7 @@ export MACRO_PLACE_CHANNEL = 20 20
 
 export PLACE_DENSITY_LB_ADDON = 0.10
 export TNS_END_PERCENT        = 100
+
+export GLOBAL_ROUTE_ARGS = -allow_congestion -congestion_iterations 10
+
+export DETAILED_ROUTE_ARGS = -droute_end_iter 8
