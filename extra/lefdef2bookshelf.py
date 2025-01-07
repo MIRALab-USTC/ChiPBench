@@ -201,7 +201,9 @@ NumPins : {num_pins}
                 direct = 'I'
 
             node_name=str(placedb.rawdb.nodeName(idmacro))
-            content += f"\t{node_name} {direct} : {placedb.pin_offset_x[pin]:.6f} {placedb.pin_offset_y[pin]:.6f}\n"
+            pin_offset_x=placedb.pin_offset_x[pin]-placedb.node_size_x[idmacro]/2
+            pin_offset_y=placedb.pin_offset_y[pin]-placedb.node_size_y[idmacro]/2
+            content += f"\t{node_name} {direct} : {pin_offset_x:.6f} {pin_offset_y:.6f}\n"
     with open(net_file, "w", encoding="utf8") as fwrite:
         fwrite.write(content)
 

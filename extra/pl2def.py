@@ -65,7 +65,7 @@ def write2def(pl_dict,def_file,target_filename):
 
                     x, y, o = pl_dict[instance]
                     x=round(x / 10) * 10
-                    y=round(y / 10) * 10
+                    y=round((y-70)/280)*280+70
 
                     old_pos = line[line.find("(") : line.find(")") + 1]
                     line = line.replace(old_pos, "( %d %d )" % (x, y))
