@@ -688,15 +688,26 @@ clean_floorplan:
 	rm -f $(REPORTS_DIR)/2_*
 	rm -f $(LOG_DIR)/2_*
 
+# $(eval $(call do-step,2_3_floorplan_macro,$(RESULTS_DIR)/2_3_floorplan_macro.odb,block_channels_generate))
 
+.PHONY: macro-pre
+macro-pre:
+	($(TIME_CMD) $(OPENROAD_CMD) -python $(SCRIPTS_DIR)/pre_macro.py) 2>&1 | tee $(LOG_DIR)/pre_macro.log
+
+.PHONY:generate_channels
+generate_channels:
+	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/block_channels_generate.tcl) 2>&1 | tee $(LOG_DIR)/block_channels_generate.log
 
 .PHONY: do-floorplan-macro
 do-floorplan-macro:
-	$(UNSET_AND_MAKE) do-2_4_floorplan_tapcell do-2_5_floorplan_pdn do-2_floorplan do-2_floorplan.sdc
+	$(UNSET_AND_MAKE) getMacroMetrics do-2_4_floorplan_tapcell do-2_5_floorplan_pdn do-2_floorplan do-2_floorplan.sdc
 
 .PHONY: evaluate_MacroPlace
-evaluate_MacroPlace: do-floorplan-macro do-place do-cts do-route do-finish
+evaluate_MacroPlace: macro-pre generate_channels do-floorplan-macro do-place do-cts do-route do-finish
 
+.PHONY: getMacroMetrics
+getMacroMetrics:
+	($(TIME_CMD) $(OPENROAD_CMD) -python $(SCRIPTS_DIR)/getMacroMetrics.py) 2>&1 | tee $(LOG_DIR)/MacroMetrics.log
 
 # ==============================================================================
 #  ____  _        _    ____ _____
@@ -897,9 +908,13 @@ do-final: do-finish
 .PHONY: final
 final: finish
 
+# .PHONY: do-finish
+# do-finish:
+# 	$(UNSET_AND_MAKE) do-6_1_fill do-6_1_fill.sdc do-6_final.sdc do-6_report do-gds elapsed
+
 .PHONY: do-finish
 do-finish:
-	$(UNSET_AND_MAKE) do-6_1_fill do-6_1_fill.sdc do-6_final.sdc do-6_report do-gds elapsed
+	$(UNSET_AND_MAKE) do-6_1_fill do-6_1_fill.sdc do-6_final.sdc do-6_report elapsed
 
 .PHONY: generate_abstract
 generate_abstract: $(RESULTS_DIR)/6_final.gds $(RESULTS_DIR)/6_final.def  $(RESULTS_DIR)/6_final.v $(RESULTS_DIR)/6_final.sdc
@@ -1114,8 +1129,17 @@ noop:
 def2db:
 	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
 	cp $(SDC_FILE) $(RESULTS_DIR)/1_synth.sdc
+	cp $(SDC_FILE) $(RESULTS_DIR)/2_1_floorplan.sdc
 	cp $(SDC_FILE) $(RESULTS_DIR)/2_floorplan.sdc
 	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/def2db.tcl) 2>&1 | tee $(LOG_DIR)/def2db.log
+
+
+.PHONY:init_flow
+init_flow:
+	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
+	cp $(SDC_FILE) $(RESULTS_DIR)/1_synth.sdc
+	cp $(SDC_FILE) $(RESULTS_DIR)/2_1_floorplan.sdc
+	cp $(SDC_FILE) $(RESULTS_DIR)/2_floorplan.sdc
 
 # Utilities
 #-------------------------------------------------------------------------------
