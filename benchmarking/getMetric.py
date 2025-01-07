@@ -2,20 +2,32 @@ import os
 import re
 import json
 
+
+def get_units(data):
+    time_units=data.get("run__flow__platform__time_units",None)
+    distance_units=data.get("run__flow__platform__distance_units",None)
+    power_units=data.get("run__flow__platform__power_units",None)
+    unit_dict={"time_units":time_units,"distance_units":distance_units,"power_units":power_units}
+    return unit_dict
+
+
 def sum_power_totals(data):
     
     internal_total = data.get("finish__power__internal__total", None)
     switching_total = data.get("finish__power__switching__total", None)
+    leakage_total = data.get("finish__power__leakage__total", None)
 
-    if internal_total is None or switching_total is None:
+    if internal_total is None or switching_total is None or leakage_total is None:
         return None
 
     if not isinstance(internal_total, (int, float)):
         return None
     if not isinstance(switching_total, (int, float)):
         return None
+    if not isinstance(leakage_total, (int, float)):
+        return None
 
-    return internal_total + switching_total
+    return internal_total + switching_total + leakage_total
 
 def get_wns_tns(data):
     
@@ -70,7 +82,7 @@ def get_nvp(data):
 
 
 
-def get_cellHpwl(file_content):
+def get_totalHpwl(file_content):
     try:
         # Define the regex pattern to match the specific string and capture the number
         pattern = r"\[INFO DPL-0022\] HPWL after\s+([0-9]+\.[0-9]+) u"
@@ -99,11 +111,12 @@ def get_usage(content):
     table_start_index = match.end()
     table_content = content[table_start_index:]
     # Find the Total line and extract the Usage percentage
-    total_line_pattern = r'Total\s+\d+\s+\d+\s+(\d+\.\d+%)'
+        # 修改正则表达式以捕获所有数字
+    total_line_pattern = r'Total\s+(\d+)\s+(\d+)\s+(\d+\.\d+)%\s+(\d+)\s*/\s*(\d+)\s*/\s*(\d+)'
     total_match = re.search(total_line_pattern, table_content)
     if not total_match:
         raise ValueError("Total usage percentage not found in the table")
-    total_usage = total_match.group(1)
+    total_usage = total_match.group(3)
     return float(total_usage.replace("%", "")) / 100
 
 def load_Json(Json):
@@ -124,13 +137,14 @@ def load_file(input_file):
         
         return ""  
 
-def get_Metric_in(finalJson, routeJson, placedpLog,gproutefile):
+def get_Metric_in(finalJson, routeJson, placedpLog,gproutefile,macro_path=""):
 
 
     final=load_Json(finalJson)
     route=load_Json(routeJson)
     place=load_file(placedpLog)
     gproute=load_file(gproutefile)
+    macro=load_Json(macro_path)
     # with open(finalJson, 'r', encoding='utf-8') as file:
     #     final = json.load(file)
 
@@ -144,14 +158,17 @@ def get_Metric_in(finalJson, routeJson, placedpLog,gproutefile):
     #     gproute = file.read()
 
     metric = {}
-    metric["HPWL"] = get_cellHpwl(place)
+    metric["MHpwl"]=macro["hpwl"]
+    metric["Regularity"]=macro["regularity"]
+    metric["DataFlow"]=macro["dataflow"]
+    metric["HPWL"] = get_totalHpwl(place)
     metric["Wirelength"] = get_wirelength(route)
     metric["Congestion"]=get_usage(gproute)
     metric["Power"] = sum_power_totals(final)
     metric["WNS"], metric["TNS"] = get_wns_tns(final)
     metric["NVP"]=get_nvp(final)
     metric["Area"] = get_area(final)
-
+    metric["unit"]=get_units(final)
     return metric
 
 def get_substring_after_underscore(input_string):
@@ -217,4 +234,18 @@ def getMetrics(dir_path):
 
     return metric_dict
 
+def get_metrics_single(log_path):
 
+    report_path=os.path.join(log_path,"6_report.json")
+    route_path=os.path.join(log_path,"5_2_route.json")
+    place_path=os.path.join(log_path,"3_5_place_dp.log")
+    gp_route_path=os.path.join(log_path,"5_1_grt.log")
+    floorplan_path=os.path.join(log_path,"2_1_floorplan.json")
+    macro_path=os.path.join(log_path,"macro.json")
+    
+    metric=get_Metric_in(report_path,route_path,place_path,gp_route_path,macro_path)
+    return metric
+
+if __name__ == "__main__":
+    metric=get_metrics_single("/workspace/afix/test/ChiPBench/flow/logs/nangate45/gcd/test_py")
+    print(metric)
