@@ -14,7 +14,7 @@ proc global_route_helper {} {
 
   proc do_global_route {} {
     set all_args [concat [list \
-      -congestion_report_file $::global_route_congestion_report] \
+      -congestion_report_file $::global_route_congestion_report] -verbose \
       $::env(GLOBAL_ROUTE_ARGS)]
 
     log_cmd global_route {*}$all_args
@@ -45,46 +45,46 @@ proc global_route_helper {} {
     set_dont_use $::env(DONT_USE_CELLS)
   }
 
-  if { !$::env(SKIP_INCREMENTAL_REPAIR) } {
-    if { $::env(DETAILED_METRICS) } {
-      report_metrics 5 "global route pre repair design"
-    }
+  # if { !$::env(SKIP_INCREMENTAL_REPAIR) } {
+  #   if { $::env(DETAILED_METRICS) } {
+  #     report_metrics 5 "global route pre repair design"
+  #   }
 
-    # Repair design using global route parasitics
-    repair_design_helper
-    if { $::env(DETAILED_METRICS) } {
-      report_metrics 5 "global route post repair design"
-    }
+  #   # Repair design using global route parasitics
+  #   repair_design_helper
+  #   if { $::env(DETAILED_METRICS) } {
+  #     report_metrics 5 "global route post repair design"
+  #   }
 
-    # Running DPL to fix overlapped instances
-    # Run to get modified net by DPL
-    global_route -start_incremental
-    detailed_placement
-    # Route only the modified net by DPL
-    global_route -end_incremental -congestion_report_file $::env(REPORTS_DIR)/congestion_post_repair_design.rpt
+  #   # Running DPL to fix overlapped instances
+  #   # Run to get modified net by DPL
+  #   global_route -start_incremental
+  #   detailed_placement
+  #   # Route only the modified net by DPL
+  #   global_route -end_incremental -congestion_report_file $::env(REPORTS_DIR)/congestion_post_repair_design.rpt
 
-    # Repair timing using global route parasitics
-    puts "Repair setup and hold violations..."
-    estimate_parasitics -global_routing
+  #   # Repair timing using global route parasitics
+  #   puts "Repair setup and hold violations..."
+  #   estimate_parasitics -global_routing
 
-    repair_timing_helper
+  #   repair_timing_helper
 
-    if { $::env(DETAILED_METRICS) } {
-      report_metrics 5 "global route post repair timing"
-    }
+  #   if { $::env(DETAILED_METRICS) } {
+  #     report_metrics 5 "global route post repair timing"
+  #   }
 
-    # Running DPL to fix overlapped instances
-    # Run to get modified net by DPL
-    global_route -start_incremental
-    detailed_placement
-    # Route only the modified net by DPL
-    global_route -end_incremental -congestion_report_file $::env(REPORTS_DIR)/congestion_post_repair_timing.rpt
-  }
+  #   # Running DPL to fix overlapped instances
+  #   # Run to get modified net by DPL
+  #   global_route -start_incremental
+  #   detailed_placement
+  #   # Route only the modified net by DPL
+  #   global_route -end_incremental -congestion_report_file $::env(REPORTS_DIR)/congestion_post_repair_timing.rpt
+  # }
 
-  global_route -start_incremental
-  recover_power
-  # Route the modified nets by rsz journal restore
-  global_route -end_incremental -congestion_report_file $::env(REPORTS_DIR)/congestion_post_recover_power.rpt
+  # global_route -start_incremental
+  # recover_power
+  # # Route the modified nets by rsz journal restore
+  # global_route -end_incremental -congestion_report_file $::env(REPORTS_DIR)/congestion_post_recover_power.rpt
 
   if {![env_var_equals SKIP_ANTENNA_REPAIR 1]} {
     puts "Repair antennas..."

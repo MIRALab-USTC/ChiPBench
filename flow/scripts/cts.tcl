@@ -121,12 +121,26 @@ if {![env_var_equals SKIP_CTS_REPAIR_TIMING 1]} {
       run_equivalence_test
   }
 
-  set result [catch {detailed_placement} msg]
-  if {$result != 0} {
-    save_progress 4_1_error
-    puts "Detailed placement failed in CTS: $msg"
-    exit $result
+  # set result [catch {detailed_placement} msg]
+  set result [run_detailed_placement ""]
+  if {$result} {
+      set max_displacement_values {50 100 500 1000 5000 10000}
+      foreach max_displacement $max_displacement_values {
+          set result [run_detailed_placement $max_displacement]
+          if {!$result} {
+              break
+          }
+      }
+
+    # save_progress 4_1_error
+    # puts "Detailed placement failed in CTS: $msg"
+    # exit $result
   }
+  # if {$result != 0} {
+  #   save_progress 4_1_error
+  #   puts "Detailed placement failed in CTS: $msg"
+  #   exit $result
+  # }
 
   check_placement -verbose
 }

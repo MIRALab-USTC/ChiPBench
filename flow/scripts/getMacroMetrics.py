@@ -3,7 +3,7 @@ import odb
 import random
 import os
 import json
-
+from dataflow import getdataflow
 
 tech = Tech()
 
@@ -96,11 +96,13 @@ logs_dir=os.getenv('LOG_DIR')
 hpwl_um=design_block.dbuToMicrons(hpwl)
 regularity_um=design_block.dbuToMicrons(regularity)
 macro_json=os.path.join(logs_dir,"macro.json")
+dataflow=getdataflow(design_block,depth=8)
 
 data={}
 data["hpwl"]=hpwl_um
 data["regularity"]=regularity_um
 
+data["dataflow"]=dataflow
 with open(macro_json,"w") as f:
     json.dump(data,f,indent=4)
 
