@@ -1,0 +1,21 @@
+{
+    "evaluate_name":"example_global",
+    "mode":"global",
+    "config_setting":"",
+    "def_path":"",
+    "case_list":
+    [
+        {
+            "config_setting":"",
+            "def_path":""
+        },
+        {
+            "config_setting":"",
+            "def_path":""
+        }
+        
+    ],
+    "baseline_data_file":"",
+    "parallel":3
+
+}
