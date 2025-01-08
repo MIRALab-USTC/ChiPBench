@@ -137,13 +137,14 @@ def load_file(input_file):
         
         return ""  
 
-def get_Metric_in(finalJson, routeJson, placedpLog,gproutefile,macro_path=""):
+def get_Metric_in(finalJson, routeJson, placedpLog,gproutefile,dr_route_path,macro_path=""):
 
 
     final=load_Json(finalJson)
     route=load_Json(routeJson)
     place=load_file(placedpLog)
     gproute=load_file(gproutefile)
+    dr_route=load_Json(dr_route_path)
     macro=load_Json(macro_path)
     # with open(finalJson, 'r', encoding='utf-8') as file:
     #     final = json.load(file)
@@ -164,6 +165,7 @@ def get_Metric_in(finalJson, routeJson, placedpLog,gproutefile,macro_path=""):
     metric["HPWL"] = get_totalHpwl(place)
     metric["Wirelength"] = get_wirelength(route)
     metric["Congestion"]=get_usage(gproute)
+    metric["Route_DRC"]=dr_route["detailedroute__route__drc_errors"]
     metric["Power"] = sum_power_totals(final)
     metric["WNS"], metric["TNS"] = get_wns_tns(final)
     metric["NVP"]=get_nvp(final)
@@ -240,10 +242,11 @@ def get_metrics_single(log_path):
     route_path=os.path.join(log_path,"5_2_route.json")
     place_path=os.path.join(log_path,"3_5_place_dp.log")
     gp_route_path=os.path.join(log_path,"5_1_grt.log")
+    dr_route_path=os.path.join(log_path,"5_2_route.json")
     floorplan_path=os.path.join(log_path,"2_1_floorplan.json")
     macro_path=os.path.join(log_path,"macro.json")
     
-    metric=get_Metric_in(report_path,route_path,place_path,gp_route_path,macro_path)
+    metric=get_Metric_in(report_path,route_path,place_path,gp_route_path,dr_route_path,macro_path)
     return metric
 
 if __name__ == "__main__":

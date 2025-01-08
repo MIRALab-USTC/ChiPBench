@@ -348,6 +348,8 @@ def dict_to_table(data):
 
     pd.set_option('display.float_format', '{:.2f}'.format)
     df = pd.DataFrame.from_dict(data_tmp, orient='index')
+    pd.set_option('display.max_columns', None)  
+    pd.set_option('display.max_rows', None)     
     print(df)
 
 
@@ -362,7 +364,7 @@ def benchmarking_single_in(config_setting,def_path,evaluate_name,mode,baseline_d
     log_dir=env_vars.get("LOG_DIR",None)
     result_dir=env_vars.get("RESULTS_DIR",None)
     report_dir=env_vars.get("REPORTS_DIR",None)
-    design_name=env_vars.get("DESIGN_NAME",None)
+    design_name=env_vars.get("DESIGN_NICKNAME",None)
     log_dir=os.path.join(original_dir,"flow",log_dir)
     result_dir=os.path.join(original_dir,"flow",result_dir)
     report_dir=os.path.join(original_dir,"flow",report_dir)
