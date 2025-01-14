@@ -119,6 +119,140 @@ def get_usage(content):
     total_usage = total_match.group(3)
     return float(total_usage.replace("%", "")) / 100
 
+
+def get_grt_data(text: str) -> dict:
+    """
+    Parse specific GRT (Global Routing) information from the given text.
+
+    :param text: The complete content of a text file as a single string.
+    :return: A dictionary that consolidates parsed routing resources analysis and final congestion report data.
+    """
+
+    # This dictionary will hold the final merged result.
+    parsed_data = {}
+
+    # ---------------------------------------------------------
+    # 1) Parse "[INFO GRT-0053] Routing resources analysis" block
+    # ---------------------------------------------------------
+    # We try to locate the text block after "[INFO GRT-0053]" until the line of dashes.
+    # Then we extract each line within that block to parse:
+    #   Layer (e.g., "metal1"), Direction (Horizontal/Vertical), etc.
+    #
+    # We only need the layer name and routing direction from this section.
+    # Direction will be stored as "H" if "Horizontal", "V" if "Vertical".
+    # Any additional data in that block is ignored.
+    # If this block is missing, no exception is raised; we just skip it.
+
+    # Regex pattern to capture the lines between the first and second "-----" lines
+    # after encountering "[INFO GRT-0053] Routing resources analysis:"
+    # We use DOTALL to allow matches over multiple lines.
+    pattern_0053_block = re.compile(
+        r'\[INFO\s+GRT-0053\]\s*Routing\s+resources\s+analysis:.*?^-+\n(.*?)^-+',
+        re.DOTALL | re.MULTILINE
+    )
+
+    match_0053_block = pattern_0053_block.search(text)
+    if match_0053_block:
+        block_0053_content = match_0053_block.group(1)
+        # Parse each line in the extracted block.
+        # Expected format:
+        # metal1     Horizontal    5609898    2054336    63.38%
+        # metal2     Vertical      3570000    2050939    42.55%
+        # ...
+        #
+        # We focus on capturing two groups: layer name and direction.
+        # We'll ignore the other columns, but be flexible about spacing.
+        pattern_0053_line = re.compile(r'^\s*(\S+)\s+(Horizontal|Vertical)\s+', re.MULTILINE)
+        for line_match in pattern_0053_line.finditer(block_0053_content):
+            layer_name = line_match.group(1)
+            direction_text = line_match.group(2)
+            direction = "H" if direction_text == "Horizontal" else "V"
+            # Initialize dictionary for this layer if not present
+            if layer_name not in parsed_data:
+                parsed_data[layer_name] = {}
+            parsed_data[layer_name]["direction"] = direction
+
+    # ---------------------------------------------------------
+    # 2) Parse "[INFO GRT-0096] Final congestion report" block
+    # ---------------------------------------------------------
+    # We try to locate the text block after "[INFO GRT-0096]" until the line of dashes.
+    # Then we extract each line within that block to parse:
+    #   Layer, Resource, Demand, Usage (%), MaxH, MaxV, overflow
+    #
+    # After extracting these data, we attach them to the corresponding layers.
+    # If a layer is missing from the earlier part, we still add these values.
+    # If this block is missing, we skip it.
+    pattern_0096_block = re.compile(
+        r'\[INFO\s+GRT-0096\]\s*Final\s+congestion\s+report:.*?^-+\n(.*?)^-+',
+        re.DOTALL | re.MULTILINE
+    )
+
+    match_0096_block = pattern_0096_block.search(text)
+    if match_0096_block:
+        block_0096_content = match_0096_block.group(1)
+        # Parse each line in the extracted block.
+        # Expected format:
+        # metal1          0              0              0.00%             0 /  0 /  0
+        # metal2     2054336         742576            36.15%             0 /  0 /  0
+        # ...
+        # We will capture (layer, resource, demand, usage, maxH, maxV, overflow).
+        #
+        # Notice that usage might contain a percentage symbol. We remove it or parse as float.
+        # Also, MaxH, MaxV, and overflow are separated by slashes.
+        pattern_0096_line = re.compile(
+            r'^\s*(\S+)\s+'            # Layer name (group 1)
+            r'(\d+)\s+'                # Resource (group 2)
+            r'(\d+)\s+'                # Demand (group 3)
+            r'([\d\.]+)%\s+'           # Usage (group 4, w/o %)
+            r'(\d+)\s*/\s*(\d+)\s*/\s*(\d+)\s*$',  # MaxH/MaxV/overflow (groups 5,6,7)
+            re.MULTILINE
+        )
+
+        for line_match in pattern_0096_line.finditer(block_0096_content):
+            layer_name = line_match.group(1)
+            resource = int(line_match.group(2))
+            demand = int(line_match.group(3))
+            usage = float(line_match.group(4))
+            max_h = int(line_match.group(5))
+            max_v = int(line_match.group(6))
+            overflow = int(line_match.group(7))
+
+            if layer_name not in parsed_data:
+                parsed_data[layer_name] = {}
+            parsed_data[layer_name]["Resource"] = resource
+            parsed_data[layer_name]["Demand"] = demand
+            parsed_data[layer_name]["Usage"] = usage
+            parsed_data[layer_name]["MaxH"] = max_h
+            parsed_data[layer_name]["MaxV"] = max_v
+            parsed_data[layer_name]["overflow"] = overflow
+
+    # Return the consolidated dictionary with all parsed info.
+    return parsed_data
+
+def get_congestion(content):
+    grt_data=get_grt_data(content)
+    H_layers=[]
+    V_layers=[]
+    for layer,data in grt_data.items():
+        if data["Resource"] == 0:
+            continue
+        if data["direction"]=="H":
+            H_layers.append(layer)
+        else:
+            V_layers.append(layer)
+    
+    route_usage_V=0
+    route_usage_H=0
+    for layer in H_layers:
+        route_usage_H+=grt_data[layer]["Usage"]
+    for layer in V_layers:
+        route_usage_V+=grt_data[layer]["Usage"]
+
+    route_usage_V/=len(V_layers)
+    route_usage_H/=len(H_layers)
+    return route_usage_V/100,route_usage_H/100
+
+
 def load_Json(Json):
     try:
         with open(Json, 'r', encoding='utf-8') as file:
@@ -164,6 +298,7 @@ def get_Metric_in(finalJson, routeJson, placedpLog,gproutefile,dr_route_path,mac
     metric["DataFlow"]=macro["dataflow"]
     metric["HPWL"] = get_totalHpwl(place)
     metric["Wirelength"] = get_wirelength(route)
+    metric["Congestion(V)"],metric["Congestion(H)"]=get_congestion(gproute)
     metric["Congestion"]=get_usage(gproute)
     metric["Route_DRC"]=dr_route["detailedroute__route__drc_errors"]
     metric["Power"] = sum_power_totals(final)
