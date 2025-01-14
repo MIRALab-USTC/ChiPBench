@@ -233,6 +233,9 @@ def get_congestion(content):
     grt_data=get_grt_data(content)
     H_layers=[]
     V_layers=[]
+    MaxH=0
+    MaxV=0
+    overflow=0
     for layer,data in grt_data.items():
         if data["Resource"] == 0:
             continue
@@ -240,6 +243,9 @@ def get_congestion(content):
             H_layers.append(layer)
         else:
             V_layers.append(layer)
+        MaxH+=data["MaxH"]
+        MaxV+=data["MaxV"]
+        overflow+=data["overflow"]
     
     route_usage_V=0
     route_usage_H=0
@@ -250,7 +256,7 @@ def get_congestion(content):
 
     route_usage_V/=len(V_layers)
     route_usage_H/=len(H_layers)
-    return route_usage_V/100,route_usage_H/100
+    return route_usage_V/100,route_usage_H/100,MaxH,MaxV,overflow
 
 
 def load_Json(Json):
@@ -298,7 +304,7 @@ def get_Metric_in(finalJson, routeJson, placedpLog,gproutefile,dr_route_path,mac
     metric["DataFlow"]=macro["dataflow"]
     metric["HPWL"] = get_totalHpwl(place)
     metric["Wirelength"] = get_wirelength(route)
-    metric["Congestion(V)"],metric["Congestion(H)"]=get_congestion(gproute)
+    metric["Congestion(V)"],metric["Congestion(H)"],metric["MaxH"],metric["MaxV"],metric["overflow"]=get_congestion(gproute)
     metric["Congestion"]=get_usage(gproute)
     metric["Route_DRC"]=dr_route["detailedroute__route__drc_errors"]
     metric["Power"] = sum_power_totals(final)
@@ -385,5 +391,5 @@ def get_metrics_single(log_path):
     return metric
 
 if __name__ == "__main__":
-    metric=get_metrics_single("/workspace/afix/test/ChiPBench/flow/logs/nangate45/gcd/test_py")
+    metric=get_metrics_single("/workspace/afix/test/ChiPBench/flow/logs/nangate45/bp/autodmp")
     print(metric)
