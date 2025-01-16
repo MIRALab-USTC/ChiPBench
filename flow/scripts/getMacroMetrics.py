@@ -4,6 +4,7 @@ import random
 import os
 import json
 from dataflow import getdataflow
+import numpy as np
 
 tech = Tech()
 
@@ -96,7 +97,13 @@ logs_dir=os.getenv('LOG_DIR')
 hpwl_um=design_block.dbuToMicrons(hpwl)
 regularity_um=design_block.dbuToMicrons(regularity)
 macro_json=os.path.join(logs_dir,"macro.json")
-dataflow=getdataflow(design_block,depth=8)
+depth=8
+
+dataflow=getdataflow(design_block,depth=depth)
+while dataflow is None or np.isnan(dataflow):
+    depth += 1
+    dataflow = getdataflow(design_block, depth=depth)
+
 
 data={}
 data["hpwl"]=hpwl_um
