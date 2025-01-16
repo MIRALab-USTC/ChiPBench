@@ -213,6 +213,7 @@ def load_makefile_env(design_config,flow_variant=""):
         return None
 
 def def2db(config_setting,flow_variant,def_path,db_path):
+    os.makedirs("def_tmp",exist_ok=True)
     tmp_def_path=f"def_tmp/{os.path.basename(def_path)}"
     tmp_def_path_abs=os.path.abspath(tmp_def_path)
     os.system(f"cp {def_path} {tmp_def_path_abs}")
