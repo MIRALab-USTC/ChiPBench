@@ -1,23 +1,23 @@
-// CNN指令集架构的执行器
+// CNN
 module npu_inst_fsm
-#(parameter	DATA_WIDTH = 32,    // 数据位宽
-  parameter	FRAC_WIDTH = 16,	// 小数部分
-  parameter RAM_LATENCY = 2,	// ram的IP核读取需要延时
-  parameter MAC_LATENCY = 2,	// ram的IP核读取需要延时
-  parameter	DIV_LATENCY = 50,	// 除法器的延时
-  parameter	DMI_LATENCY = 2,	// 除法器的延时
-  parameter	DATA_UNIT = {{(DATA_WIDTH-FRAC_WIDTH-1){1'B0}}, 1'B1, {FRAC_WIDTH{1'B0}}}, // 固定的单位1 
-  parameter	DATA_ZERO = {DATA_WIDTH{1'B0}},	// 固定的0值
-  parameter	INST_WIDTH = 128	// 指令的长度
+#(parameter	DATA_WIDTH = 32,    // 
+  parameter	FRAC_WIDTH = 16,	// 
+  parameter RAM_LATENCY = 2,	// ramIP
+  parameter MAC_LATENCY = 2,	// ramIP
+  parameter	DIV_LATENCY = 50,	// 
+  parameter	DMI_LATENCY = 2,	// 
+  parameter	DATA_UNIT = {{(DATA_WIDTH-FRAC_WIDTH-1){1'B0}}, 1'B1, {FRAC_WIDTH{1'B0}}}, // 1 
+  parameter	DATA_ZERO = {DATA_WIDTH{1'B0}},	// 0
+  parameter	INST_WIDTH = 128	// 
 )
 (
-	input	wire						clk, rst_n,	// 时钟和复位信号
-	input	wire	[INST_WIDTH-1:0]	npu_inst_q,	// CNN的指令
-	output	reg 	[DATA_WIDTH-1:0]	npu_inst_addr,	// CNN的指令地址
-	input	wire						npu_inst_start,	// 指令使能标志
-	output	reg							npu_inst_ready,	// 指令执行完成标志
-	output	reg		[DATA_WIDTH-1:0]	npu_inst_time,	// 计量指令执行时间
-	// DDR接口
+	input	wire						clk, rst_n,	// 
+	input	wire	[INST_WIDTH-1:0]	npu_inst_q,	// CNN
+	output	reg 	[DATA_WIDTH-1:0]	npu_inst_addr,	// CNN
+	input	wire						npu_inst_start,	// 
+	output	reg							npu_inst_ready,	// 
+	output	reg		[DATA_WIDTH-1:0]	npu_inst_time,	// 
+	// DDR
 	output	wire						DDR_WRITE_CLK,
 	output	wire	[DATA_WIDTH-1:0]	DDR_WRITE_ADDR,
 	output	wire	[DATA_WIDTH-1:0]	DDR_WRITE_DATA,
@@ -31,7 +31,7 @@ module npu_inst_fsm
 	input	wire						DDR_READ_DATA_VALID
 );
 
-    // 使用状态机控制
+    // 
     reg     [3:0]   cstate;
     reg     [10:0]  delay;
     reg             npu_inst_parser_en;
@@ -58,7 +58,7 @@ module npu_inst_fsm
                 1: begin
                     if(delay>=3)
                     begin
-                        if(npu_inst_q==128'D0)  // NOP指令
+                        if(npu_inst_q==128'D0)  // NOP
                         begin
                             cstate <= 0;
                             npu_inst_parser_en <= 0;
@@ -75,12 +75,12 @@ module npu_inst_fsm
                 end
                 
                 2: begin
-                    npu_inst_parser_en <= 0;    // 关断使能信号
+                    npu_inst_parser_en <= 0;    // 
                     cstate <= 5;
                     delay <= 0;
                 end
                 
-                // 延时一下
+                // 
                 5: begin
                     if(delay>=5)
                         cstate <= 3;
@@ -122,7 +122,7 @@ module npu_inst_fsm
         else if(!npu_inst_ready)
             npu_inst_time <= npu_inst_time + 1;
         
-    // CNN指令执行
+    // CNN
 	npu_inst_excutor			npu_inst_excutor_inst(
 									.clk(clk),
 									.rst_n(rst_n),

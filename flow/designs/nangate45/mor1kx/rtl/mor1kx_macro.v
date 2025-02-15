@@ -52,7 +52,7 @@
 // /********** 4) Macro: spram_9x4 **********/
 // module spram_9x4 (
 //     input               clk,
-//     input      [3:0]    raddr, // 仅用0~8
+//     input      [3:0]    raddr, // 0~8
 //     input               re,
 //     input      [3:0]    waddr,
 //     input               we,
@@ -86,7 +86,7 @@
 // /********** 6) Macro: spram_12x4 **********/
 // module spram_12x4 (
 //     input               clk,
-//     input      [11:0]   raddr, // 仅用0~11
+//     input      [11:0]   raddr, // 0~11
 //     input               re,
 //     input      [11:0]   waddr,
 //     input               we,
@@ -118,12 +118,12 @@
 // endmodule
 
 /************************************************************/
-/**********  以下是对 6 个 SPRAM 模块的重写组合示例  **********/
+/**********   6  SPRAM   **********/
 /************************************************************/
 
 /* 
- * 原型: mor1kx_simple_dpram_sclk_1 : 12x32
- * 方案: 7个 spram_12x4 (共28bit) + 1个 spram_12x8 (8bit)，合计36bit，实际浪费4bit。
+ * : mor1kx_simple_dpram_sclk_1 : 12x32
+ * : 7 spram_12x4 (28bit) + 1 spram_12x8 (8bit)�36bit�4bit
  */
 module mor1kx_simple_dpram_sclk_1
 (
@@ -136,17 +136,17 @@ module mor1kx_simple_dpram_sclk_1
     output     [31:0]          dout
 );
 
-    // 先将 36bit 拆成 两部分:
-    //   partA = 28bit (由 7个 spram_12x4 拼成)
-    //   partB = 8bit  (由 1个 spram_12x8 拼成)
+    //  36bit  :
+    //   partA = 28bit ( 7 spram_12x4 )
+    //   partB = 8bit  ( 1 spram_12x8 )
     wire [27:0] partA_dout;
     wire [7:0]  partB_dout;
 
-    // 写数据也要拆成两部分
+    // 
     wire [27:0] partA_din = din[27:0];
-    wire [7:0]  partB_din = din[31:24];  // 取高8位作为partB输入
+    wire [7:0]  partB_din = din[31:24];  // 8partB
 
-    // 将partA再细分成7段，每段4 bit
+    // partA7�4 bit
     genvar i;
     generate
         for (i = 0; i < 7; i=i+1) begin : GEN_12X4
@@ -162,7 +162,7 @@ module mor1kx_simple_dpram_sclk_1
         end
     endgenerate
 
-    // partB: 一个12x8
+    // partB: 12x8
     spram_12x8 u_12x8 (
         .clk   (clk),
         .raddr (raddr),
@@ -173,16 +173,16 @@ module mor1kx_simple_dpram_sclk_1
         .dout  (partB_dout)
     );
 
-    // 最终读数据拼接
-    // dout[27:0] 对应 partA_dout
-    // dout[31:28] 对应 partB_dout[3:0]? 这里简单映射到 dout[31:24]
-    // 也可做更灵活的拼法；演示仅简化处理。
+    // 
+    // dout[27:0]  partA_dout
+    // dout[31:28]  partB_dout[3:0]?  dout[31:24]
+    // �
     assign dout = { partB_dout, partA_dout[23:0] };
 
 endmodule
 
 /* 
- * 与 mor1kx_simple_dpram_sclk_1 一致的方案: mor1kx_simple_dpram_sclk_5 : 12x32
+ *  mor1kx_simple_dpram_sclk_1 : mor1kx_simple_dpram_sclk_5 : 12x32
  */
 module mor1kx_simple_dpram_sclk_5
 (
@@ -231,11 +231,11 @@ endmodule
 
 /*
  * mor1kx_simple_dpram_sclk_2 : 8x101
- * 方案示例: 
- *   - 1个 spram_8x16 => 16bit
- *   - 1个 spram_8x8  =>  8bit
- *   - 21个 spram_8x4 => 84bit
- * 合计 108bit, 浪费 7bit, 共23个子宏
+ * : 
+ *   - 1 spram_8x16 => 16bit
+ *   - 1 spram_8x8  =>  8bit
+ *   - 21 spram_8x4 => 84bit
+ *  108bit,  7bit, 23
  */
 module mor1kx_simple_dpram_sclk_2
 (
@@ -248,29 +248,29 @@ module mor1kx_simple_dpram_sclk_2
     output     [100:0]       dout
 );
 
-    // 拆分: 
-    //   partA_16 (1个8x16)
-    //   partB_8  (1个8x8)
-    //   partC_84 (21个8x4)
+    // : 
+    //   partA_16 (18x16)
+    //   partB_8  (18x8)
+    //   partC_84 (218x4)
 
-    // 先分别定义输出线
+    // 
     wire [15:0] partA_16_dout;
     wire [7:0]  partB_8_dout;
     wire [83:0] partC_84_dout;
 
-    // 输入对应
+    // 
     wire [15:0] partA_16_din = din[15:0];
     wire [7:0]  partB_8_din  = din[23:16];
-    wire [83:0] partC_84_din = din[100:24]; // 共 77bit? 注意位数
+    wire [83:0] partC_84_din = din[100:24]; //  77bit? 
 
-    // (注意：这里演示时可能还要仔细校对位宽，以下仅做示例)
-    // 实际可将 din[100:24] => 77bit，可能还需补余
-    // 为简洁先假设这样映射，多余或浪费由后续逻辑处理
+    // (��)
+    //  din[100:24] => 77bit�
+    // �
 
     // 1) spram_8x16
     spram_8x16 u_8x16 (
         .clk   (clk),
-        .raddr (raddr[2:0]),  // 深度8只用低3bit
+        .raddr (raddr[2:0]),  // 83bit
         .re    (re),
         .waddr (waddr[2:0]),
         .we    (we),
@@ -289,7 +289,7 @@ module mor1kx_simple_dpram_sclk_2
         .dout  (partB_8_dout)
     );
 
-    // 3) spram_8x4 (21个)
+    // 3) spram_8x4 (21)
     wire [21*4-1:0] c_din_bus  = partC_84_din;  // 84bit
     wire [21*4-1:0] c_dout_bus;
 
@@ -308,14 +308,14 @@ module mor1kx_simple_dpram_sclk_2
         end
     endgenerate
 
-    // 拼接输出 (仅示意)
+    //  ()
     assign partC_84_dout = c_dout_bus;
     assign dout = {
-        // 假设将 partC_84_dout 接到 dout[100:17] (84bit)
+        //  partC_84_dout  dout[100:17] (84bit)
         partC_84_dout,
         // partB_8_dout => dout[16:9] (8bit)
         partB_8_dout,
-        // partA_16_dout => dout[8:0] 只取 9bit? 仅演示，不严谨
+        // partA_16_dout => dout[8:0]  9bit? �
         partA_16_dout[8:0]  
     };
 
@@ -323,17 +323,17 @@ endmodule
 
 /*
  * mor1kx_simple_dpram_sclk_3/4/6 : 9x39
- * 方案: 每个 9x39 分别
- *   - spram_9x4 8个 => 32bit
- *   - spram_9x8 1个 => 8bit
- * 总40bit, 浪费1bit, 每个模块9个子宏
+ * :  9x39 
+ *   - spram_9x4 8 => 32bit
+ *   - spram_9x8 1 => 8bit
+ * 40bit, 1bit, 9
  */
 
 /* mor1kx_simple_dpram_sclk_3 */
 module mor1kx_simple_dpram_sclk_3
 (
     input                     clk,
-    input      [8:0]         raddr, // 实际只用到0~38
+    input      [8:0]         raddr, // 0~38
     input                     re,
     input      [8:0]         waddr,
     input                     we,
@@ -377,12 +377,12 @@ module mor1kx_simple_dpram_sclk_3
         .dout  (partB_8_dout)
     );
 
-    // 拼接输出(只演示)
+    // ()
     assign dout = { partB_8_dout[7:0], partA_32_dout[31:0] };
 
 endmodule
 
-/* mor1kx_simple_dpram_sclk_4 : 9x39, 同上 */
+/* mor1kx_simple_dpram_sclk_4 : 9x39,  */
 module mor1kx_simple_dpram_sclk_4
 (
     input                     clk,
@@ -394,10 +394,10 @@ module mor1kx_simple_dpram_sclk_4
     output     [38:0]        dout
 );
 
-    // 同样的拼法，这里就不再重复展开
-    // 省略，写法与 _3 一致
+    // �
+    // � _3 
     // ...
-    // 简化：直接复制即可
+    // �
     wire [31:0] partA_32_dout;
     wire [7:0]  partB_8_dout;
     wire [31:0] partA_32_din = din[31:0];
@@ -434,7 +434,7 @@ module mor1kx_simple_dpram_sclk_4
     assign dout = { partB_8_dout, partA_32_dout };
 endmodule
 
-/* mor1kx_simple_dpram_sclk_6 : 9x39, 同上 */
+/* mor1kx_simple_dpram_sclk_6 : 9x39,  */
 module mor1kx_simple_dpram_sclk_6
 (
     input                     clk,
@@ -445,7 +445,7 @@ module mor1kx_simple_dpram_sclk_6
     input      [38:0]        din,
     output     [38:0]        dout
 );
-    // 与 _3,_4 一样，演示省略。
+    //  _3,_4 �
     wire [31:0] partA_32_dout;
     wire [7:0]  partB_8_dout;
     wire [31:0] partA_32_din = din[31:0];

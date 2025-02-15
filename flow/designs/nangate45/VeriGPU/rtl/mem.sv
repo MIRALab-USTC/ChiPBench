@@ -14,7 +14,7 @@ module small_mem_cell #(
     reg [DATA_WIDTH-1:0] mem_array [0:SUBMEM_SIZE-1];
 
     // Because we always read after the rising edge (for example),
-    // we can do a synchronous read, or “read-during-write” style, as needed.
+    // we can do a synchronous read, or read-during-write style, as needed.
     always @(posedge clk) begin
         if (wr_en)
             mem_array[addr] <= wr_data;

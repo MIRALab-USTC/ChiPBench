@@ -71,7 +71,7 @@
 //     FSQRT = 5'b01011
 // } e_funct5_float;
 
-// 操作码（Opcode）定义
+// �Opcode�
 `define STORE    7'b0100011
 `define OPIMM    7'b0010011
 `define LOAD     7'b0000011
@@ -91,7 +91,7 @@
 `define OPIMM32  7'b0011011
 `define JAL      7'b1101111
 
-// OPIMM 指令功能码（Funct3）定义
+// OPIMM �Funct3�
 `define ADDI     3'b000
 `define SLTI     3'b010
 `define SLTIU    3'b011
@@ -100,9 +100,9 @@
 `define ANDI     3'b111
 `define SLLI     3'b001
 `define SRLI     3'b101
-// `define SRAI  3'b101  // 如果需要 SRAI，可启用
+// `define SRAI  3'b101  //  SRAI�
 
-// BRANCH 指令功能码（Funct3）定义
+// BRANCH �Funct3�
 `define BEQ      3'b000
 `define BNE      3'b001
 `define BLT      3'b100
@@ -110,7 +110,7 @@
 `define BLTU     3'b110
 `define BGEU     3'b111
 
-// OP 指令功能码（Funct10）定义
+// OP �Funct10�
 `define ADD      10'b0000000000
 `define SLT      10'b0000000010
 `define SLTU     10'b0000000011
@@ -122,7 +122,7 @@
 `define SUB      10'b0100000000
 `define SRA      10'b0100000101
 
-// RV32M 扩展功能码（Funct10）定义
+// RV32M �Funct10�
 `define MUL      10'b0000001000
 `define MULH     10'b0000001001
 `define MULHSU   10'b0000001010
@@ -132,7 +132,7 @@
 `define REM      10'b0000001110
 `define REMU     10'b0000001111
 
-// 浮点操作指令功能码（Funct5）定义
+// �Funct5�
 `define FADD     5'b00000
 `define FSUB     5'b00001
 `define FMUL     5'b00010

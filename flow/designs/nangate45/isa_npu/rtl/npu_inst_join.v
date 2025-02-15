@@ -8,10 +8,10 @@ module npu_inst_join
 );
 
 	wire	RESETN = npu_inst_rst_n;
-	// 生成npu_inst/npu_inst_en
-	// 要用状态机来生成
+	// npu_inst/npu_inst_en
+	// 
 	reg		[3:0]	npu_inst_state;
-	reg		[31:0]	npu_inst_delay;	// 延时计数单元，如果超时了，就说明指令传输完成
+	reg		[31:0]	npu_inst_delay;	// ��
 	always @(posedge npu_inst_clk)
 		if(!RESETN)
 		begin
@@ -33,7 +33,7 @@ module npu_inst_join
 					end
 				end
 				
-				// 等待超时了，就说明指令传输完成
+				// �
 				1: begin
 					if(npu_inst_part_en)
 					begin
@@ -41,14 +41,14 @@ module npu_inst_join
 						npu_inst_en <= 0;
 						npu_inst_delay <= 0;
 					end
-					else if(npu_inst_delay>=2000000)	// 40ms超时等待机制
+					else if(npu_inst_delay>=2000000)	// 40ms
 					begin
 						npu_inst_en <= 1;
 						npu_inst_state <= 2;
 						npu_inst_delay <= 0;
 					end
 					else 
-						npu_inst_delay <= npu_inst_delay + 1;	// 超时等待计数器++
+						npu_inst_delay <= npu_inst_delay + 1;	// ++
 				end
 				
 				// 

@@ -59,23 +59,23 @@ endmodule
 
 
 module hard_mem_1rw_bit_mask_d64_w15_wrapper (
-  input clk_i,             // 时钟信号
-  input reset_i,           // 复位信号
-  input v_i,               // 有效信号，控制读/写
-  input w_i,               // 写使能信号
-  input [14:0] data_i,     // 写数据输入
-  input [5:0] addr_i,      // 地址信号，支持 64 个地址
-  input [14:0] w_mask_i,   // 写掩码信号，每位控制相应数据位是否写入
-  output reg [14:0] data_o // 读数据输出
+  input clk_i,             // 
+  input reset_i,           // 
+  input v_i,               // �/
+  input w_i,               // 
+  input [14:0] data_i,     // 
+  input [5:0] addr_i,      // � 64 
+  input [14:0] w_mask_i,   // �
+  output reg [14:0] data_o // 
 );
 
-  // 定义 64x15 的存储阵列
+  //  64x15 
   reg [14:0] mem [63:0];
 
-  // 同步读写逻辑
+  // 
   always @(posedge clk_i) begin
     if (reset_i) begin
-      // 在复位时清零存储器
+      // 
       integer i;
       for (i = 0; i < 64; i = i + 1) begin
         mem[i] <= 15'b0;
@@ -83,10 +83,10 @@ module hard_mem_1rw_bit_mask_d64_w15_wrapper (
       data_o <= 15'b0;
     end else if (v_i) begin
       if (w_i) begin
-        // 写操作，结合写掩码
+        // �
         mem[addr_i] <= (mem[addr_i] & ~w_mask_i) | (data_i & w_mask_i);
       end else begin
-        // 读操作
+        // 
         data_o <= mem[addr_i];
       end
     end

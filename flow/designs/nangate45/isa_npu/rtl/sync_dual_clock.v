@@ -12,8 +12,8 @@
 \*-------------------------------------------------------------------------*/
 module sync_dual_clock
 #(
-parameter	WIDTH = 6,			// 带同步的数据宽度
-parameter	SYNC_STAGE = 2		// 同步的级数（级数越多，竞争冒险越少）
+parameter	WIDTH = 6,			// 
+parameter	SYNC_STAGE = 2		// ���
 )
 (
 input	wire				clock_dst,
@@ -31,6 +31,6 @@ begin
 		sync_reg[p] <= sync_reg[p-1];
 end
 
-assign						dst = sync_reg[SYNC_STAGE-1];	// 输出
+assign						dst = sync_reg[SYNC_STAGE-1];	// 
 
 endmodule

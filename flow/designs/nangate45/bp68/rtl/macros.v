@@ -91,24 +91,24 @@ module hard_mem_1rw_bit_mask_d64_w7_wrapper(
   output reg [6:0] data_o
 );
 
-  // 内存数组：64 行，每行 7 位
+  // �64 � 7 
   reg [6:0] mem [63:0];
 
-  // 写逻辑
+  // 
   always @(posedge clk_i) begin
     if (reset_i) begin
-      // 复位时清零所有内存
+      // 
       integer i;
       for (i = 0; i < 64; i = i + 1) begin
         mem[i] <= 7'b0;
       end
     end else if (v_i && w_i) begin
-      // 写操作：仅写入受 w_mask_i 影响的位
+      // � w_mask_i 
       mem[addr_i] <= (mem[addr_i] & ~w_mask_i) | (data_i & w_mask_i);
     end
   end
 
-  // 读逻辑
+  // 
   always @(posedge clk_i) begin
     if (v_i && !w_i) begin
       data_o <= mem[addr_i];
@@ -128,24 +128,24 @@ module hard_mem_1rw_bit_mask_d64_w15_wrapper(
   output reg [14:0] data_o
 );
 
-  // 内存数组：64 行，每行 15 位
+  // �64 � 15 
   reg [14:0] mem [63:0];
 
-  // 写逻辑
+  // 
   always @(posedge clk_i) begin
     if (reset_i) begin
-      // 复位时清零所有内存
+      // 
       integer i;
       for (i = 0; i < 64; i = i + 1) begin
         mem[i] <= 15'b0;
       end
     end else if (v_i && w_i) begin
-      // 写操作：仅写入受 w_mask_i 影响的位
+      // � w_mask_i 
       mem[addr_i] <= (mem[addr_i] & ~w_mask_i) | (data_i & w_mask_i);
     end
   end
 
-  // 读逻辑
+  // 
   always @(posedge clk_i) begin
     if (v_i && !w_i) begin
       data_o <= mem[addr_i];

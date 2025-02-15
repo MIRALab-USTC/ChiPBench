@@ -131,7 +131,7 @@ module gpu_die (
     input clk,
     input rst,
 
-    // 与主板 CPU 的通信
+    //  CPU 
     input [31:0] cpu_recv_instr,
     input [31:0] cpu_in_data,
     output reg [31:0] cpu_out_data,
@@ -143,7 +143,7 @@ module gpu_die (
     output reg [data_width - 1:0] out
 );
 
-    // 核心信号数组
+    // 
     wire [NUM_CORES-1:0] core_mem_rd_req;
     wire [NUM_CORES-1:0] core_mem_wr_req;
     wire [addr_width-1:0] core_mem_addr [NUM_CORES-1:0];
@@ -158,10 +158,10 @@ module gpu_die (
     wire [NUM_CORES-1:0] core_set_pc_req;
     wire [data_width-1:0] core_set_pc_addr [NUM_CORES-1:0];
 
-    // 仲裁相关变量
+    // 
     reg [$clog2(NUM_CORES)-1:0] active_core;
 
-    // 全局内存控制器实例
+    // 
     global_mem_controller global_mem_controller_(
         .clk(clk),
         .rst(rst),
@@ -175,7 +175,7 @@ module gpu_die (
         .core1_ack(core_mem_ack[active_core])
     );
 
-    // 仲裁逻辑
+    // 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             active_core <= 0;
@@ -186,7 +186,7 @@ module gpu_die (
         end
     end
 
-    // 核心实例生成
+    // 
     genvar i;
     generate
         for (i = 0; i < NUM_CORES; i = i + 1) begin : core_array
@@ -198,7 +198,7 @@ module gpu_die (
                 .set_pc_req(core_set_pc_req[i]),
                 .set_pc_addr(core_set_pc_addr[i]),
 
-                .outflen(outflen), // 所有核心共享同一输出信号
+                .outflen(outflen), // 
                 .out(out),
                 .outen(outen),
 
@@ -223,7 +223,7 @@ module gpu_die (
         //     .set_pc_req(core_set_pc_req[NUM_CORES-1]),
         //     .set_pc_addr(core_set_pc_addr[NUM_CORES-1]),
 
-        //     .outflen(outflen), // 所有核心共享同一输出信号
+        //     .outflen(outflen), // 
         //     .out(out),
         //     .outen(outen),
 
@@ -239,7 +239,7 @@ module gpu_die (
         // );
 
 
-    // GPU 控制器实例
+    // GPU 
     gpu_controller gpu_controller_(
         .rst(rst),
         .clk(clk),
@@ -264,9 +264,9 @@ module gpu_die (
         .core_set_pc_addr(core_set_pc_addr[active_core])
     );
 
-    // 整合核心输出信号（例如 halt 信号）
+    // � halt �
     always @(*) begin
-        halt = |core_halt; // 如果任何一个核心发出 halt 信号，则整体 halt
+        halt = |core_halt; //  halt � halt
     end
 
 endmodule

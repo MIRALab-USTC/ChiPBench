@@ -9,19 +9,19 @@
 //	$Log$
 //			Xudong Chen		18/5/6		original, implement ln(r) = p*ln(2) + ln(t), 
 //										and for numerical stability, 1/4 < t < 1/2
-//			Xudong Chen		18/5/19		对于零输入，要有下限标记								
+//			Xudong Chen		18/5/19		�								
 //-----------------------------------------------------------------------------------------------------------
 
 module cordic_ln
-#(	parameter	DATA_WIDTH = 32,    // 数据位宽
+#(	parameter	DATA_WIDTH = 32,    // 
 	parameter 	FRAC_WIDTH = 16,
-	parameter	EPSILON = 3,		// 收敛阈值
-	parameter 	ITERATION = 8,  // 迭代次数
-	parameter 	ROM_LATENCY = 2,	// rom的IP核读取需要延时
-	parameter	DATA_ZERO = {DATA_WIDTH{1'B0}},	// 固定的0值
-	parameter	DATA_UNIT = {{(DATA_WIDTH-1){1'B0}}, 1'B1, {FRAC_WIDTH{1'B0}}},	// 固定的1值
-	parameter	LN_2 = 32'D45426,	// ln(2)定点化
-	parameter	LN_EPS = -2362156	// 近零（np.log(np.finfo(float).eps)*2**16）
+	parameter	EPSILON = 3,		// 
+	parameter 	ITERATION = 8,  // 
+	parameter 	ROM_LATENCY = 2,	// romIP
+	parameter	DATA_ZERO = {DATA_WIDTH{1'B0}},	// 0
+	parameter	DATA_UNIT = {{(DATA_WIDTH-1){1'B0}}, 1'B1, {FRAC_WIDTH{1'B0}}},	// 1
+	parameter	LN_2 = 32'D45426,	// ln(2)
+	parameter	LN_EPS = -2362156	// �np.log(np.finfo(float).eps)*2**16�
 )
 (
 	input	wire								sys_clk, sys_rst_n,
@@ -29,7 +29,7 @@ module cordic_ln
 	output	reg		signed	[DATA_WIDTH-1:0]	ln_r
 );
 	
-	// 存储Kn的系数表，使用Python脚本来生成相应的数值
+	// Kn�Python
 	wire	[DATA_WIDTH-1:0]	Kn_THETAn_address;
 	wire	[DATA_WIDTH-1:0]	Kn;
 	wire	[DATA_WIDTH-1:0]	THETAn;
@@ -37,31 +37,31 @@ module cordic_ln
 	//////////////////////////////////
 	// tanh^-1(a) = 1/2 * ln^-1((1+a)/(1-a)), and if we let 1+a/1-a = b,
 	// then we have: tanh^-1((b-1)/(b+1)) = 1/2 * ln(b)
-	// 因为要写成流水线型的CORDIC运算
-	// 所以需要建立一个巨大的reg阵列
-	reg		signed 	[DATA_WIDTH-1:0]	Xn	[0:ITERATION-1];	// 归一化以后的数值，减去1
-	reg		signed 	[DATA_WIDTH-1:0]	Yn	[0:ITERATION-1];	// 归一化以后的数值，加上1
-	reg		signed 	[DATA_WIDTH-1:0]	Pn	[0:ITERATION-1];	// 左移/右移，归一化模块输入到[1/2, 1]
-	reg									LOFn[0:ITERATION];	// 零输入的标记
-	// 迭代次数，因为Zn是可能中途收敛的，需要标注什么时候收敛了
-	reg				[DATA_WIDTH-1:0]	Nn	[0:ITERATION+1];	// 一个程序的bug，这里的Nn应该继续传递
-	// 还要记录旋转的角度
-	reg		signed 	[DATA_WIDTH-1:0]	Tn	[0:ITERATION-1];
-	reg		signed 	[DATA_WIDTH-1:0]	T0n	[0:ITERATION-1];	// 这是要从ROM里面加载的
-	reg		signed 	[DATA_WIDTH-1:0]	K0n	[0:ITERATION-1];	// 这是要从ROM里面加载的
+	// CORDIC
+	// reg
+	reg		signed 	[DATA_WIDTH-1:0]	Xn	[0:ITERATION-1];	// �1
+	reg		signed 	[DATA_WIDTH-1:0]	Yn	[0:ITERATION-1];	// �1
+	reg		signed 	[DATA_WIDTH-1:0]	Pn	[0:ITERATION-1];	// /�[1/2, 1]
+	reg									LOFn[0:ITERATION];	// 
+	// �Zn�
+	reg				[DATA_WIDTH-1:0]	Nn	[0:ITERATION+1];	// bug�Nn
 	// 
-	reg		[4:0]				cstate;		// 状态计数器
-	parameter					IDLE = 0;	// 闲置状态
-	parameter					LOAD = 1;	// 加载ROM中的数据
-	parameter					COMP = 2;	// 正常的工作/运算阶段
-	reg		[DATA_WIDTH-1:0]	timer_in_state;	// 每个阶段的计数器
-	reg		[DATA_WIDTH-1:0]	rom_address;	// 读取ROM的地址计数器
-	// cordic 迭代运算 + 数据输入&1/4象限校正处理
+	reg		signed 	[DATA_WIDTH-1:0]	Tn	[0:ITERATION-1];
+	reg		signed 	[DATA_WIDTH-1:0]	T0n	[0:ITERATION-1];	// ROM
+	reg		signed 	[DATA_WIDTH-1:0]	K0n	[0:ITERATION-1];	// ROM
+	// 
+	reg		[4:0]				cstate;		// 
+	parameter					IDLE = 0;	// 
+	parameter					LOAD = 1;	// ROM
+	parameter					COMP = 2;	// /
+	reg		[DATA_WIDTH-1:0]	timer_in_state;	// 
+	reg		[DATA_WIDTH-1:0]	rom_address;	// ROM
+	// cordic  + &1/4
 	always @(posedge sys_clk)
-		// 初始化
+		// 
 		if(!sys_rst_n)
 			init_system_task;
-		// 否则就是正常的迭代计算
+		// 
 		else
 		begin
 			case(cstate)
@@ -72,13 +72,13 @@ module cordic_ln
 			endcase
 		end
 ///////////////////////////////
-// 下面是具体的task的描述
+// task
 integer	n;
-// 首先是系统初始化的描述
+// 
 task init_system_task;
 begin
-	cstate <= IDLE;	// 首先切换到闲置状态
-	// 然后复位所有的寄存器
+	cstate <= IDLE;	// 
+	// 
 	for(n=0; n<ITERATION; n=n+1)
 	begin
 		Xn[n] <= DATA_ZERO;
@@ -88,46 +88,46 @@ begin
 		Tn[n] <= DATA_ZERO;
 		LOFn[n] <= 0;
 	end
-	// 计数器复位
+	// 
 	timer_in_state <= DATA_ZERO;
-	// 读取rom的地址计数器清零
+	// rom
 	rom_address <= 0;
 end
 endtask
 ////////////////////
-// 然后是IDLE阶段，不直接进入load阶段，
-// 主要是因为rom的读取是有latency时间的
+// IDLE�load�
+// romlatency
 task prepare_load_task;
 begin	
-	// 如果等待够了就要跳出，进入rom数据加载阶段
+	// �rom
 	if(timer_in_state>=(ROM_LATENCY-1))
 	begin
 		cstate <= LOAD;
-		// 计数器复位
+		// 
 		timer_in_state <= DATA_ZERO;
 	end
-	// 否则，就要继续加载ROM数据
+	// �ROM
 	else
 	begin
 		timer_in_state <= timer_in_state+1;
 	end
-	// rom读取不要停
+	// rom
 	rom_address <= rom_address+1;
 end
 endtask
-// 然后是LOAD阶段，执行load指令
+// LOAD�load
 task execute_load_task;
 begin	
-	// 加载够了，就要跳出，可以开始计算了
+	// ��
 	if(timer_in_state>=(ITERATION))
 	begin
 		cstate <= COMP;
-		// 计数器复位
+		// 
 		timer_in_state <= DATA_ZERO;
 	end
 	else
 	begin
-		// 否则，加载rom里面的数据
+		// �rom
 		T0n[timer_in_state] <= THETAn;
 		K0n[timer_in_state] <= Kn;
 		rom_address <= rom_address+1;
@@ -135,14 +135,14 @@ begin
 	end
 end
 endtask
-// 现在是重头戏，就是整个cordic迭代过程了
+// �cordic
 reg		[DATA_WIDTH-1:0]	rx;
 always @(posedge sys_clk)
 	rx <= r[DATA_WIDTH-1]? (~r+1) : r;
 task execute_comp_task;
 begin
-	// 首先是输入数据
-	// 使用casex语句，用面积换时序
+	// 
+	// casex�
 	casex(rx)
 		32'B1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX : begin
 			Pn[0] <= 17;
@@ -313,35 +313,35 @@ begin
 
 	endcase
 	//////////////////////////////////
-	// 下溢指示?
+	// ?
 	LOFn[0] <= (rx==0);
-	// 然后N = 0
+	// N = 0
 	Nn[0] <= DATA_ZERO;
 	// T=0
 	Tn[0] <= DATA_ZERO;
-	// 然后是cordic迭代的过程，这里使用for循环，方便写程序，注意综合结果
+	// cordic�for��
 	for(n=ITERATION-1; n>=1; n=n-1)
 	begin
-		// 移位情况 Pn 需要不断地移位下去
+		//  Pn 
 		Pn[n] <= Pn[n-1];
 		LOFn[n] <= LOFn[n-1];
-		// 如果Yn[n-1]>0，那么顺时针旋转
+		// Yn[n-1]>0�
 		if(Yn[n-1]>EPSILON)
 		begin
 			Xn[n] <= Xn[n-1] - (Yn[n-1]>>>(n));
 			Yn[n] <= Yn[n-1] - (Xn[n-1]>>>(n));
-			Nn[n] <= Nn[n-1] + 1;	// 继续迭代，迭代次数+1
-			Tn[n] <= Tn[n-1] + T0n[n-1];	// 修改角度值
+			Nn[n] <= Nn[n-1] + 1;	// �+1
+			Tn[n] <= Tn[n-1] + T0n[n-1];	// 
 		end
-		// 如果Yn[n-1]<0，那么逆时针旋转
+		// Yn[n-1]<0�
 		else if(Yn[n-1]<-EPSILON)
 		begin
 			Xn[n] <= Xn[n-1] + (Yn[n-1]>>>(n));
 			Yn[n] <= Yn[n-1] + (Xn[n-1]>>>(n));
-			Nn[n] <= Nn[n-1] + 1;	// 继续迭代，迭代次数+1
-			Tn[n] <= Tn[n-1] - T0n[n-1];	// 修改角度值
+			Nn[n] <= Nn[n-1] + 1;	// �+1
+			Tn[n] <= Tn[n-1] - T0n[n-1];	// 
 		end
-		// 否则就说明收敛了，停止迭代过程
+		// �
 		else
 		begin
 			Xn[n] <= Xn[n-1];
@@ -354,18 +354,18 @@ begin
 end
 endtask
 	
-	// 最后，考虑到rom的ip核读取，需要给出ROM的读取地址
+	// �romip�ROM
 	assign	Kn_THETAn_address = rom_address;
-	// 最后输出
+	// 
 	reg		signed 	[2*DATA_WIDTH-1:0]	bias;// = (Pn[ITERATION-1] * LN_2);
 	reg		signed 	[DATA_WIDTH-1:0]	theta;
 	always @(posedge sys_clk)
 	begin
 		bias <= (Pn[ITERATION-1] * LN_2);
 		theta <= Tn[ITERATION-1] * 2;
-		ln_r <= LOFn[ITERATION]? LN_EPS : (theta + bias);	// 这里对于ln(0)进行了定义 
+		ln_r <= LOFn[ITERATION]? LN_EPS : (theta + bias);	// ln(0) 
 	end	
-	// 为了调试
+	// 
 	wire	signed	[31:0]	P0 = Pn[0];
 	wire	signed	[31:0]	X0 = Xn[0];
 	wire	signed	[31:0]	Y0 = Yn[0];

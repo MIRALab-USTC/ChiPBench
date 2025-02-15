@@ -13,12 +13,12 @@
 \*-------------------------------------------------------------------------------*/
 module gray_enc_1p
 #(
-parameter	WIDTH = 6			// 宽度
+parameter	WIDTH = 6			// 
 )
 (
-input		wire					clock,	// 时钟
-input		wire	[WIDTH-1:0]		src,	// 源数据
-output		reg		[WIDTH-1:0]		dst		// 目标数据
+input		wire					clock,	// 
+input		wire	[WIDTH-1:0]		src,	// 
+output		reg		[WIDTH-1:0]		dst		// 
 );
 
 // 
@@ -33,7 +33,7 @@ begin
 	end
 end
 
-// 输出打一拍
+// 
 always @(posedge clock)
 	dst <= dst_x;
 

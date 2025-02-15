@@ -290,7 +290,7 @@ module global_mem_controller(
     // 3) Wires to/from the submem blocks
     // ------------------------------------------------------------------------
     // We'll instantiate an array of small_mem.
-    // Each has a single read-data wire out. We’ll multiplex them.
+    // Each has a single read-data wire out. Well multiplex them.
     wire [data_width-1:0] submem_rd_data [0:NUM_SUBMEM-1];
 
     // For the core transactions (the "delayed" path), we decode once at the end.
@@ -333,8 +333,8 @@ module global_mem_controller(
                 .wr_en( (n_write_now && (submem_idx_core == i)) ||
                         (contr_wr_en  && (submem_idx_contr_wr == i)) ),
 
-                // For the address, if it’s the core writing, use submem_off_core,
-                // else if it’s the controller writing, use submem_off_contr_wr.
+                // For the address, if its the core writing, use submem_off_core,
+                // else if its the controller writing, use submem_off_contr_wr.
                 // This is a simplistic approach that merges signals.
                 // For strict design, you might need separate cycles or arbitration.
                 .addr( (n_write_now && (submem_idx_core == i)) ? submem_off_core :
@@ -361,8 +361,8 @@ module global_mem_controller(
                 .wr_en( (n_write_now && (submem_idx_core == i)) ||
                         (contr_wr_en  && (submem_idx_contr_wr == i)) ),
 
-                // For the address, if it’s the core writing, use submem_off_core,
-                // else if it’s the controller writing, use submem_off_contr_wr.
+                // For the address, if its the core writing, use submem_off_core,
+                // else if its the controller writing, use submem_off_contr_wr.
                 // This is a simplistic approach that merges signals.
                 // For strict design, you might need separate cycles or arbitration.
                 .addr( (n_write_now && (submem_idx_core == i)) ? submem_off_core :
@@ -385,8 +385,8 @@ module global_mem_controller(
 //     .wr_en( (n_write_now && (submem_idx_core == NUM_SUBMEM-1)) ||
 //             (contr_wr_en  && (submem_idx_contr_wr == NUM_SUBMEM-1)) ),
 
-//     // For the address, if it’s the core writing, use submem_off_core,
-//     // else if it’s the controller writing, use submem_off_contr_wr.
+//     // For the address, if its the core writing, use submem_off_core,
+//     // else if its the controller writing, use submem_off_contr_wr.
 //     // This is a simplistic approach that merges signals.
 //     // For strict design, you might need separate cycles or arbitration.
 //     .addr( (n_write_now && (submem_idx_core == NUM_SUBMEM-1)) ? submem_off_core :

@@ -1,13 +1,13 @@
-// Õâ¸öÄ£¿éÓÃÓÚÊµÏÖtanh()Ë«ÇúÕýÇÐÔËËã
-// »¹ÊÇ»ùÓÚcordicËã·¨
+// ötanh()úý
+// ùcordic
 module cordic_tanh_sigm_rtl
-#(parameter	DATA_WIDTH = 32,    // Êý¾ÝÎ»¿í
-  parameter	FRAC_WIDTH = 16,	// Ð¡Êý²¿·Ö
-  parameter	EPSILON = 16,		// ÊÕÁ²ãÐÖµ
-  parameter ITERATION = 8,  	// µü´ú´ÎÊý
-  parameter ROM_LATENCY = 2,	// romµÄIPºË¶ÁÈ¡ÐèÒªÑÓÊ±
-  parameter	DATA_UNIT = {{(DATA_WIDTH-FRAC_WIDTH-1){1'B0}}, 1'B1, {FRAC_WIDTH{1'B0}}}, // ¹Ì¶¨µÄµ¥Î»1 
-  parameter	DATA_ZERO = {DATA_WIDTH{1'B0}}	// ¹Ì¶¨µÄ0Öµ
+#(parameter	DATA_WIDTH = 32,    // ýí
+  parameter	FRAC_WIDTH = 16,	// ý
+  parameter	EPSILON = 16,		// 
+  parameter ITERATION = 8,  	// üúý
+  parameter ROM_LATENCY = 2,	// romIP
+  parameter	DATA_UNIT = {{(DATA_WIDTH-FRAC_WIDTH-1){1'B0}}, 1'B1, {FRAC_WIDTH{1'B0}}}, // 1 
+  parameter	DATA_ZERO = {DATA_WIDTH{1'B0}}	// 0
 )
 (
 	input	wire	sys_clk, sys_rst_n,
@@ -16,7 +16,7 @@ module cordic_tanh_sigm_rtl
 	output	wire	[DATA_WIDTH-1:0]	rho,
 	input	wire	[1:0]	algorithm			// 10--tanh, 01--sigmoid
 );
-	// ÐèÒªÒ»¸ö¼ÇÒäÆ÷
+	// ö÷
 	reg		[1:0]	algorithm_reg	[0:ITERATION+4];
 	integer			n;
 	always @(posedge sys_clk)
@@ -33,19 +33,19 @@ module cordic_tanh_sigm_rtl
 			algorithm_reg[0] <= algorithm;
 		end
 			
-	// Ê×ÏÈÒªÓÐexp(2x)Ö¸ÊýÔËËãµÄ½á¹û
+	// exp(2x)ýû
 	wire	[31:0]		rho_exp;
 	wire	[31:0]		src_x_exp = (algorithm==2'B10)? {src_x[DATA_WIDTH-2:0], 1'B0} : 
 									(algorithm==2'B01)? {src_x[DATA_WIDTH-1:0]} : 
 									0;
 	cordic_exp_rtl		cordic_exp_mdl(.sys_clk(sys_clk),.sys_rst_n(sys_rst_n),.src_x(src_x_exp), .rho(rho_exp));
-	// È»ºóÊÇ³ý·¨ÔËËã2/(exp(2x)+1)
+	// óý2/(exp(2x)+1)
 	wire	[31:0]		rho_div;
 	wire	[35:0]		numer_div = (algorithm_reg[ITERATION+4]==2'B10)? {DATA_UNIT, 1'B0} : 
 									(algorithm_reg[ITERATION+4]==2'B01)? {DATA_UNIT} : 
 									0;
 	fixed_sdiv			fixed_sdiv_inst(.sys_clk(sys_clk),.sys_rst_n(sys_rst_n),.denom((rho_exp+DATA_UNIT)),.numer(numer_div),.quotient(rho_div));
-	// ×îºóÊä³ö1-2/(exp(2x)+1)
+	// îóö1-2/(exp(2x)+1)
 	assign				rho = DATA_UNIT-rho_div[DATA_WIDTH-1:0];
 	
 endmodule

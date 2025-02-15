@@ -144,7 +144,7 @@ module generic_spram_9_24(
     output [23:0] do
 );
 
-    // 顶层的地址寄存，用于同步输出数据
+    // �
     reg [8:0] ra;
     always @(posedge clk) begin
         if (rst)
@@ -153,13 +153,13 @@ module generic_spram_9_24(
             ra <= addr;
     end
 
-    wire [23:0] do_lo;  // 下半256x24块输出
-    wire [23:0] do_hi;  // 上半256x24块输出
+    wire [23:0] do_lo;  // 256x24
+    wire [23:0] do_hi;  // 256x24
 
     wire we_lo = we & ce & (addr[8] == 1'b0);
     wire we_hi = we & ce & (addr[8] == 1'b1);
 
-    // 下半区 256x24 直接模块实例
+    //  256x24 
     spram_256x24_direct u_spram_256x24_direct(
         .clk(clk),
         .rst(rst),
@@ -171,7 +171,7 @@ module generic_spram_9_24(
         .do(do_lo)
     );
 
-    // 上半区 256x24 由子模块组合而成
+    //  256x24 
     spram_256x24_composed u_spram_256x24_composed(
         .clk(clk),
         .rst(rst),
@@ -183,7 +183,7 @@ module generic_spram_9_24(
         .do(do_hi)
     );
 
-    // 根据存的ra的高位选择输出
+    // ra
     assign do = (ra[8] == 1'b0) ? do_lo : do_hi;
 
 endmodule
@@ -238,20 +238,20 @@ module spram_256x24_composed(
             ra <= addr;
     end
 
-    // 根据地址划分选择子模块
+    // 
     wire sel_64_1   = (addr < 8'd64);
     wire sel_64_2   = (addr >= 8'd64  && addr < 8'd128);
     wire sel_128_1  = (addr >= 8'd128 && addr < 8'd256);
 
-    // 写使能分配
+    // 
     wire we_64_1   = we & ce & sel_64_1;
     wire we_64_2   = we & ce & sel_64_2;
     wire we_128_1  = we & ce & sel_128_1;
 
-    // 子模块地址映射
+    // 
     wire [5:0] addr_64_1  = addr[5:0];             // 0~63
-    wire [5:0] addr_64_2  = addr[5:0];             // 64~127中的后6位地址对应0~63
-    wire [6:0] addr_128_1 = addr[6:0];             // 128~255中的后7位地址对应0~127
+    wire [5:0] addr_64_2  = addr[5:0];             // 64~12760~63
+    wire [6:0] addr_128_1 = addr[6:0];             // 128~25570~127
 
     wire [23:0] do_64_1;
     wire [23:0] do_64_2;
@@ -290,7 +290,7 @@ module spram_256x24_composed(
         .do(do_128_1)
     );
 
-    // 读出时根据存储的ra选择最终输出
+    // ra
     reg [23:0] do_reg;
     always @(*) begin
         if (ra < 8'd64)
@@ -348,7 +348,7 @@ module spram_128x24(
 );
     wire [7:0] do_slice0, do_slice1, do_slice2;
 
-    // 实例化3个128x8的内存模块
+    // 3128x8
     memory_block_128x8 mem_block0 (
         .wclk(clk),
         .wrst(rst),
@@ -391,7 +391,7 @@ module spram_128x24(
         .do_slice(do_slice2)
     );
 
-    // 合并3个模块的输出数据
+    // 3
     assign do = {do_slice2, do_slice1, do_slice0};
 
 endmodule

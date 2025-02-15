@@ -24,23 +24,23 @@ module altsyncram8x64 (
     input wire wren_b            // Secondary write enable (not used)
 );
 
-    // 分割数据为两组，每组32位
-    wire [31:0] q_a_part [1:0];  // 2个32位输出组成64位
-    wire [31:0] data_a_part [1:0]; // 输入数据分为两组
+    // �32
+    wire [31:0] q_a_part [1:0];  // 23264
+    wire [31:0] data_a_part [1:0]; // 
     assign {data_a_part[1], data_a_part[0]} = data_a;
 
-    // 将两组输出组合为64位
+    // 64
     assign q_a = {q_a_part[1], q_a_part[0]};
 
-    // 使用2个fakeram45_256x32实例化
+    // 2fakeram45_256x32
     fakeram45_256x32 ram0 (
         .clk(clock0),
         .ce_in(1'b1),                   // Always enabled
         .we_in(wren_a),                 // Write enable
         .addr_in(address_a),            // Address
-        .wd_in(data_a_part[0]),         // 低32位输入数据
-        .w_mask_in(32'hFFFFFFFF),       // 写掩码
-        .rd_out(q_a_part[0])            // 低32位输出数据
+        .wd_in(data_a_part[0]),         // 32
+        .w_mask_in(32'hFFFFFFFF),       // 
+        .rd_out(q_a_part[0])            // 32
     );
 
     fakeram45_256x32 ram1 (
@@ -48,12 +48,12 @@ module altsyncram8x64 (
         .ce_in(1'b1),                   // Always enabled
         .we_in(wren_a),                 // Write enable
         .addr_in(address_a),            // Address
-        .wd_in(data_a_part[1]),         // 高32位输入数据
-        .w_mask_in(32'hFFFFFFFF),       // 写掩码
-        .rd_out(q_a_part[1])            // 高32位输出数据
+        .wd_in(data_a_part[1]),         // 32
+        .w_mask_in(32'hFFFFFFFF),       // 
+        .rd_out(q_a_part[1])            // 32
     );
 
-    // 未使用的输出
+    // 
     assign eccstatus = 1'b0;            // ECC status is not used
     assign q_b = 64'b0;                 // Secondary data output is not used
 
@@ -220,23 +220,23 @@ module altsyncram10x128 (
     input wire wren_b            // Secondary write enable (not used)
 );
 
-    // 分割数据为4组，每组32位
-    wire [31:0] q_a_part [3:0];  // 4个32位输出组成128位
-    wire [31:0] data_a_part [3:0]; // 输入数据分为4组
+    // 4�32
+    wire [31:0] q_a_part [3:0];  // 432128
+    wire [31:0] data_a_part [3:0]; // 4
     assign {data_a_part[3], data_a_part[2], data_a_part[1], data_a_part[0]} = data_a;
 
-    // 将4组输出组合为128位
+    // 4128
     assign q_a = {q_a_part[3], q_a_part[2], q_a_part[1], q_a_part[0]};
 
-    // 使用4个fakeram45_1024x32实例化
+    // 4fakeram45_1024x32
     fakeram45_1024x32 ram0 (
         .clk(clock0),
         .ce_in(1'b1),                   // Always enabled
         .we_in(wren_a),                 // Write enable
         .addr_in(address_a),            // Address
-        .wd_in(data_a_part[0]),         // 低32位输入数据
-        .w_mask_in(32'hFFFFFFFF),       // 写掩码
-        .rd_out(q_a_part[0])            // 低32位输出数据
+        .wd_in(data_a_part[0]),         // 32
+        .w_mask_in(32'hFFFFFFFF),       // 
+        .rd_out(q_a_part[0])            // 32
     );
 
     fakeram45_1024x32 ram1 (
@@ -244,9 +244,9 @@ module altsyncram10x128 (
         .ce_in(1'b1),                   // Always enabled
         .we_in(wren_a),                 // Write enable
         .addr_in(address_a),            // Address
-        .wd_in(data_a_part[1]),         // 第二组32位输入数据
-        .w_mask_in(32'hFFFFFFFF),       // 写掩码
-        .rd_out(q_a_part[1])            // 第二组32位输出数据
+        .wd_in(data_a_part[1]),         // 32
+        .w_mask_in(32'hFFFFFFFF),       // 
+        .rd_out(q_a_part[1])            // 32
     );
 
     fakeram45_1024x32 ram2 (
@@ -254,9 +254,9 @@ module altsyncram10x128 (
         .ce_in(1'b1),                   // Always enabled
         .we_in(wren_a),                 // Write enable
         .addr_in(address_a),            // Address
-        .wd_in(data_a_part[2]),         // 第三组32位输入数据
-        .w_mask_in(32'hFFFFFFFF),       // 写掩码
-        .rd_out(q_a_part[2])            // 第三组32位输出数据
+        .wd_in(data_a_part[2]),         // 32
+        .w_mask_in(32'hFFFFFFFF),       // 
+        .rd_out(q_a_part[2])            // 32
     );
 
     fakeram45_1024x32 ram3 (
@@ -264,12 +264,12 @@ module altsyncram10x128 (
         .ce_in(1'b1),                   // Always enabled
         .we_in(wren_a),                 // Write enable
         .addr_in(address_a),            // Address
-        .wd_in(data_a_part[3]),         // 高32位输入数据
-        .w_mask_in(32'hFFFFFFFF),       // 写掩码
-        .rd_out(q_a_part[3])            // 高32位输出数据
+        .wd_in(data_a_part[3]),         // 32
+        .w_mask_in(32'hFFFFFFFF),       // 
+        .rd_out(q_a_part[3])            // 32
     );
 
-    // 未使用的输出
+    // 
     assign eccstatus = 1'b0;            // ECC status is not used
     assign q_b = 128'b0;                // Secondary data output is not used
 

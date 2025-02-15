@@ -11,7 +11,7 @@
 \*-------------------------------------------------------------------------------*/
 module npu_top(
     //////// CLOCK ////////
-    input             CLOCK_50,    // 只保留此时钟输入
+    input             CLOCK_50,    // 
 
     //////// LED ////////
     output     [8:0]  LEDG,
@@ -38,48 +38,48 @@ module npu_top(
 );
 
     ////////////////////////////////////////////////////////
-    // SW拨码开关的配置 (原注释保持不变，仅供参考)
-    // [0]: reserved，恒为0
-    // [1]: reserved，恒为0
-    // [2]: reserved，恒为0
-    // [3]: 按钮KEY[3]按下触发CNN；1-->使能按钮触发
-    // [4]: reserved，恒为0
-    // [5]: 串口触发CNN运算，测试硬件化正确性；1-->使能串口触发
+    // SW (�)
+    // [0]: reserved�0
+    // [1]: reserved�0
+    // [2]: reserved�0
+    // [3]: KEY[3]CNN�1-->
+    // [4]: reserved�0
+    // [5]: CNN��1-->
     ////////////////////////////////////////////////////////
 
-    // 三种模式 (原逻辑保持不变)
+    //  ()
     wire TEST_MODE = (SW[5:1] == 5'b10100);
     wire SAMP_MODE = (SW[5:1] == 5'b00011);
     wire RUN_MODE  = (SW[5:1] == 5'b01001);
-    wire SIMU_MODE = (SW[5:1] == 5'b01000); // 仿真模式，切断MFCC写入SRAM的过程
+    wire SIMU_MODE = (SW[5:1] == 5'b01000); // �MFCCSRAM
 
     ////////////////////////////////////////////////////////
-    // 全局复位信号
+    // 
     wire RESET_N = KEY[0];
 
     ////////////////////////////////////////////////////////
-    // 使用一个简单的时钟生成模块得到 CLOCK60
+    //  CLOCK60
     wire CLOCK60,CLOCK50,CLOCK40;
 	assign CLOCK60 = CLOCK_50;
 	assign CLOCK50 = CLOCK_50;
 	assign CLOCK40 = CLOCK_50;
 
     ////////////////////////////////////////////////////////
-    // 系统运行的时钟和复位信号
+    // 
     wire sys_clk;
 	assign sys_clk  = CLOCK60;
 	wire sys_rst_n;
     assign sys_rst_n = RESET_N;
-	// 然后是uart接口
-	// 然后需要一个命令解析器，能够将数据扩充之后返回
-	// 和uart的接口
+	// uart
+	// �
+	// uart
 	wire		[31:0]					sys_uart_write_data /* synthesis keep */;
 	wire								sys_uart_write_data_valid /* synthesis keep */;
 	wire								sys_uart_write_data_permitted /* synthesis keep */;
 	wire		[15:0]					sys_uart_read_data /* synthesis keep */;
 	wire								sys_uart_read_data_req /* synthesis keep */;
 	wire								sys_uart_read_data_permitted /* synthesis keep */;
-	// 和ddr的接口
+	// ddr
 	wire		[31:0]					sys_ddr_write_addr /* synthesis keep */;
 	wire		[31:0]					sys_ddr_write_data /* synthesis keep */;
 	wire								sys_ddr_write_data_valid /* synthesis keep */;
@@ -93,7 +93,7 @@ module npu_top(
 	wire								sys_ddr_read_data_permitted /* synthesis keep */;
 	wire								logic_receive_valid_cmd;
 	/********************************************************************************************/
-	// NPU指令接口
+	// NPU
 	wire		[31:0]					npu_inst_part;
 	wire								npu_inst_part_en;
 	/*
@@ -125,13 +125,13 @@ module npu_top(
 							.adc_ddr_write_addr_mask(),
 							//
 							.audio_sample_en(audio_sample_en),
-							// NPU指令接口
+							// NPU
 							.npu_inst_part(npu_inst_part),
 							.npu_inst_part_en(npu_inst_part_en)
 						);
-	// 串口
-	// 例化一个cypress uart的读写模块
-	// uart的slavefifo读写模块
+	// 
+	// cypress uart
+	// uartslavefifo
 	uart_wr				uart_wr_inst(
 							.sys_clk(sys_clk),
 							.sys_rst_n(sys_rst_n),
@@ -148,13 +148,13 @@ module npu_top(
 						);	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////// NPU 指令集架构
+	///////////////////////////// NPU 
 	/*
 	*/
 	wire	[127:0]				npu_inst /* synthesis noprune */;
 	wire						npu_inst_en /* synthesis noprune */;
 	wire						npu_inst_ready;
-	// 计量NPU指令计算周期数
+	// NPU
 	wire	[31:0]				npu_inst_time;
 	wire						NPU_DDR_WRITE_CLK;
 	wire	[31:0]				NPU_DDR_WRITE_ADDR;
@@ -171,10 +171,10 @@ module npu_top(
 	wire						npu_inst_rst_n = RESET_N;
     wire    [31:0]              npu_inst_addr;
     wire    [127:0]             npu_inst_q;
-	wire						npu_inst_start_vad;	// 允许另一个模块启动NPU运算
-	// 这里debug一下；因为不确定NPU卡住/不断被触发
-	// 所以NPU运算使能，需要有debug措施：如果 KEY_CNN ==1，那么由按钮按下触发；否则，就是正常工作	// mark: 2018/6/4
-	wire						KEY3_DOWN;	// 按下按钮3
+	wire						npu_inst_start_vad;	// NPU
+	// debug�NPU/
+	// NPU�debug� KEY_CNN ==1���	// mark: 2018/6/4
+	wire						KEY3_DOWN;	// 3
     wire                        npu_inst_start = TEST_MODE? ((npu_inst_en && npu_inst==128'D2)|KEY3_DOWN) : (RUN_MODE||SIMU_MODE)? npu_inst_start_vad : 0;	
 	npu_inst_fsm				npu_inst_fsm_inst(
 									.clk(npu_inst_clk),
@@ -197,20 +197,20 @@ module npu_top(
 									.DDR_READ_DATA(NPU_DDR_READ_DATA),
 									.DDR_READ_DATA_VALID(NPU_DDR_READ_DATA_VALID)
 								);
-	// 生成 按下按钮的信号
+	//  
 	reg		[1:0]				KEY3;
 	always @(posedge npu_inst_clk)
 		KEY3 <= {KEY3[0], KEY[3]};
 	assign						KEY3_DOWN = (KEY3==2'B10);
                                 
-    // 存储NPU指令的地址
+    // NPU
     reg     [31:0]      npu_inst_wraddr;
     always @(posedge npu_inst_clk)
         if(npu_inst_en && npu_inst==128'D1)
             npu_inst_wraddr <= 0;
         else if(npu_inst_en && npu_inst!=128'D1 && npu_inst!=128'D2)
             npu_inst_wraddr <= npu_inst_wraddr  +1;
-    // 然后要将NPU指令存储到RAM里面去
+    // NPURAM
     npu_inst_ram            npu_inst_ram_inst(
                                 .data(npu_inst),
                                 .wren(npu_inst_en && npu_inst!=128'D1 && npu_inst!=128'D2),
@@ -220,7 +220,7 @@ module npu_top(
                                 .rdaddress(npu_inst_addr),
                                 .q(npu_inst_q)
                             );   
-    // 然后要将NPU指令存储到RAM里面去，并可以通过memory editor观察
+    // NPURAM�memory editor
     npu_inst_ram_bak        npu_inst_ram_bak_inst(
                                 .data(npu_inst),
                                 .wren(npu_inst_en && npu_inst!=128'D1 && npu_inst!=128'D2),
@@ -228,8 +228,8 @@ module npu_top(
                                 .clock(npu_inst_clk)
                             );   
 							
-	// 生成npu_inst/npu_inst_en
-	// 超时等待机制
+	// npu_inst/npu_inst_en
+	// 
 	npu_inst_join			npu_inst_join_inst(
 								.npu_inst_clk(npu_inst_clk),
 								.npu_inst_rst_n(npu_inst_rst_n),
@@ -239,13 +239,13 @@ module npu_top(
 								.npu_inst_en(npu_inst_en)
 							);
 	/////////////////////////////////////////////////////////////////////
-	// 配置CNN的参数
-	// 配置CNN的参数
-	wire					cnn_paras_ready;	// 参数配置模块闲置状态
-	wire					cnn_paras_en = !KEY[2];	// 使能配置
-	wire	[31:0]			cnn_paras_q;	// CNN的参数
-	wire	[31:0]			cnn_paras_addr;	// CNN参数的地址
-	// DDR接口
+	// CNN
+	// CNN
+	wire					cnn_paras_ready;	// 
+	wire					cnn_paras_en = !KEY[2];	// 
+	wire	[31:0]			cnn_paras_q;	// CNN
+	wire	[31:0]			cnn_paras_addr;	// CNN
+	// DDR
 	wire					CNN_DDR_WRITE_CLK;
 	wire	[31:0]			CNN_DDR_WRITE_ADDR;
 	wire	[31:0]			CNN_DDR_WRITE_DATA;
@@ -275,12 +275,12 @@ module npu_top(
 	/////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////
 	///////////////////
-	// 和内存有关的时钟和复位
+	// 
 	wire		afi_phy_clk /* synthesis keep */;
 	wire		afi_phy_rst_n /* synthesis keep */;
 	// SSRAM
-	// 添加一个缓存空间	// 使用ddr的IP核
-	//	// 声明核心多路选通控制器
+	// 	// ddrIP
+	//	// 
 	wire        local_ready;                //              local.waitrequest_n
 	wire        local_burstbegin;           //                   .beginbursttransfer
 	wire [31:0] local_addr;                 //                   .address
@@ -292,7 +292,7 @@ module npu_top(
 	wire        local_write_req;            //                   .write
 	wire [2:0]  local_size;                 //                   .burstcount
 	wire		local_waitrequest;
-	//	// 声明附属多路选通控制器
+	//	// 
 	wire        attach_ready;                //              attach.waitrequest_n
 	wire        attach_burstbegin;           //                   .beginbursttransfer
 	wire [31:0] attach_addr;                 //                   .address
@@ -303,13 +303,13 @@ module npu_top(
 	wire        attach_read_req;             //                   .read
 	wire        attach_write_req;            //                   .write
 	wire [2:0]  attach_size;                 //                   .burstcount
-	wire		attach_ready_w, attach_ready_r;	// 读写允许
+	wire		attach_ready_w, attach_ready_r;	// 
 	assign		attach_ready = 	attach_write_req? attach_ready_w : 
 								attach_read_req? attach_ready_r : 
-								attach_ready_w && attach_ready_r;	// 挂载在核心选通上，必须读写都允许的情况下可以允许附属选通器读写
+								attach_ready_w && attach_ready_r;	// �
 	//
-	///////// 复位信号
-	// 例化SSRAM控制器
+	///////// 
+	// SSRAM
 	sram_controller		sram_controller_inst(
 							.CLOCK(CLOCK40),
 							.RESET_N(RESET_N),
@@ -349,7 +349,7 @@ module npu_top(
 							//.local_refresh_ack,
 							.local_init_done(RESET_N),
 							///////////////
-							// 附属的多路选通器
+							// 
 							.wport_clock_6(afi_phy_clk),
 							.wport_addr_6(attach_addr),
 							.wport_data_6(attach_wdata),
@@ -361,32 +361,32 @@ module npu_top(
 							.rport_data_valid_7(attach_rdata_valid),
 							.rport_req_7(attach_read_req),
 							.rport_ready_7(attach_ready_r),
-							// MFCC特征搬运 mark[2018/6/6]: 测试CNN状态下，禁止MFCC写入
+							// MFCC mark[2018/6/6]: CNN�MFCC
 							.wport_clock_4(),
 							.wport_addr_4(),
 							.wport_data_4(),
 							.wport_req_4(),
 							.wport_ready_4(),
-							// MFCC特征搬运
+							// MFCC
 							.rport_clock_3(),
 							.rport_addr_3(),
 							.rport_data_3(),
 							.rport_data_valid_3(),
 							.rport_req_3(),
 							.rport_ready_3(),
-							// CNN参数配置接口 mark[2018/6/6]: 测试CNN状态下，不能禁止CNN参数写入
+							// CNN mark[2018/6/6]: CNN�CNN
 							.wport_clock_2(CNN_DDR_WRITE_CLK),
 							.wport_addr_2(CNN_DDR_WRITE_ADDR),
 							.wport_data_2(CNN_DDR_WRITE_DATA),
 							.wport_req_2(CNN_DDR_WRITE_REQ && (RUN_MODE||TEST_MODE||SIMU_MODE)),
 							.wport_ready_2(CNN_DDR_WRITE_READY),
-							// NPU读写接口
+							// NPU
 							.wport_clock_0(NPU_DDR_WRITE_CLK),
 							.wport_addr_0(NPU_DDR_WRITE_ADDR),
 							.wport_data_0(NPU_DDR_WRITE_DATA),
 							.wport_req_0(NPU_DDR_WRITE_REQ && (RUN_MODE||TEST_MODE||SIMU_MODE)),
 							.wport_ready_0(NPU_DDR_WRITE_READY),
-							// NPU读写接口
+							// NPU
 							.rport_clock_1(NPU_DDR_READ_CLK),
 							.rport_addr_1(NPU_DDR_READ_ADDR),
 							.rport_data_1(NPU_DDR_READ_DATA),
@@ -394,7 +394,7 @@ module npu_top(
 							.rport_req_1(NPU_DDR_READ_REQ && (RUN_MODE||TEST_MODE||SIMU_MODE)),
 							.rport_ready_1(NPU_DDR_READ_READY)
 						);
-	// 附属多路选通
+	// 
 	mux_ddr_access		mux_ddr_access_attach_inst(
 							.afi_phy_clk(afi_phy_clk),
 							.afi_phy_rst_n(afi_phy_rst_n),
@@ -412,26 +412,26 @@ module npu_top(
 							//.local_refresh_ack,
 							.local_init_done(RESET_N),
 							///////////////
-							// 测试 写入
+							//  
 							.wport_clock_4(sys_clk),
 							.wport_addr_4(sys_ddr_write_addr),
 							.wport_data_4(sys_ddr_write_data),
 							.wport_req_4(sys_ddr_write_data_valid),
 							.wport_ready_4(sys_ddr_write_data_permitted),
-							// 测试 读取
+							//  
 							.rport_clock_5(sys_clk),
 							.rport_addr_5(sys_ddr_read_addr),
 							.rport_data_5(sys_ddr_read_data),
 							.rport_data_valid_5(sys_ddr_read_data_valid),
 							.rport_req_5(sys_ddr_read_data_req),
 							.rport_ready_5(sys_ddr_read_data_permitted),
-							// 音频信号 写入
+							//  
 							.wport_clock_0(),
 							.wport_addr_0(),
 							.wport_data_0(),
 							.wport_req_0(),
 							.wport_ready_0(),
-							// MFCC特征 写入
+							// MFCC 
 							.wport_clock_2(),
 							.wport_addr_2(),
 							.wport_data_2(),

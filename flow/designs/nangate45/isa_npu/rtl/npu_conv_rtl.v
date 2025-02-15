@@ -7,27 +7,27 @@
  
  	MODIFICATION HISTORY:
 	$Log$
-			Xudong Chen 	18/7/24		original, 在允许的范围内（Km x Kn）任意尺寸卷积运算
-							18/7/27		试图增加pooling
-							18/7/28		除法器复用，减少逻辑开销，提升Fmax
-							18/7/29		修正了ram_q[x]==>field_data[y]端口映射，将任意尺寸卷积支持起来，v1.0确定
-							18/8/2		使用function函数，将ATlayer参数，自动计算出来
+			Xudong Chen 	18/7/24		original, �Km x Kn�
+							18/7/27		pooling
+							18/7/28		��Fmax
+							18/7/29		ram_q[x]==>field_data[y]��v1.0
+							18/8/2		function�ATlayer�
 \*------------------------------------------------------------------------------------------------------*/
 module npu_conv_rtl
 #(
-	parameter	Km = 3,							// 卷积核row
-	parameter	Kn = 3,							// 卷积核col
-	parameter	Ksz = Km * Kn,					// 卷积核尺寸
-	parameter	ATlayer = CeilLog2(Ksz)+1,		// ceil( log2( Ksz ) + 1 )	// 加法树的层数
-	parameter	ATsize = 1<<(ATlayer),			// 加法树的规模
-	parameter	logW = 9,						// 支持的图像的最大宽度（列数量）
+	parameter	Km = 3,							// row
+	parameter	Kn = 3,							// col
+	parameter	Ksz = Km * Kn,					// 
+	parameter	ATlayer = CeilLog2(Ksz)+1,		// ceil( log2( Ksz ) + 1 )	// 
+	parameter	ATsize = 1<<(ATlayer),			// 
+	parameter	logW = 9,						// ��
 	parameter	ADDR_WIDTH = 9,					// 
-	parameter	DATA_WIDTH = 32,    			// 数据位宽
-	parameter	FRAC_WIDTH = 16,				// 小数部分
-	parameter	DATA_UNIT = {{(DATA_WIDTH-FRAC_WIDTH-1){1'B0}}, 1'B1, {FRAC_WIDTH{1'B0}}}, // 固定的单位1 
-	parameter	DATA_ZERO = {DATA_WIDTH{1'B0}},	// 固定的0值
-	parameter	DATA_MINF = {1'B1, {(DATA_WIDTH-1){1'B0}}},	// 负无穷
-	parameter	DATA_PINF = {1'B0, {(DATA_WIDTH-1){1'B1}}}	// 正无穷
+	parameter	DATA_WIDTH = 32,    			// 
+	parameter	FRAC_WIDTH = 16,				// 
+	parameter	DATA_UNIT = {{(DATA_WIDTH-FRAC_WIDTH-1){1'B0}}, 1'B1, {FRAC_WIDTH{1'B0}}}, // 1 
+	parameter	DATA_ZERO = {DATA_WIDTH{1'B0}},	// 0
+	parameter	DATA_MINF = {1'B1, {(DATA_WIDTH-1){1'B0}}},	// 
+	parameter	DATA_PINF = {1'B0, {(DATA_WIDTH-1){1'B1}}}	// 
 )
 (
 	clk, 
@@ -48,7 +48,7 @@ module npu_conv_rtl
 	// conv/pool
 	arith_type,
 	pool_type,
-	// 输出一行的数据
+	// 
 	pool_opt_col
 );
 
@@ -68,20 +68,20 @@ endfunction
 /*-------------------------------------------------------------------*\
 	I/O signals
 \*-------------------------------------------------------------------*/
-input	wire						clk, rst;				// 时钟/复位
-input	wire						kernel_clr;				// 清空卷积核
-input	wire	[ADDR_WIDTH-1:0]	kernel_m;				// 卷积核的横向尺寸
-input	wire	[ADDR_WIDTH-1:0]	kernel_n;				// 卷积核的纵向尺寸
-input	wire	[DATA_WIDTH-1:0]	kernel_data;			// 读取到的卷积核数据
-input	wire						kernel_data_valid;		// 读取卷积核数据有效
+input	wire						clk, rst;				// /
+input	wire						kernel_clr;				// 
+input	wire	[ADDR_WIDTH-1:0]	kernel_m;				// 
+input	wire	[ADDR_WIDTH-1:0]	kernel_n;				// 
+input	wire	[DATA_WIDTH-1:0]	kernel_data;			// 
+input	wire						kernel_data_valid;		// 
 
-input	wire	[DATA_WIDTH-1:0]	width;					// 图像的纵向尺寸
-input	wire	[DATA_WIDTH-1:0]	read_data;				// 读取到的数据
-input	wire						read_data_valid;		// 读取数据有效
+input	wire	[DATA_WIDTH-1:0]	width;					// 
+input	wire	[DATA_WIDTH-1:0]	read_data;				// 
+input	wire						read_data_valid;		// 
 //
-output	reg		[DATA_WIDTH-1:0]	write_data;				// 写入的数据
-output	reg							write_data_valid;		// 写入数据有效
-// 卷积/池化选项
+output	reg		[DATA_WIDTH-1:0]	write_data;				// 
+output	reg							write_data_valid;		// 
+// /
 input	wire						arith_type;				// 0-convolution, 1-pooling
 input	wire						pool_type;				// 0-mean_pool, 1-max_pool
 //
@@ -96,63 +96,63 @@ localparam							MAX_TYPE = 1'B1;
 /*-------------------------------------------------------------------*\
 	signals
 \*-------------------------------------------------------------------*/
-// 生成卷积核数据地址
+// 
 reg				[ADDR_WIDTH-1:0]	kernel_row;
 reg				[ADDR_WIDTH-1:0]	kernel_col;
-reg				[ADDR_WIDTH-1:0]	kernel_addr;			// 卷积核地址
-reg				[DATA_WIDTH-1:0]	kernel_datax;			// 读取到的卷积核数据
-reg									kernel_data_validx;		// 读取卷积核数据有效
+reg				[ADDR_WIDTH-1:0]	kernel_addr;			// 
+reg				[DATA_WIDTH-1:0]	kernel_datax;			// 
+reg									kernel_data_validx;		// 
 //
-reg		signed	[DATA_WIDTH-1:0]	kernel_q	[0:Ksz-1];	// 卷积核里面的数据
-//wire	signed	[DATA_WIDTH-1:0]	kernel_qs	[0:Ksz-1];	// 卷积核里面的数据
-reg		signed	[DATA_WIDTH-1:0]	field_q		[0:Ksz-1];	// 卷积域里面的数据
-//wire	signed	[DATA_WIDTH-1:0]	field_qs	[0:Ksz-1];	// 卷积域里面的数据
+reg		signed	[DATA_WIDTH-1:0]	kernel_q	[0:Ksz-1];	// 
+//wire	signed	[DATA_WIDTH-1:0]	kernel_qs	[0:Ksz-1];	// 
+reg		signed	[DATA_WIDTH-1:0]	field_q		[0:Ksz-1];	// 
+//wire	signed	[DATA_WIDTH-1:0]	field_qs	[0:Ksz-1];	// 
 reg									field_q_en;					
-reg				[DATA_WIDTH-1:0]	field_con_idx[0:Km-1];	// 互联网络
+reg				[DATA_WIDTH-1:0]	field_con_idx[0:Km-1];	// 
 //wire			[DATA_WIDTH-1:0]	field_con_idx_s[0:Km-1];// = field_con_idx[0];
-reg		signed	[DATA_WIDTH-1:0]	field_data	[0:Km-1];	// 卷积域里面的数据【源】
-//wire	signed	[DATA_WIDTH-1:0]	field_data_s[0:Km-1];	// 卷积域里面的数据【源】
-reg									field_data_valid	;	// 数据源有效
-// 然后是进行p2p乘法
-reg		signed	[DATA_WIDTH-1:0]	field_mult	[0:Ksz-1];	// 点对点乘法	
-reg		signed	[2*DATA_WIDTH-1:0]	field_mults	[0:Ksz-1];	// 点对点乘法	
-reg									field_zero	[0:Ksz-1];	// 点对点乘法	==0
-//wire	signed	[DATA_WIDTH-1:0]	field_mult_s[0:Ksz-1];	// 点对点乘法	
+reg		signed	[DATA_WIDTH-1:0]	field_data	[0:Km-1];	// 
+//wire	signed	[DATA_WIDTH-1:0]	field_data_s[0:Km-1];	// 
+reg									field_data_valid	;	// 
+// p2p
+reg		signed	[DATA_WIDTH-1:0]	field_mult	[0:Ksz-1];	// 	
+reg		signed	[2*DATA_WIDTH-1:0]	field_mults	[0:Ksz-1];	// 	
+reg									field_zero	[0:Ksz-1];	// 	==0
+//wire	signed	[DATA_WIDTH-1:0]	field_mult_s[0:Ksz-1];	// 	
 reg									field_mult_en;		
 reg									field_mults_en;		
-// 求和
-reg		signed	[DATA_WIDTH-1:0]	ATnode 	  [0:ATsize-1];	// 加法树	
-//wire	signed	[DATA_WIDTH-1:0]	ATnodes	  [0:ATsize-1];	// 加法树	
-reg									ATnode_en [0:ATlayer-1];// 加法树节点数据有效使能
-//wire								ATnode_ens[0:ATlayer-1];// 加法树节点数据有效使能
 // 
-reg				[DATA_WIDTH-1:0]	ConvResRow;				// 卷积结果的行计数
-reg				[DATA_WIDTH-1:0]	ConvResCol;				// 卷积结果的列计数
-reg				[DATA_WIDTH-1:0]	ConvCycRow;				// 卷积结果的行计数(0 ~ kernel_m-1)内循环计数
-reg				[DATA_WIDTH-1:0]	ConvCycCol;				// 卷积结果的列计数(0 ~ kernel_n-1)内循环计数
+reg		signed	[DATA_WIDTH-1:0]	ATnode 	  [0:ATsize-1];	// 	
+//wire	signed	[DATA_WIDTH-1:0]	ATnodes	  [0:ATsize-1];	// 	
+reg									ATnode_en [0:ATlayer-1];// 
+//wire								ATnode_ens[0:ATlayer-1];// 
+// 
+reg				[DATA_WIDTH-1:0]	ConvResRow;				// 
+reg				[DATA_WIDTH-1:0]	ConvResCol;				// 
+reg				[DATA_WIDTH-1:0]	ConvCycRow;				// (0 ~ kernel_m-1)
+reg				[DATA_WIDTH-1:0]	ConvCycCol;				// (0 ~ kernel_n-1)
 // pooling
-reg		signed	[DATA_WIDTH-1:0]	div_numer;				// divider的分子部分
-reg		signed	[DATA_WIDTH-1:0]	div_denom;				// divider的分母部分
-wire	signed	[DATA_WIDTH-1:0]	div_quotient;			// 商
-wire								div_dst_en;				// 除法器输出有效
-reg									div_src_en;				// 除法器输入有效
-// 输出数据有效
+reg		signed	[DATA_WIDTH-1:0]	div_numer;				// divider
+reg		signed	[DATA_WIDTH-1:0]	div_denom;				// divider
+wire	signed	[DATA_WIDTH-1:0]	div_quotient;			// 
+wire								div_dst_en;				// 
+reg									div_src_en;				// 
+// 
 wire								write_data_validx;
 wire			[DATA_WIDTH-1:0]	opt_colx;
-reg									pool_opt_col_rdy;		// 除法结果
-// 这里是shifter taps
-reg				[DATA_WIDTH-1:0]	ram_wptr 			;	// 指向正在写入的ram
-reg				[DATA_WIDTH-1:0]	ram_wptr_sync [0:1] ;	// 同步
-reg									ram_wren_sync [0:1] ;	// 同步
-reg				[DATA_WIDTH-1:0]	ram_rptr			;	// 指向正在读取的ram	// ram_wptr同步3个clock
+reg									pool_opt_col_rdy;		// 
+// shifter taps
+reg				[DATA_WIDTH-1:0]	ram_wptr 			;	// ram
+reg				[DATA_WIDTH-1:0]	ram_wptr_sync [0:1] ;	// 
+reg									ram_wren_sync [0:1] ;	// 
+reg				[DATA_WIDTH-1:0]	ram_rptr			;	// ram	// ram_wptr3clock
 reg									ram_rden			;	// 
-reg				[DATA_WIDTH-1:0]	ram_waddr			;	// 写入ram的地址
-wire	signed	[DATA_WIDTH-1:0]	ram_data	[0:Km-1];	// 写入ram的数据
-wire			[DATA_WIDTH-1:0]	ram_wraddr	[0:Km-1];	// 写入ram的地址
-wire								ram_wrreq	[0:Km-1];	// 写入ram的请求
-wire	signed	[DATA_WIDTH-1:0]	ram_q		[0:Km-1];	// 读取ram的数据
-wire			[DATA_WIDTH-1:0]	ram_rdaddr	[0:Km-1];	// 读取ram的地址
-wire								ram_rdreq	[0:Km-1];	// 读取ram的请求
+reg				[DATA_WIDTH-1:0]	ram_waddr			;	// ram
+wire	signed	[DATA_WIDTH-1:0]	ram_data	[0:Km-1];	// ram
+wire			[DATA_WIDTH-1:0]	ram_wraddr	[0:Km-1];	// ram
+wire								ram_wrreq	[0:Km-1];	// ram
+wire	signed	[DATA_WIDTH-1:0]	ram_q		[0:Km-1];	// ram
+wire			[DATA_WIDTH-1:0]	ram_rdaddr	[0:Km-1];	// ram
+wire								ram_rdreq	[0:Km-1];	// ram
 /*-------------------------------------------------------------------*\
 	timing
 //
@@ -174,24 +174,24 @@ wire								ram_rdreq	[0:Km-1];	// 读取ram的请求
 	field_con_idx[0]:	_________________| 1 																											 | 2
 	field_con_idx[1]:	_________________| 2 																											 | 3
 	field_con_idx[2]:	_________________| 3 																											 | 4
-	// 要写入卷积域的数据
+	// 
 	field_data[0]	:   _____________________|q44      	 | q0| q1| q2| q3| q4| q5| q6| q7| q8|...|q30|q31|q32|q33|q34|q35|q36|q37|q38|q39|q40|q41|q42|q43|q44
 	field_data_valid: 	_________________________________|------------------------------------------------...------------------------------------------------|_____
-	// 卷积域中的数据
+	// 
 	field_q[x]		:   _________________________|q44      	 | q0| q1| q2| q3| q4| q5| q6| q7| q8|...|q30|q31|q32|q33|q34|q35|q36|q37|q38|q39|q40|q41|q42|q43|q44
 	field_q_en		: 	_____________________________________|------------------------------------------------...------------------------------------------------|_____
-	// 点对点乘法
+	// 
 	field_mults[x]	:   _____________________________|m44      	 | m0| m1| m2| m3| m4| m5| m6| m7| m8|...|m30|m31|m32|m33|m34|m35|m36|m37|m38|m39|m40|m41|m42|m43|m44
 	field_mults_en	: 	_________________________________________|------------------------------------------------...------------------------------------------------|_____
 	field_mult[x]	:   _________________________________|m44      	 | m0| m1| m2| m3| m4| m5| m6| m7| m8|...|m30|m31|m32|m33|m34|m35|m36|m37|m38|m39|m40|m41|m42|m43|m44
 	field_mult_en	: 	_____________________________________________|------------------------------------------------...------------------------------------------------|_____
-	// 加法树
+	// 
 	ATnode[#L0]		: 	_________________________________________________| m0| m1| m2| m3| m4| m5| m6| m7| m8|...|m30|m31|m32|m33|m34|m35|m36|m37|m38|m39|m40|m41|m42|m43|m44
 	ATnode[#L1]		: 	_____________________________________________________| m0| m1| m2| m3| m4| m5| m6| m7| m8|...|m30|m31|m32|m33|m34|m35|m36|m37|m38|m39|m40|m41|m42|m43|m44
 	...
 	ATnode[#L4]		: 	_________________________________________________________________| m0| m1| m2| m3| m4| m5| m6| m7| m8|...|m30|m31|m32|m33|m34|m35|m36|m37|m38|m39|m40|m41|m42|m43|m44
 	ATnode_en[#L4]	: 	_________________________________________________________________|------------------------------------------------...------------------------------------------------|_____
-	// 行列计数
+	// 
 	ConvResCol		:	_____|0  		     											     | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10| 11|...| 33| 34| 35| 36| 37| 38| 39| 40| 41| 42| 43| 44| 0 	
 	ConvResRow		:	_____|0															    																								 | 1
 
@@ -203,7 +203,7 @@ wire								ram_rdreq	[0:Km-1];	// 读取ram的请求
 /*-------------------------------------------------------------------*\
 	process
 \*-------------------------------------------------------------------*/
-// 生成卷积核数据地址
+// 
 always @ ( posedge clk )
 	if ( kernel_clr == 1'B1 )
 	begin
@@ -220,14 +220,14 @@ always @ ( posedge clk )
 		else
 			kernel_col <= kernel_col + 1;
 	end
-// 只能打一排了
+// 
 always @ ( posedge clk )
 begin
 	kernel_addr 		<= ( kernel_row * Kn + kernel_col );
 	kernel_datax		<= kernel_data;
 	kernel_data_validx	<= kernel_data_valid;
 end
-// 首先是卷积核
+// 
 genvar	ki;
 genvar 	kj;
 generate
@@ -259,8 +259,8 @@ generate
 		end
 	end
 endgenerate
-// 然后是ram操作，构造shifter-taps
-// 生成wraddr
+// ram�shifter-taps
+// wraddr
 always @ ( posedge clk )
 begin	
 	if ( rst == 1'B1 )
@@ -283,7 +283,7 @@ begin
 			ram_waddr	<= ram_waddr + 1;
 	end
 end
-// 同步3个clock
+// 3clock
 always @ ( posedge clk )
 begin
 	//
@@ -331,7 +331,7 @@ endgenerate
 always @ ( posedge clk )
 	field_data_valid	<= ram_rden;
 	
-// 生成卷积域
+// 
 genvar 		convi;
 genvar 		convj;
 generate
@@ -341,7 +341,7 @@ generate
 		begin : conv_col
 			begin : construct
 				if ( convj == 0 )
-					// 首先是【0】列
+					// 0
 					always @ ( posedge clk )
 					begin
 						if ( rst == 1'B1 )
@@ -369,7 +369,7 @@ generate
 					end
 				else
 				begin
-					// 然后是【1...Kn-1】列
+					// 1...Kn-1
 					always @ ( posedge clk )
 					begin
 						if ( rst == 1'B1 )
@@ -406,23 +406,23 @@ endgenerate
 always @ ( posedge clk )
 	field_q_en <= field_data_valid;
 	
-// 然后是进行点对点乘法
+// 
 genvar 	pts;
 generate
 	for ( pts = 0; pts < Ksz; pts = pts + 1 )
 	begin : multi
-		// 先计算乘法
+		// 
 		always @ ( posedge clk )
 		begin
 			field_mults[pts] 	<= field_q[pts] * kernel_q[pts];
 			field_zero[pts] 	<= ( kernel_q[pts] == DATA_ZERO );
 		end
-		// 然后移位寄存
+		// 
 		always @ ( posedge clk )
 		begin
 			field_mult[pts] <= ( field_zero[pts] == 1'B1 )? DATA_ZERO : field_mults[pts][DATA_WIDTH+FRAC_WIDTH-1:FRAC_WIDTH];
 		end
-		// 调试用
+		// 
 		//assign	field_mult_s[pts] = field_mult[pts];
 	end
 endgenerate
@@ -433,7 +433,7 @@ begin
 	field_mults_en 	<= field_q_en;
 end
 	
-// 加法树
+// 
 genvar 	at_layer;
 genvar	at_node_idx;
 generate
@@ -441,7 +441,7 @@ generate
 	begin : ATtree
 		//
 		//assign	ATnode_ens[ at_layer ] = ATnode_en[ at_layer ];
-		// 对于第0层，输入点对点乘法结果
+		// 0�
 		if ( at_layer == 0 )
 		begin
 			for ( at_node_idx = 0; at_node_idx < ( ATsize >> ( 1 + at_layer )); at_node_idx = at_node_idx + 1 )
@@ -468,7 +468,7 @@ generate
 			always @ ( posedge clk )
 				ATnode_en[ at_layer ] <= field_mult_en;
 		end
-		// 对于其它层
+		// 
 		/*
 		*/
 		else 
@@ -508,25 +508,25 @@ generate
 	end
 endgenerate
 
-// 输入定点除法器，实现pool（mean-pool）
+// �pool�mean-pool�
 always @ ( posedge clk )
 begin
 	if ( rst == 1'B1 && arith_type == POOL_TYPE )
 	begin
 		div_numer			<= width;
-		// mean_pool要 / 卷积核尺度
+		// mean_pool / 
 		div_denom			<= kernel_n;
 		div_src_en			<= 1'B1;
 	end
 	else
 	begin
 		div_numer			<= ATnode[ ATsize - ( ATsize >> ( ATlayer - 1 ) ) ];
-		// mean_pool要 / 卷积核尺度
+		// mean_pool / 
 		div_denom			<= ( arith_type == POOL_TYPE && pool_type == MEAN_TYPE )? {32'D0, ( kernel_m * kernel_n ), {FRAC_WIDTH{1'B0}}} : DATA_UNIT;
 		div_src_en			<= ATnode_en[ ATlayer - 1 ];
 	end
 end
-// 统计输出的行列计数
+// 
 always @ ( posedge clk )
 begin
 	if ( rst == 1'B1 )
@@ -534,7 +534,7 @@ begin
 		ConvResRow 		<= 0;
 		ConvResCol		<= 0;
 	end
-	// 如果AT加法树结果有效，行列计数
+	// AT�
 	else if ( pool_opt_col_rdy == 1'B1 && div_dst_en == 1'B1 )
 	begin
 		if ( ConvResCol >= ( width - 1 ) )
@@ -546,7 +546,7 @@ begin
 			ConvResCol	<= ConvResCol + 1;
 	end
 end
-// 统计输出的循环行列计数
+// 
 always @ ( posedge clk )
 begin
 	if ( rst == 1'B1 )
@@ -554,7 +554,7 @@ begin
 		ConvCycRow 		<= 0;
 		ConvCycCol		<= 0;
 	end
-	// 如果AT加法树结果有效，行列计数
+	// AT�
 	else if ( pool_opt_col_rdy == 1'B1 && div_dst_en == 1'B1 )
 	begin
 		if ( ConvCycCol >= ( kernel_n - 1 ) || ConvResCol >= ( width - 1 ))
@@ -574,19 +574,19 @@ begin
 end
 
 
-// 最后生成卷积结果
-// 过滤掉无效的卷及结果
+// 
+// 
 assign	write_data_validx = ( arith_type == CONV_TYPE )? ( pool_opt_col_rdy && div_dst_en && ( ConvResCol >= ( kernel_n - 1 )) && ( ConvResRow >= ( kernel_m - 1 )) ) : 
 							( arith_type == POOL_TYPE )? ( pool_opt_col_rdy && div_dst_en && ( ConvCycCol == ( kernel_n - 1 )) && ( ConvCycRow == ( kernel_m - 1 )) ) : 
 							1'B0;
-// 寄存器打一拍输出
+// 
 always @ ( posedge clk )
 begin
 	write_data 			<= div_quotient;
 	write_data_valid 	<= write_data_validx;
 end
 
-// 因为pooloing池化运算，需要先计算最后输出的数据列数
+// pooloing�
 always @ ( posedge clk )
 	if ( rst == 1'B1 )
 	begin
@@ -604,8 +604,8 @@ always @ ( posedge clk )
 /*-------------------------------------------------------------------*\
 	instances
 \*-------------------------------------------------------------------*/
-// 统计输出的一行数量
-// 定点除法器
+// 
+// 
 fixed_sdiv	u0_fixed_sdiv
 (
 	.sys_clk			( clk 				),
@@ -617,7 +617,7 @@ fixed_sdiv	u0_fixed_sdiv
 	.dst_en				( div_dst_en		)
 );
 
-// 偏上缓存
+// 
 genvar	rami;
 generate
 	for ( rami = 0; rami < Km; rami = rami + 1 )

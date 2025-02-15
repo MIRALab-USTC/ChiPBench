@@ -7,38 +7,38 @@
 // 
 // 	MODIFICATION HISTORY:
 //	$Log$
-//			Xudong Chen		18/3/9		original, 验证了CONV指令的正确性，增加TRAN函数
-//										CNN模块的资源占用如下:ALM：3631.8 / M10K：19 / DSP：46 / Fmax：54.67 MHz
+//			Xudong Chen		18/3/9		original, CONV�TRAN
+//										CNN:ALM�3631.8 / M10K�19 / DSP�46 / Fmax�54.67 MHz
 //										Cyclone V series, SoC FPGA
-//			Xudong Chen		18/3/10		为了证明CNN指令集架构计算的正确性，写了相应的python/matlab代码
-//			Xudong Chen		18/3/13		修正了CNN的指令集架构，使得运算结果回写DDR的时候速度提升100%
-//										CNN模块的资源占用如下:ALM：3487.9 / M10K：25 / DSP：42 / Fmax：71.21 MHz
-//			Xudong Chen		18/5/16		$1的FIFO输出到$3的输入时序不佳（估计是通过某个组合逻辑直连了，这里修正一下）
-//										使用自己写的流水线除法器，并在Cyclone IV系列芯片上实现
-//										LE：16.4 K	/ M9K：18 / DSP：110 / Fmax：> 50 Mhz
-//			Xudong Chen		18/5/24		将CNN改成了NPU，更接近这个模块的本质
-//			Xudong			18/7/16		把内部的ram/fifo使用自己的module进行替换
-//			Xudong			18/7/26		将卷积运算通过module单独例化
+//			Xudong Chen		18/3/10		CNN�python/matlab
+//			Xudong Chen		18/3/13		CNN�DDR100%
+//										CNN:ALM�3487.9 / M10K�25 / DSP�42 / Fmax�71.21 MHz
+//			Xudong Chen		18/5/16		$1FIFO$3���
+//										�Cyclone IV
+//										LE�16.4 K	/ M9K�18 / DSP�110 / Fmax�> 50 Mhz
+//			Xudong Chen		18/5/24		CNNNPU�
+//			Xudong			18/7/16		ram/fifomodule
+//			Xudong			18/7/26		module
 //-----------------------------------------------------------------------------------------------------------
-// CNN指令集架构的解析器
+// CNN
 module npu_inst_excutor
-#(parameter	DATA_WIDTH = 32,    // 数据位宽
-  parameter	FRAC_WIDTH = 16,	// 小数部分
-  parameter RAM_LATENCY = 2,	// ram的IP核读取需要延时
-  parameter MAC_LATENCY = 2,	// ram的IP核读取需要延时
-  parameter	DIV_LATENCY = 50,	// 除法器的延时
-  parameter	DMI_LATENCY = 2,	// 除法器的延时
-  parameter	DATA_UNIT = {{(DATA_WIDTH-FRAC_WIDTH-1){1'B0}}, 1'B1, {FRAC_WIDTH{1'B0}}}, // 固定的单位1 
-  parameter	DATA_ZERO = {DATA_WIDTH{1'B0}},	// 固定的0值
-  parameter	INST_WIDTH = 128	// 指令的长度
+#(parameter	DATA_WIDTH = 32,    // 
+  parameter	FRAC_WIDTH = 16,	// 
+  parameter RAM_LATENCY = 2,	// ramIP
+  parameter MAC_LATENCY = 2,	// ramIP
+  parameter	DIV_LATENCY = 50,	// 
+  parameter	DMI_LATENCY = 2,	// 
+  parameter	DATA_UNIT = {{(DATA_WIDTH-FRAC_WIDTH-1){1'B0}}, 1'B1, {FRAC_WIDTH{1'B0}}}, // 1 
+  parameter	DATA_ZERO = {DATA_WIDTH{1'B0}},	// 0
+  parameter	INST_WIDTH = 128	// 
 )
 (
-	input	wire						clk, rst_n,	// 时钟和复位信号
-	input	wire	[INST_WIDTH-1:0]	npu_inst,	// CNN的指令
-	input	wire						npu_inst_en,	// 指令使能标志
-	output	reg							npu_inst_ready,	// 指令执行完成标志
-	output	reg		[DATA_WIDTH-1:0]	npu_inst_time,	// 计量指令执行时间
-	// DDR接口
+	input	wire						clk, rst_n,	// 
+	input	wire	[INST_WIDTH-1:0]	npu_inst,	// CNN
+	input	wire						npu_inst_en,	// 
+	output	reg							npu_inst_ready,	// 
+	output	reg		[DATA_WIDTH-1:0]	npu_inst_time,	// 
+	// DDR
 	output	wire						DDR_WRITE_CLK,
 	output	wire	[DATA_WIDTH-1:0]	DDR_WRITE_ADDR,
 	output	wire	[DATA_WIDTH-1:0]	DDR_WRITE_DATA,
@@ -52,7 +52,7 @@ module npu_inst_excutor
 	input	wire						DDR_READ_DATA_VALID
 );
 	
-	// ddr的读写接口
+	// ddr
 	reg		[31:0]	ddr_read_addr;
 	reg				ddr_read_req;
 	wire			ddr_read_ready;
@@ -69,7 +69,7 @@ module npu_inst_excutor
 	assign			DDR_WRITE_REQ = ddr_write_req;
 	assign			ddr_write_ready = DDR_WRITE_READY;
 	
-	wire			ddr_write_data_valid = ddr_write_ready && ddr_write_req;	// 表示一次数据成功写入
+	wire			ddr_write_data_valid = ddr_write_ready && ddr_write_req;	// 
 	//
 	assign			DDR_READ_CLK = clk;
 	assign			DDR_READ_ADDR = ddr_read_addr;
@@ -79,16 +79,16 @@ module npu_inst_excutor
 	assign			ddr_read_data_valid = DDR_READ_DATA_VALID;
 	
 	//
-	reg		[31:0]	ddr_write_row;	// 计量DDR回写时候的行计数
-	reg		[31:0]	ddr_write_col;	// 计量DDR回写时候的列计数
+	reg		[31:0]	ddr_write_row;	// DDR
+	reg		[31:0]	ddr_write_col;	// DDR
 	
 	///////////////
 	
-/* CNN指令集架构的指令表
+/* CNN
 
 	[127:124][123:92][91:60][59:28][27:0]
 		OP 		$1		$2		$3		MNPK
-		指令名	地址	地址	地址	参数
+						
 ADD		0		$1		$2		$3		M/N/0/0		==> $3 = $1+$2
 ADDi	1		$1		i		$3		M/N/0/0		==> $3 = $1+i
 SUB		2		$1		$2		$3		M/N/0/0		==> $3 = $1-$2
@@ -101,43 +101,43 @@ POOL	8		$1		mode	$3		M/N/Pm/Pn	==> $3 = pooling($1)	// mode = max/mean
 SIGM	9		$1		xx		$3		M/N/0/0		==> $3 = sigmoid($1)
 RELU	10		$1		xx		$3		M/N/0/0		==> $3 = ReLU($1)
 TANH	11		$1		xx		$3		M/N/0/0		==> $3 = tanh($1)
-GRAY	12		$1		xx		$3		M/N/0/0		==> $3 = gray($1)	// RGB565-->灰度图
+GRAY	12		$1		xx		$3		M/N/0/0		==> $3 = gray($1)	// RGB565-->
 TRAN	13		$1		xx		$3		M/N/0/0		==> $3 = tran($1)	// 
-ADDs	14		$1		$2		$3		M/N/0/0		==> $3 = $1 + $2 x ones(M, N)	// 进行矩阵matrix和标量scalar的加法
-SUBs	15		$1		$2		$3		M/N/0/0		==> $3 = $1 - $2 x ones(M, N)	// 进行矩阵matrix和标量scalar的减法
+ADDs	14		$1		$2		$3		M/N/0/0		==> $3 = $1 + $2 x ones(M, N)	// matrixscalar
+SUBs	15		$1		$2		$3		M/N/0/0		==> $3 = $1 - $2 x ones(M, N)	// matrixscalar
 */
-	parameter		ADD = 0;		// 加法
-	parameter		ADDi = 1;		// 立即数加法
-	parameter		SUB = 2;		// 减法
-	parameter		SUBi = 3;		// 立即数减法
-	parameter		MULT = 4;		// 乘法
-	parameter		MULTi = 5;		// 立即数乘法
-	parameter		DOT = 6;		// 矩阵点乘
-	parameter		CONV = 7;		// 2D卷积
-	parameter		POOL = 8;		// 2D池化
-	parameter		SIGM = 9;		// sigmoid函数
-	parameter		RELU = 10;		// ReLU函数
-	parameter		TANH = 11;		// tanh函数
-	parameter		GRAY = 12;		// RGB--灰度图转换
-	parameter		TRAN = 13;		// 转置
-	parameter		ADDs = 14;		// 矩阵+标量
-	parameter		SUBs = 15;		// 矩阵-标量
+	parameter		ADD = 0;		// 
+	parameter		ADDi = 1;		// 
+	parameter		SUB = 2;		// 
+	parameter		SUBi = 3;		// 
+	parameter		MULT = 4;		// 
+	parameter		MULTi = 5;		// 
+	parameter		DOT = 6;		// 
+	parameter		CONV = 7;		// 2D
+	parameter		POOL = 8;		// 2D
+	parameter		SIGM = 9;		// sigmoid
+	parameter		RELU = 10;		// ReLU
+	parameter		TANH = 11;		// tanh
+	parameter		GRAY = 12;		// RGB--
+	parameter		TRAN = 13;		// 
+	parameter		ADDs = 14;		// +
+	parameter		SUBs = 15;		// -
 
-	reg		[3:0]	OP;	// 指令名
-	reg		[31:0]	Dollar1;	// 参数1
-	reg		[31:0]	Dollar2;	// 参数2
-	reg		[31:0]	Dollar3;	// 参数3
-	reg		[8:0]	M;	// 参数1的行尺寸
-	reg		[8:0]	N;	// 参数1的列尺寸	/ 参数2的行尺寸
-	reg		[8:0]	P;	// 参数2的列尺寸
-	reg		[4:0]	Km, Kn;	// 卷积核的行列尺寸
-	reg		[4:0]	Pm, Pn;	// 池化核的行列尺寸
-	reg		[127:0]	OP_EN;	// 一长串OP使能链
+	reg		[3:0]	OP;	// 
+	reg		[31:0]	Dollar1;	// 1
+	reg		[31:0]	Dollar2;	// 2
+	reg		[31:0]	Dollar3;	// 3
+	reg		[8:0]	M;	// 1
+	reg		[8:0]	N;	// 1	/ 2
+	reg		[8:0]	P;	// 2
+	reg		[4:0]	Km, Kn;	// 
+	reg		[4:0]	Pm, Pn;	// 
+	reg		[127:0]	OP_EN;	// OP
 	//
-	reg		[31:0]	IMM;	// 立即数
-	reg		[31:0]	MODE;	// POOL池化的模式：平均[0] / maxpool[1]
-	reg		signed	[31:0]	SCALAR;	// 读取到的$2标量
-	// 加载CNN的指令
+	reg		[31:0]	IMM;	// 
+	reg		[31:0]	MODE;	// POOL�[0] / maxpool[1]
+	reg		signed	[31:0]	SCALAR;	// $2
+	// CNN
 	always @(posedge clk)
 	begin
 		OP_EN <= {OP_EN[126:0], npu_inst_en};
@@ -159,8 +159,8 @@ SUBs	15		$1		$2		$3		M/N/0/0		==> $3 = $1 - $2 x ones(M, N)	// 进行矩阵matri
 		end
 	end
 	
-	// 三段数据缓存	// 之所以要缓存下$1/$2一行的数据，是考虑到DDR的读写（连续地址可以burst，很快）
-	// 之所以要缓存  $3的数据，是因为DDR的写入有延时
+	// 	// $1/$2�DDR�burst��
+	//   $3�DDR
 	wire	[31:0]		npu_scfifo_Dollar1_q;
 	wire				npu_scfifo_Dollar1_rdreq;
 	wire				npu_scfifo_Dollar1_rdempty;
@@ -177,8 +177,8 @@ SUBs	15		$1		$2		$3		M/N/0/0		==> $3 = $1 - $2 x ones(M, N)	// 进行矩阵matri
 	wire				npu_scfifo_Dollar3_rdreq;
 	wire				npu_scfifo_Dollar3_rdempty;
 	wire	[8:0]		npu_scfifo_Dollar3_rdusedw;
-	// $1的FIFO输出到$3的输入时序不佳（估计是通过某个组合逻辑直连了，这里修正一下）
-	// 使用寄存器打断一下链路
+	// $1FIFO$3���
+	// 
 	reg		[31:0]		npu_scfifo_Dollar3_data;
 	reg					npu_scfifo_Dollar3_wrreq;
 	sc_fifo				#(
@@ -228,122 +228,122 @@ SUBs	15		$1		$2		$3		M/N/0/0		==> $3 = $1 - $2 x ones(M, N)	// 进行矩阵matri
 						);
 						
 	//////////////////////////////////////////////////////////////////////////////////					
-	// 使用FSM控制CNN的计算
+	// FSMCNN
 	reg		[5:0]	cstate;
 	reg		[5:0]	substate;
 	reg		[5:0]	delay;
-	reg		[31:0]	GPC0;	// 通用计数器 -- general proposal counter
-	reg		[31:0]	GPC1;	// 通用计数器 -- general proposal counter
-	reg		[31:0]	GPC2;	// 通用计数器 -- general proposal counter
-	reg		[31:0]	GPC3;	// 通用计数器 -- general proposal counter
-	reg		[31:0]	GPC4;	// 通用计数器 -- general proposal counter
-	reg		[31:0]	GPC5;	// 通用计数器 -- general proposal counter
-	parameter		IDLE = 0;	// 空闲状态
-	parameter		ExADD = 1;	// 执行加法
-	parameter		ExADDi = 2;	// 执行立即数加法
-	parameter		ExSUB = 3;	// 执行减法
-	parameter		ExSUBi = 4;	// 执行立即数减法
-	parameter		ExMulti = 5;	// 执行立即数乘法
-	parameter		ExMult = 6;	// 执行矩阵乘法
-	parameter		ExDOT = 7;	// 执行矩阵点乘运算
-	parameter		ExConv = 8;	// 执行卷机操作
-	parameter		ExPool = 9;	// 执行池化pooling操作
-	parameter		ExReLU = 11;	// 执行ReLU激活函数
-	parameter		ExSigmoid = 10;	// 执行sigmoid激活函数
-	parameter		ExTanh = 12;	// 执行tanh激活函数
-	parameter		ExTran = 14;	// 执行矩阵转置函数
-	parameter		ExGray = 13;	// 执行灰度图转换函数
-	parameter		ExADDs = 15;	// 执行矩阵+标量的函数
-	parameter		ExSUBs = 16;	// 执行矩阵-标量的函数
+	reg		[31:0]	GPC0;	//  -- general proposal counter
+	reg		[31:0]	GPC1;	//  -- general proposal counter
+	reg		[31:0]	GPC2;	//  -- general proposal counter
+	reg		[31:0]	GPC3;	//  -- general proposal counter
+	reg		[31:0]	GPC4;	//  -- general proposal counter
+	reg		[31:0]	GPC5;	//  -- general proposal counter
+	parameter		IDLE = 0;	// 
+	parameter		ExADD = 1;	// 
+	parameter		ExADDi = 2;	// 
+	parameter		ExSUB = 3;	// 
+	parameter		ExSUBi = 4;	// 
+	parameter		ExMulti = 5;	// 
+	parameter		ExMult = 6;	// 
+	parameter		ExDOT = 7;	// 
+	parameter		ExConv = 8;	// 
+	parameter		ExPool = 9;	// pooling
+	parameter		ExReLU = 11;	// ReLU
+	parameter		ExSigmoid = 10;	// sigmoid
+	parameter		ExTanh = 12;	// tanh
+	parameter		ExTran = 14;	// 
+	parameter		ExGray = 13;	// 
+	parameter		ExADDs = 15;	// +
+	parameter		ExSUBs = 16;	// -
 	always @(posedge clk)
 		if(!rst_n)
 			reset_system_task;
 		else
 		begin
 			case(cstate)
-				// 闲置状态
+				// 
 				IDLE: begin
 					idle_task;
 				end
 				
-				// 加法
+				// 
 				ExADD: begin
 					ex_add_sub_task;
 				end
 				
-				// 减法
+				// 
 				ExSUB: begin
 					ex_add_sub_task;
 				end
 				
-				// 加上立即数
+				// 
 				ExADDi: begin
 					ex_add_sub_imm_task;
 				end
 				
-				// 减去立即数
+				// 
 				ExSUBi: begin
 					ex_add_sub_imm_task;
 				end
 				
-				// 执行ReLU激活函数
+				// ReLU
 				ExReLU: begin
-					ex_add_sub_imm_task;	// 可以参照立即数加减算法
+					ex_add_sub_imm_task;	// 
 				end
 				
 				
-				// 执行sigmoid激活函数
+				// sigmoid
 				ExSigmoid: begin
-					ex_add_sub_imm_task;	// 可以参照立即数加减算法
+					ex_add_sub_imm_task;	// 
 				end
 				
 				
-				// 执行tanh激活函数
+				// tanh
 				ExTanh: begin
-					ex_add_sub_imm_task;	// 可以参照立即数加减算法
+					ex_add_sub_imm_task;	// 
 				end
 				
-				// 执行矩阵点乘运算
+				// 
 				ExDOT: begin
-					ex_add_sub_task;	// 可以参考加减法的运算
+					ex_add_sub_task;	// 
 				end
 				
-				// 执行立即数乘法
+				// 
 				ExMulti: begin
-					ex_add_sub_imm_task;	// 可以参照立即数加减算法
+					ex_add_sub_imm_task;	// 
 				end
 				
-				// 执行矩阵2-D卷积运算(注意是3x3的valid卷积！)
+				// 2-D(3x3valid�)
 				ExConv: begin
-					ex_conv_task;	// 执行卷积操作
+					ex_conv_task;	// 
 				end
 				
-				// 执行矩阵的pooling池化运算（注意是2x2的pooling）
+				// pooling�2x2pooling�
 				ExPool: begin
-					ex_pool_task;	// 执行pooling池化操作
+					ex_pool_task;	// pooling
 				end
 				
-				// 执行矩阵乘法运算
+				// 
 				ExMult: begin
-					ex_mult_task;	// 执行矩阵的乘法运算
+					ex_mult_task;	// 
 				end
 				
-				// 执行矩阵转置函数
+				// 
 				ExTran: begin
-					ex_tran_task;	// 执行转置
+					ex_tran_task;	// 
 				end
 				
-				// 执行RGB565转换成灰度图的运算
+				// RGB565
 				ExGray: begin
-					ex_add_sub_imm_task;	// 可以参照立即数加减算法
+					ex_add_sub_imm_task;	// 
 				end
 					
-				// 执行矩阵±标量的函数
+				// 
 				ExADDs: begin
 					ex_add_sub_scalar_task;	//
 				end
 				
-				// 执行矩阵-标量的函数
+				// -
 				ExSUBs: begin
 					ex_add_sub_scalar_task;	//
 				end
@@ -356,17 +356,17 @@ SUBs	15		$1		$2		$3		M/N/0/0		==> $3 = $1 - $2 x ones(M, N)	// 进行矩阵matri
 			
 		end
 ////////////////////////////////////////////////
-// 执行各种操作
-	// 激活函数 的计算
-	wire		[31:0]			ddr_read_data_rho;	// 经过激活函数的变换
-	reg			[127:0]			ddr_read_data_valid_shifter;	// 需要较大的寄存器链
-	// 2018-04-05: 查出来一个bug，如果不在接收到npu_inst_shifter的时候将ddr_read_data_valid_shifter复位，可能会有问题！
+// 
+	//  
+	wire		[31:0]			ddr_read_data_rho;	// 
+	reg			[127:0]			ddr_read_data_valid_shifter;	// 
+	// 2018-04-05: bug�npu_inst_shifterddr_read_data_valid_shifter��
 	always @(posedge clk)
 		if(npu_inst_en)
 			ddr_read_data_valid_shifter <= 0;
 		else
 			ddr_read_data_valid_shifter <= {ddr_read_data_valid_shifter[126:0], ddr_read_data_valid};
-	// 例化激活函数的计算器
+	// 
 	cordic_tanh_sigm_rtl		cordic_tanh_sigm_rtl_inst(
 									.sys_clk(clk),
 									.sys_rst_n(rst_n),
@@ -378,9 +378,9 @@ SUBs	15		$1		$2		$3		M/N/0/0		==> $3 = $1 - $2 x ones(M, N)	// 进行矩阵matri
 	wire	signed	[31:0]		dot_a = (cstate==ExMulti)? IMM : npu_scfifo_Dollar1_q;
 	wire	signed	[31:0]		dot_b = ddr_read_data;
 	wire	signed	[63:0]		dot_c = dot_a * dot_b;
-	// 路由联通
+	// 
 	//////////////////////////////////////////////////////////////////////////////////
-	// 首先是要缓存矩阵乘法中，$1的一行向量
+	// �$1
 	wire	[31:0]		npu_ram_inst_4_q;
 	wire				npu_ram_inst_4_wren;
 	wire	[31:0]		npu_ram_inst_4_data;
@@ -396,17 +396,17 @@ SUBs	15		$1		$2		$3		M/N/0/0		==> $3 = $1 - $2 x ones(M, N)	// 进行矩阵matri
 							.rdreq(1),
 							.q(npu_ram_inst_4_q)
 						);
-	// 将$1里面的一行数据写入到RAM进行缓存
+	// $1RAM
 	always @(posedge clk)
 		if(cstate==ExMult && substate==0)
 			npu_ram_inst_4_wraddress <= 0;
 		else if(cstate==ExMult && substate<=2 && ddr_read_data_valid)
-			npu_ram_inst_4_wraddress <= npu_ram_inst_4_wraddress + 1;	// 地址加1
+			npu_ram_inst_4_wraddress <= npu_ram_inst_4_wraddress + 1;	// 1
 	
 	assign	npu_ram_inst_4_wren = (cstate==ExMult && substate<=2 && ddr_read_data_valid);
 	assign	npu_ram_inst_4_data = ddr_read_data;
 	
-	// 然后是向量的MAC操作
+	// MAC
 	always @(posedge clk)
 		if(cstate==ExMult && substate<=2)
 			npu_ram_inst_4_rdaddress <= 0;
@@ -419,7 +419,7 @@ SUBs	15		$1		$2		$3		M/N/0/0		==> $3 = $1 - $2 x ones(M, N)	// 进行矩阵matri
 					npu_ram_inst_4_rdaddress <= npu_ram_inst_4_rdaddress + 1;
 		end
 		
-	// 需要将ddr_read_data打两排
+	// ddr_read_data
 	reg		[31:0]		ddr_read_data_prev	[0:5];
 	integer		l;
 	always @(posedge clk)
@@ -429,7 +429,7 @@ SUBs	15		$1		$2		$3		M/N/0/0		==> $3 = $1 - $2 x ones(M, N)	// 进行矩阵matri
 		ddr_read_data_prev[0] <= ddr_read_data;
 	end
 	
-	// 计算现在MAC有多少元素了
+	// MAC
 	reg		[31:0]				vec_mac_elem_cnt;
 	always @(posedge clk)
 		if(cstate==ExMult && (substate<=2 || substate==8))
@@ -437,8 +437,8 @@ SUBs	15		$1		$2		$3		M/N/0/0		==> $3 = $1 - $2 x ones(M, N)	// 进行矩阵matri
 		else if(ddr_read_data_valid_shifter[1])
 			vec_mac_elem_cnt <= (vec_mac_elem_cnt>=(N-1))? 0 : vec_mac_elem_cnt + 1;
 			
-	// 然后是MAC操作，实现向量乘法
-	// 2018-03-09：查出bug，发现是因为MAC操作少加了一组！
+	// MAC�
+	// 2018-03-09�bug�MAC�
 	wire	signed		[31:0]	vec_mac_a = ddr_read_data_prev[1];
 	wire	signed		[31:0]	vec_mac_b = npu_ram_inst_4_q;
 	wire	signed		[63:0]	vec_mac_c = vec_mac_a*vec_mac_b;
@@ -455,7 +455,7 @@ SUBs	15		$1		$2		$3		M/N/0/0		==> $3 = $1 - $2 x ones(M, N)	// 进行矩阵matri
 	always @(posedge clk)
 		vec_mac_result_en <= (cstate==ExMult && substate>=3 && substate<8) && (ddr_read_data_valid_shifter[1] && vec_mac_elem_cnt==(N-1));
 	
-	// 补充： 灰度图转换操作
+	// � 
 	reg		[7:0]	RGB888_R;
 	reg		[7:0]	RGB888_G;
 	reg		[7:0]	RGB888_B;
@@ -469,9 +469,9 @@ SUBs	15		$1		$2		$3		M/N/0/0		==> $3 = $1 - $2 x ones(M, N)	// 进行矩阵matri
 	reg		[16:0]	YUV422_Y_reg;// = 66*RGB888_R + 129 * RGB888_G + 25*RGB888_B;
 	reg		[16:0]	YUV422_Cb_reg;// = -38*RGB888_R - 74*RGB888_G + 112*RGB888_B;
 	reg		[16:0]	YUV422_Cr_reg;// = 112*RGB888_R - 94*RGB888_G - 18*RGB888_B;
-	// set_multicycle_path -- 理论上，两个时钟计算一次即可
-	// 不过，在芯片 5CSEBA6U23I7 上面，似乎不必太在意，因为65MHz时钟比较慢(Fmax=81.63MHz)
-	// 或者可以打一拍看看，将MAC运算拆分为 * / + 两步进行 ==> 171.79MHz
+	// set_multicycle_path -- �
+	// � 5CSEBA6U23I7 ��65MHz(Fmax=81.63MHz)
+	// �MAC * / +  ==> 171.79MHz
 	reg		[16:0]	RGB888_R_66;
 	reg		[16:0]	RGB888_R_38;
 	reg		[16:0]	RGB888_R_112;
@@ -500,7 +500,7 @@ SUBs	15		$1		$2		$3		M/N/0/0		==> $3 = $1 - $2 x ones(M, N)	// 进行矩阵matri
 		YUV422_Cb_reg <= - RGB888_R_38 - RGB888_G_74 + RGB888_B_112;
 		YUV422_Cr_reg <= RGB888_R_112 - RGB888_G_94 - RGB888_B_18;
 		
-		// 加上偏移量
+		// 
 		YUV422_Y <= (YUV422_Y_reg>>>8) + 16;	// 16~235
 		YUV422_Cb <= (YUV422_Cb_reg>>>8) + 128;	// 16~240
 		YUV422_Cr <= (YUV422_Cr_reg>>>8) + 128;	// 16~240
@@ -511,7 +511,7 @@ SUBs	15		$1		$2		$3		M/N/0/0		==> $3 = $1 - $2 x ones(M, N)	// 进行矩阵matri
 	wire	[7:0]	YUV422_Cb_valid = (YUV422_Cb<16)? 16 : (YUV422_Cb>240)? 240 : YUV422_Cb;
 	wire	[7:0]	YUV422_Cr_valid = (YUV422_Cr<16)? 16 : (YUV422_Cr>240)? 240 : YUV422_Cr;
 	///////////////
-	// 例化卷积模块
+	// 
 	wire	signed	[DATA_WIDTH-1:0]	conv_write_data;
 	wire								conv_write_data_valid;
 	wire								conv_read_data_valid = (((cstate==ExConv && substate>=2 && substate<7) || (cstate==ExPool)) && ddr_read_data_valid);
@@ -575,8 +575,8 @@ SUBs	15		$1		$2		$3		M/N/0/0		==> $3 = $1 - $2 x ones(M, N)	// 进行矩阵matri
 		.pool_opt_col		( pool_opt_col 			)
 	);
 	
-	/////////// 输出的FIFO操作
-	// 2018-05-16: $1的FIFO输出到$3的输入时序不佳（估计是通过某个组合逻辑直连了，这里修正一下）
+	/////////// FIFO
+	// 2018-05-16: $1FIFO$3���
 	assign			npu_scfifo_Dollar1_data = ddr_read_data;
 	assign			npu_scfifo_Dollar1_wrreq = ddr_read_data_valid && 
 														(	(cstate==ExADD && substate<=2) ||
@@ -588,7 +588,7 @@ SUBs	15		$1		$2		$3		M/N/0/0		==> $3 = $1 - $2 x ones(M, N)	// 进行矩阵matri
 															(cstate==ExSUB && substate>=3) ||
 															(cstate==ExDOT && substate>=3)
 														);
-	// 使用寄存器打断一下链路
+	// 
 	always @(posedge clk)
 	begin
 		npu_scfifo_Dollar3_data 				<= 	(cstate==ExADD)? (npu_scfifo_Dollar1_q + ddr_read_data) : 
@@ -646,156 +646,156 @@ SUBs	15		$1		$2		$3		M/N/0/0		==> $3 = $1 - $2 x ones(M, N)	// 进行矩阵matri
 	end													
 	
 ////////////////////////
-// 各种gtak
-// 首先	是系统复位的task
+// gtak
+// 	task
 task reset_system_task;
 begin
 	cstate <= IDLE;
-	substate <= 0;	// 为了让指令执行更加正确，需要在外部FSM里面嵌入子FSM
-	npu_inst_ready <= 1;	// 可以接受指令
-	// 撤销DDR读取使能信号
+	substate <= 0;	// �FSMFSM
+	npu_inst_ready <= 1;	// 
+	// DDR
 	ddr_read_req <= 0;
-	// 撤销DDR写入信号
+	// DDR
 	//ddr_write_req <= 0;
-	// $1/$2/$3三个FIFO的读取信号
+	// $1/$2/$3FIFO
 	//npu_scfifo_Dollar3_rdreq <= 0;
 end
 endtask
 
-// 空闲状态下的task
+// task
 task idle_task;
 begin
-	// 根据指令的OP字段选择跳转逻辑
+	// OP
 	if(OP_EN[0])
 	begin
 		case(OP)
 			ADD: begin
-				cstate <= ExADD;	//	 执行加法操作
+				cstate <= ExADD;	//	 
 				substate <= 0;
 				GPC0 <= 0;
 				GPC1 <= 0;
-				npu_inst_ready <= 0;	// not ready了
+				npu_inst_ready <= 0;	// not ready
 			end
 			
 			SUB: begin
-				cstate <= ExSUB;	//	 执行减法操作
+				cstate <= ExSUB;	//	 
 				substate <= 0;
 				GPC0 <= 0;
 				GPC1 <= 0;
-				npu_inst_ready <= 0;	// not ready了
+				npu_inst_ready <= 0;	// not ready
 			end
 			
 			ADDi: begin
-				cstate <= ExADDi;	//	 执行立即数加法操作
+				cstate <= ExADDi;	//	 
 				substate <= 0;
 				GPC0 <= 0;
 				GPC1 <= 0;
-				npu_inst_ready <= 0;	// not ready了
+				npu_inst_ready <= 0;	// not ready
 			end
 			
 			SUBi: begin
-				cstate <= ExSUBi;	//	 执行立即数减法操作
+				cstate <= ExSUBi;	//	 
 				substate <= 0;
 				GPC0 <= 0;
 				GPC1 <= 0;
-				npu_inst_ready <= 0;	// not ready了
+				npu_inst_ready <= 0;	// not ready
 			end
 			
 			RELU: begin
-				cstate <= ExReLU;	//	 执行RELU操作
+				cstate <= ExReLU;	//	 RELU
 				substate <= 0;
 				GPC0 <= 0;
 				GPC1 <= 0;
-				npu_inst_ready <= 0;	// not ready了
+				npu_inst_ready <= 0;	// not ready
 			end
 			
 			SIGM: begin
-				cstate <= ExSigmoid;	//	 执行sigmoid操作
+				cstate <= ExSigmoid;	//	 sigmoid
 				substate <= 0;
 				GPC0 <= 0;
 				GPC1 <= 0;
-				npu_inst_ready <= 0;	// not ready了
+				npu_inst_ready <= 0;	// not ready
 			end
 			
 			TANH: begin
-				cstate <= ExTanh;	//	 执行tanh操作
+				cstate <= ExTanh;	//	 tanh
 				substate <= 0;
 				GPC0 <= 0;
 				GPC1 <= 0;
-				npu_inst_ready <= 0;	// not ready了
+				npu_inst_ready <= 0;	// not ready
 			end
 			
 			DOT: begin
-				cstate <= ExDOT;	//	 执行矩阵点乘操作
+				cstate <= ExDOT;	//	 
 				substate <= 0;
 				GPC0 <= 0;
 				GPC1 <= 0;
-				npu_inst_ready <= 0;	// not ready了
+				npu_inst_ready <= 0;	// not ready
 			end
 			
 			MULTi: begin
-				cstate <= ExMulti;	//	 执行矩阵立即数乘法操作
+				cstate <= ExMulti;	//	 
 				substate <= 0;
 				GPC0 <= 0;
 				GPC1 <= 0;
-				npu_inst_ready <= 0;	// not ready了
+				npu_inst_ready <= 0;	// not ready
 			end
 			
 			CONV: begin
-				cstate <= ExConv;	//	 执行矩阵2D valid卷积操作
+				cstate <= ExConv;	//	 2D valid
 				substate <= 0;
 				GPC0 <= 0;
 				GPC1 <= 0;
-				npu_inst_ready <= 0;	// not ready了
+				npu_inst_ready <= 0;	// not ready
 			end
 			
 			POOL: begin
-				cstate <= ExPool;	//	 执行矩阵2D valid卷积操作
+				cstate <= ExPool;	//	 2D valid
 				substate <= 0;
 				GPC0 <= 0;
 				GPC1 <= 0;
 				GPC5 <= 0;
-				npu_inst_ready <= 0;	// not ready了
+				npu_inst_ready <= 0;	// not ready
 			end
 				
 			MULT: begin
-				cstate <= ExMult;	//	 执行矩阵乘法操作
+				cstate <= ExMult;	//	 
 				substate <= 0;
 				GPC0 <= 0;
 				GPC1 <= 0;
-				npu_inst_ready <= 0;	// not ready了
+				npu_inst_ready <= 0;	// not ready
 			end
 				
 			TRAN: begin
-				cstate <= ExTran;	//	 执行矩阵转置操作
+				cstate <= ExTran;	//	 
 				substate <= 0;
 				GPC0 <= 0;
 				GPC1 <= 0;
-				npu_inst_ready <= 0;	// not ready了
+				npu_inst_ready <= 0;	// not ready
 			end
 			
 			GRAY: begin
-				cstate <= ExGray;	//	 执行RGB565/灰度图转换操作
+				cstate <= ExGray;	//	 RGB565/
 				substate <= 0;
 				GPC0 <= 0;
 				GPC1 <= 0;
-				npu_inst_ready <= 0;	// not ready了
+				npu_inst_ready <= 0;	// not ready
 			end
 			
 			ADDs: begin
-				cstate <= ExADDs;	//	 执行矩阵+标量操作
+				cstate <= ExADDs;	//	 +
 				substate <= 0;
 				GPC0 <= 0;
 				GPC1 <= 0;
-				npu_inst_ready <= 0;	// not ready了
+				npu_inst_ready <= 0;	// not ready
 			end
 			
 			SUBs: begin
-				cstate <= ExSUBs;	//	 执行矩阵-标量操作
+				cstate <= ExSUBs;	//	 -
 				substate <= 0;
 				GPC0 <= 0;
 				GPC1 <= 0;
-				npu_inst_ready <= 0;	// not ready了
+				npu_inst_ready <= 0;	// not ready
 			end
 			
 			default: begin
@@ -807,34 +807,34 @@ begin
 end
 endtask
 
-// 执行加/减法操作
+// /
 task ex_add_sub_task;
 begin
 	case(substate)
 		0: begin
-			// 如果完成了ADD， 那么跳出
+			// ADD� 
 			if(GPC0>=M)
 				reset_system_task;
-			// 否则就要每行每行的执行
+			// 
 			else
 			begin
 				GPC1 <= 0;
 				GPC2 <= 0;
 				substate <= 1;
-				ddr_read_addr <= Dollar1 + (GPC0*N);	// 生成$1的读取地址
+				ddr_read_addr <= Dollar1 + (GPC0*N);	// $1
 				ddr_read_req <= 1;
 			end
 		end
 		
 		1: begin
-			// 如果$1的一行数据读取完成，就要开始读取$2
+			// $1�$2
 			if(GPC1>=(N-1) && ddr_read_ready)
 			begin
 				GPC1 <= 0;
 				substate <= 2;
-				ddr_read_req <= 0;	// 撤销DDR读取指令
+				ddr_read_req <= 0;	// DDR
 			end
-			// 否则就是要继续读取$1的当前行
+			// $1
 			else
 			begin
 				if(ddr_read_ready)
@@ -846,28 +846,28 @@ begin
 			end
 		end
 		
-		// 等待$1-fifo里面有满满一行的数据
+		// $1-fifo
 		2: begin
 			if(npu_scfifo_Dollar1_rdusedw>=N)
 			begin
 				substate <= 3;
-				ddr_read_addr <= Dollar2 + (GPC0*N);	// 生成$2的读取地址
+				ddr_read_addr <= Dollar2 + (GPC0*N);	// $2
 				ddr_read_req <= 1;
 			end
 		end
 		
-		// 实现$2的一行数据读取
+		// $2
 		3: begin
 			if(GPC1>=(N-1) && ddr_read_ready)
 			begin
 				GPC1 <= 0;
 				GPC2 <= 0;
 				substate <= 4;
-				ddr_read_req <= 0;	// 撤销DDR读取指令
-				// 生成DDR回写地址
-				//ddr_write_addr <= Dollar3 + (GPC0*N);	// $3的回写地址
+				ddr_read_req <= 0;	// DDR
+				// DDR
+				//ddr_write_addr <= Dollar3 + (GPC0*N);	// $3
 			end
-			// 否则就是要继续读取$2的当前行
+			// $2
 			else
 			begin
 				if(ddr_read_ready)
@@ -879,7 +879,7 @@ begin
 			end
 		end
 		
-		// 回写$3的数据，将N列的数据全部写入即可
+		// $3�N
 		4: begin
 			if(ddr_write_data_valid && ddr_write_col>=(N-1))
 			begin
@@ -898,36 +898,36 @@ begin
 end
 endtask
 
-// 执行立即数加减法操作
+// 
 task ex_add_sub_imm_task;
 begin
 	case(substate)
 		0: begin
-			// 如果完成了ADD， 那么跳出
+			// ADD� 
 			if(GPC0>=M)
 				reset_system_task;
-			// 否则就要每行每行的执行
+			// 
 			else
 			begin
 				GPC1 <= 0;
 				GPC2 <= 0;
 				substate <= 1;
-				ddr_read_addr <= Dollar1 + (GPC0*N);	// 生成$1的读取地址
+				ddr_read_addr <= Dollar1 + (GPC0*N);	// $1
 				ddr_read_req <= 1;
 			end
 		end
 		
 		1: begin
-			// 如果$1的一行数据读取完成，就要开始输出$3
+			// $1�$3
 			if(GPC1>=(N-1) && ddr_read_ready)
 			begin
 				GPC1 <= 0;
 				substate <= 2;
-				ddr_read_req <= 0;	// 撤销DDR读取指令
-				// 生成DDR回写地址
-				//ddr_write_addr <= Dollar3 + (GPC0*N);	// $3的回写地址
+				ddr_read_req <= 0;	// DDR
+				// DDR
+				//ddr_write_addr <= Dollar3 + (GPC0*N);	// $3
 			end
-			// 否则就是要继续读取$1的当前行
+			// $1
 			else
 			begin
 				if(ddr_read_ready)
@@ -940,7 +940,7 @@ begin
 		end
 		
 		
-		// 回写$3的数据，将N列的数据全部写入即可
+		// $3�N
 		2: begin
 			if(ddr_write_data_valid && ddr_write_col>=(N-1))
 			begin
@@ -960,13 +960,13 @@ end
 endtask
 
 ////////////////////////////////////////////
-// 2D-valid卷积操作
+// 2D-valid
 task ex_conv_task;
 begin
 	case(substate)
-		// 首先读取卷积核
+		// 
 		0: begin
-			// 如果读取完成，就要开始图像的读取 & 卷积
+			// � & 
 			if(GPC0>=(Km*Kn))
 			begin
 				GPC0 <= 0; 
@@ -974,11 +974,11 @@ begin
 				delay <= 0;
 				ddr_read_req <= 0;
 			end
-			// 否则就要持续度去卷积核
+			// 
 			else
 			begin
 				substate <= 1;
-				ddr_read_addr <= Dollar2 + GPC0;	// 生成$2（卷积核参数）的读取地址
+				ddr_read_addr <= Dollar2 + GPC0;	// $2��
 				ddr_read_req <= 1;
 			end
 		end
@@ -989,12 +989,12 @@ begin
 			if(ddr_read_data_valid)
 			begin
 				GPC0 <= GPC0 + 1;
-				substate <= 0;		// 回到0状态，要在发动一次kernel读取
+				substate <= 0;		// 0�kernel
 			end
 		end
 		
-		// 注意，这里需要延时一会儿！
-		// 因为后面的卷积计算的时候参考了rdata_valid[6]，所以一定要有delay一下才行！
+		// ��
+		// rdata_valid[6]�delay�
 		7: begin
 			if(delay>=8)
 				substate <= 2;
@@ -1003,40 +1003,40 @@ begin
 		end
 		
 		
-		// 开始读取图像
+		// 
 		2: begin
-			// 如果完成了卷积计算， 那么跳出
+			// � 
 			if(GPC0>=M)
 				reset_system_task;
-			// 否则就要每行每行的执行
+			// 
 			else
 			begin
 				GPC1 <= 0;
 				GPC2 <= 0;
 				substate <= 3;
-				ddr_read_addr <= Dollar1 + (GPC0*N);	// 生成$1的读取地址
+				ddr_read_addr <= Dollar1 + (GPC0*N);	// $1
 				ddr_read_req <= 1;
 			end
 		end
 		
 		3: begin
-			// 如果$1的Km行数据读取完成，就要开始输出$3
-			// 而且已经读了Km行了
+			// $1Km�$3
+			// Km
 			if(GPC1>=(N-1) && ddr_read_ready)
 			begin
 				GPC1 <= 0;
-				GPC0 <= GPC0 + 1;	// 读取行加1
-				ddr_read_addr <= ddr_read_addr + 1;	//  读取地址加1
+				GPC0 <= GPC0 + 1;	// 1
+				ddr_read_addr <= ddr_read_addr + 1;	//  1
 				if(GPC0>=(Km-1))
 				begin
 					substate <= 4;
-					ddr_read_req <= 0;	// 撤销DDR读取指令
-					// 生成DDR回写地址
-					//ddr_write_addr <= Dollar3 + ((GPC0-Km+1)*(N-Kn+1));	// $3的回写地址
-					GPC2 <= 0;	// GPC2置零
+					ddr_read_req <= 0;	// DDR
+					// DDR
+					//ddr_write_addr <= Dollar3 + ((GPC0-Km+1)*(N-Kn+1));	// $3
+					GPC2 <= 0;	// GPC2
 				end
 			end
-			// 否则就是要继续读取$1的当前行
+			// $1
 			else
 			begin
 				if(ddr_read_ready)
@@ -1049,7 +1049,7 @@ begin
 		end
 		
 		
-		// 回写$3的数据，将N列的数据全部写入即可
+		// $3�N
 		4: begin
 			if(ddr_write_data_valid && ddr_write_col>=(N-Kn))
 			begin
@@ -1070,46 +1070,46 @@ end
 endtask
 
 ///////////////////////////////////////////////
-// 池化操作
+// 
 task ex_pool_task;
 begin
 	case(substate)
-		// 开始读取图像
+		// 
 		0: begin
-			// 如果完成了卷积计算， 那么跳出
+			// � 
 			if(GPC0>=M)
 				reset_system_task;
-			// 否则就要每行每行的执行
+			// 
 			else
 			begin
 				GPC1 <= 0;
 				GPC2 <= 0;
 				substate <= 1;
-				ddr_read_addr <= Dollar1 + (GPC0*N);	// 生成$1的读取地址
+				ddr_read_addr <= Dollar1 + (GPC0*N);	// $1
 				ddr_read_req <= 1;
 			end
 		end
 		
 		1: begin
-			// 如果$1的行数据读取完成，就要开始输出$3
+			// $1�$3
 			if(GPC1>=(N-1) && ddr_read_ready)
 			begin
 				GPC1 <= 0;
-				GPC0 <= GPC0 + 1;	// 读取行加1
-				GPC5 <= GPC5 + 1;	// 读取行加1
-				ddr_read_addr <= ddr_read_addr + 1;	//  读取地址加1
+				GPC0 <= GPC0 + 1;	// 1
+				GPC5 <= GPC5 + 1;	// 1
+				ddr_read_addr <= ddr_read_addr + 1;	//  1
 				if(GPC0>=(M-1)&& GPC5<(Pm-1))	// 
 					reset_system_task;
 				else if(GPC5>=(Pm-1))	// 
 				begin
 					substate <= 2;
-					ddr_read_req <= 0;	// 撤销DDR读取指令
-					// 生成DDR回写地址
-					//ddr_write_addr <= Dollar3 + ((GPC0>>>1)*(N>>>1));	// $3的回写地址
-					GPC2 <= 0;	// GPC2置零
+					ddr_read_req <= 0;	// DDR
+					// DDR
+					//ddr_write_addr <= Dollar3 + ((GPC0>>>1)*(N>>>1));	// $3
+					GPC2 <= 0;	// GPC2
 				end
 			end
-			// 否则就是要继续读取$1的当前行
+			// $1
 			else
 			begin
 				if(ddr_read_ready)
@@ -1121,7 +1121,7 @@ begin
 			end
 		end
 		
-		// 回写$3的数据，将N列的数据全部写入即可
+		// $3�N
 		2: begin
 			if(ddr_write_data_valid && ddr_write_col>=(pool_opt_col-1))
 			begin
@@ -1140,35 +1140,35 @@ end
 endtask
 
 ///////////////////////////////////////////////////////////////
-// 矩阵乘法运算
+// 
 task ex_mult_task;
 begin
 	case(substate)
 		0: begin
-			// 如果完成了MULT， 那么跳出
+			// MULT� 
 			if(GPC0>=M)
 				reset_system_task;
-			// 否则就要每行每行的执行
+			// 
 			else
 			begin
 				GPC1 <= 0;
 				GPC2 <= 0;
 				substate <= 1;
-				ddr_read_addr <= Dollar1 + (GPC0*N);	// 生成$1的读取地址
+				ddr_read_addr <= Dollar1 + (GPC0*N);	// $1
 				ddr_read_req <= 1;
 			end
 		end
 		
 		1: begin
-			// 如果$1的一行数据读取完成，就要开始读取$2
+			// $1�$2
 			if(GPC1>=(N-1) && ddr_read_ready)
 			begin
 				GPC1 <= 0;
 				substate <= 2;
 				delay <= 0;
-				ddr_read_req <= 0;	// 撤销DDR读取指令
+				ddr_read_req <= 0;	// DDR
 			end
-			// 否则就是要继续读取$1的当前行
+			// $1
 			else
 			begin
 				if(ddr_read_ready)
@@ -1180,11 +1180,11 @@ begin
 			end
 		end
 		
-		// 等待$1-fifo里面有满满一行的数据
+		// $1-fifo
 		2: begin
 			if(npu_ram_inst_4_wraddress>=N)
 			begin
-				//  开始循环读取$2的每一列数据(进入8状态，进行短暂的停顿，为了防止出现bug)
+				//  $2(8��bug)
 				substate <= 8;
 				delay <= 0;
 				GPC2 <= 0;
@@ -1200,15 +1200,15 @@ begin
 				delay <= delay + 1;
 		end
 		
-		// 读取$2的每一列数据
+		// $2
 		3: begin
 			if(GPC2>=P)
 			begin
-				substate <= 5;		// 如果每一列都读取完毕，那么就要开始C行向量传输
+				substate <= 5;		// �C
 				GPC0 <= GPC0 + 1;
-				GPC4 <= 0;	// 用来统计发送的C向量长度
+				GPC4 <= 0;	// C
 			end
-			// 否则启动一列数据的读取
+			// 
 			else
 			begin
 				ddr_read_addr <= Dollar2 + GPC2;
@@ -1218,7 +1218,7 @@ begin
 			end
 		end
 		
-		// 持续读取
+		// 
 		4: begin
 			if(ddr_read_ready)
 			begin
@@ -1226,7 +1226,7 @@ begin
 				begin
 					substate <= 3;
 					GPC2 <= GPC2 + 1;
-					ddr_read_req <= 0;	// 这里关闭ddr读取使能很关键！
+					ddr_read_req <= 0;	// ddr�
 				end
 				else
 				begin
@@ -1237,7 +1237,7 @@ begin
 			end
 		end
 		
-		// 回写$3的数据，将N列的数据全部写入即可
+		// $3�N
 		5: begin
 			if(ddr_write_data_valid && ddr_write_col>=(P-1))
 			begin
@@ -1254,49 +1254,49 @@ end
 endtask
 ////////////////////////////////////////////////////////////////////////////////////
 
-// 执行矩阵转置操作
+// 
 task ex_tran_task;
 begin
 	case(substate)
 		0: begin
-			// 如果完成了ADD， 那么跳出
+			// ADD� 
 			if(GPC0>=N)
 				reset_system_task;
-			// 否则就要每列每列的进行读取
+			// 
 			else
 			begin
 				GPC1 <= 0;
 				GPC2 <= 0;
 				substate <= 1;
-				ddr_read_addr <= Dollar1 + GPC0;	// 生成$1的读取地址
+				ddr_read_addr <= Dollar1 + GPC0;	// $1
 				ddr_read_req <= 1;
 			end
 		end
 		
 		1: begin
-			// 如果$1的一列数据读取完成，就要开始输出$3
+			// $1�$3
 			if(GPC1>=(M-1) && ddr_read_ready)
 			begin
 				GPC1 <= 0;
 				substate <= 2;
-				ddr_read_req <= 0;	// 撤销DDR读取指令
-				// 生成DDR回写地址
-				//ddr_write_addr <= Dollar3 + (GPC0);	// $3的回写地址
+				ddr_read_req <= 0;	// DDR
+				// DDR
+				//ddr_write_addr <= Dollar3 + (GPC0);	// $3
 			end
-			// 否则就是要继续读取$1的当前行
+			// $1
 			else
 			begin
 				if(ddr_read_ready)
 				begin
 					GPC1 <= GPC1 + 1;
-					ddr_read_addr <= ddr_read_addr + N;	// 因为读取的时候是按列读取的
+					ddr_read_addr <= ddr_read_addr + N;	// 
 					ddr_read_req <= 1;
 				end
 			end
 		end
 		
 		
-		// 回写$3的数据，将N列的数据全部写入即可（因为是转置，所以一定要注意！）
+		// $3�N����
 		2: begin
 			if(ddr_write_data_valid && ddr_write_col>=(M-1))
 			begin
@@ -1314,25 +1314,25 @@ begin
 end
 endtask
 
-// 执行矩阵和标量的加减法操作
+// 
 task ex_add_sub_scalar_task;
 begin
 	case(substate)
 		0: begin
-			// 如果完成了ADD， 那么跳出
+			// ADD� 
 			if(GPC0>=M)
 				reset_system_task;
-			// 否则就要每行每行的执行
+			// 
 			else
 			begin
 				GPC1 <= 0;
 				GPC2 <= 0;
 				substate <= 3;
-				ddr_read_addr <= Dollar2 ;	// 生成$2的读取地址
+				ddr_read_addr <= Dollar2 ;	// $2
 				ddr_read_req <= 1;
 			end
 		end
-		// 等待$2的读取请求完成
+		// $2
 		3: begin
 			if(ddr_read_ready)
 			begin
@@ -1340,28 +1340,28 @@ begin
 				substate <= 4;
 			end
 		end
-		// 等待$2的数据读取出来
+		// $2
 		4: begin
 			if(ddr_read_data_valid)
 			begin
-				SCALAR <= ddr_read_data;	// 读取到的标量
-				ddr_read_addr <= Dollar1 + (GPC0*N);	// 生成$1的读取地址
+				SCALAR <= ddr_read_data;	// 
+				ddr_read_addr <= Dollar1 + (GPC0*N);	// $1
 				ddr_read_req <= 1;
 				substate <= 1;
 			end
 		end
 		
 		1: begin
-			// 如果$1的一行数据读取完成，就要开始输出$3
+			// $1�$3
 			if(GPC1>=(N-1) && ddr_read_ready)
 			begin
 				GPC1 <= 0;
 				substate <= 2;
-				ddr_read_req <= 0;	// 撤销DDR读取指令
-				// 生成DDR回写地址
-				//ddr_write_addr <= Dollar3 + (GPC0*N);	// $3的回写地址
+				ddr_read_req <= 0;	// DDR
+				// DDR
+				//ddr_write_addr <= Dollar3 + (GPC0*N);	// $3
 			end
-			// 否则就是要继续读取$1的当前行
+			// $1
 			else
 			begin
 				if(ddr_read_ready)
@@ -1374,7 +1374,7 @@ begin
 		end
 		
 		
-		// 回写$3的数据，将N列的数据全部写入即可
+		// $3�N
 		2: begin
 			if(ddr_write_data_valid && ddr_write_col>=(N-1))
 			begin
@@ -1395,7 +1395,7 @@ end
 endtask
 /////////////////////////////////////////////////////////////////////////////////////
 
-	// 接入DDR接口
+	// DDR
 	assign			ddr_write_data = npu_scfifo_Dollar3_q;
 	assign			ddr_write_req = !npu_scfifo_Dollar3_rdempty;
 	assign			npu_scfifo_Dollar3_rdreq = ddr_write_data_valid;
@@ -1474,7 +1474,7 @@ endtask
 			end
 		end
 		
-	// 生成DDR写入地址
+	// DDR
 	always @(posedge clk)
 	begin
 		if(OP_EN[1])
@@ -1485,7 +1485,7 @@ endtask
 
 ////////////////////////////////////////////////////////////////////////////////////
 
-	reg		[31:0]		ddr_write_cnt;	// 统计DDR写入的次数
+	reg		[31:0]		ddr_write_cnt;	// DDR
 	always @(posedge clk)
 		if(npu_inst_ready)
 			ddr_write_cnt <= 0;
@@ -1494,7 +1494,7 @@ endtask
 
 	wire	signed	[31:0]	ddr_write_data_signed = ddr_write_data;
 ////////////////////////////////////////////////////////////////////////////////////
-// 指令执行时间
+// 
 	always @(posedge clk)
 		if(npu_inst_en)
 			npu_inst_time <= 0;

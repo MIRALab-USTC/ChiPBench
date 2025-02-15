@@ -85,7 +85,7 @@ module uart_rtl(clock,rst,uart_rxd,rx_en,rx_data,uart_txd,tx_en,tx_data,tx_busy)
 			first_bit <= uart_rxd;
 	
 	
-	// ÏÂ½µÑØµÄ¼ì²âºÜÖØÒª
+	// ì
 	reg		[3:0]	jrxd;
 	always @(posedge clock)
 		if(rst)
@@ -113,7 +113,7 @@ module uart_rtl(clock,rst,uart_rxd,rx_en,rx_data,uart_txd,tx_en,tx_data,tx_busy)
 			ready <= 1'B0;
 		else if(!ready && rxd_dn)
 			ready <= 1'B1;
-			// ÐèÒª Í£Ö¹Î» µÄ ¼ì²â
+			//    ì
 		else if(ready && bit_counter==4'D8 && bit_in && uart_rxd==1'B1)
 			ready <= 1'B0;
 		
@@ -144,14 +144,14 @@ module uart_rtl(clock,rst,uart_rxd,rx_en,rx_data,uart_txd,tx_en,tx_data,tx_busy)
 	assign	rx_data = data_recv;
 	/////////////////////////////////
 	
-	// °ÑÊý¾ÝLSBÓëMSB½»»»
+	// ýLSBëMSB
 	integer			i;
 	reg		[31:0]	tx_data_reversed;
 	always @(*)
 		for(i=0; i<32; i=i+1)
 			tx_data_reversed[i] = tx_data[31-i];
 	
-	// È»ºóÊÇ·¢ËÍ²¿·Ö
+	// ó
 	reg		[31:0]	tx_cnt;
 	reg		[43:0]	tx_shifter;
 	reg		[9:0]	tx_bit;

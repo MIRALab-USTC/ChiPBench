@@ -196,35 +196,35 @@ endmodule
 
 module bsg_mem_p36
 (
-  input w_clk_i,         // 写时钟信号
-  input w_reset_i,       // 重置信号
-  input w_v_i,           // 写使能信号
-  input [0:0] w_addr_i,  // 写地址
-  input [35:0] w_data_i, // 写数据
-  input r_v_i,           // 读使能信号
-  input [0:0] r_addr_i,  // 读地址
-  output reg [35:0] r_data_o // 读数据
+  input w_clk_i,         // 
+  input w_reset_i,       // 
+  input w_v_i,           // 
+  input [0:0] w_addr_i,  // 
+  input [35:0] w_data_i, // 
+  input r_v_i,           // 
+  input [0:0] r_addr_i,  // 
+  output reg [35:0] r_data_o // 
 );
 
-  // 内存数组
-  reg [35:0] mem [1:0]; // 内存深度为 2，每行 36 位
+  // 
+  reg [35:0] mem [1:0]; //  2� 36 
 
-  // 写逻辑
+  // 
   always @(posedge w_clk_i) begin
     if (w_reset_i) begin
-      // 在复位时清零内存
+      // 
       mem[0] <= 36'b0;
       mem[1] <= 36'b0;
     end else if (w_v_i) begin
-      // 写入数据到指定地址
+      // 
       mem[w_addr_i] <= w_data_i;
     end
   end
 
-  // 读逻辑
+  // 
   always @(posedge w_clk_i) begin
     if (r_v_i) begin
-      // 从指定地址读取数据
+      // 
       r_data_o <= mem[r_addr_i];
     end
   end
@@ -233,35 +233,35 @@ endmodule
 
 module bsg_mem_p539
 (
-  input w_clk_i,         // 写时钟信号
-  input w_reset_i,       // 重置信号
-  input w_v_i,           // 写使能信号
-  input [0:0] w_addr_i,  // 写地址
-  input [538:0] w_data_i, // 写数据
-  input r_v_i,           // 读使能信号
-  input [0:0] r_addr_i,  // 读地址
-  output reg [538:0] r_data_o // 读数据
+  input w_clk_i,         // 
+  input w_reset_i,       // 
+  input w_v_i,           // 
+  input [0:0] w_addr_i,  // 
+  input [538:0] w_data_i, // 
+  input r_v_i,           // 
+  input [0:0] r_addr_i,  // 
+  output reg [538:0] r_data_o // 
 );
 
-  // 内存数组
-  reg [538:0] mem [1:0]; // 内存深度为 2，每行 36 位
+  // 
+  reg [538:0] mem [1:0]; //  2� 36 
 
-  // 写逻辑
+  // 
   always @(posedge w_clk_i) begin
     if (w_reset_i) begin
-      // 在复位时清零内存
+      // 
       mem[0] <= 538'b0;
       mem[1] <= 538'b0;
     end else if (w_v_i) begin
-      // 写入数据到指定地址
+      // 
       mem[w_addr_i] <= w_data_i;
     end
   end
 
-  // 读逻辑
+  // 
   always @(posedge w_clk_i) begin
     if (r_v_i) begin
-      // 从指定地址读取数据
+      // 
       r_data_o <= mem[r_addr_i];
     end
   end
@@ -271,35 +271,35 @@ endmodule
 
 module bsg_mem_p540
 (
-  input w_clk_i,         // 写时钟信号
-  input w_reset_i,       // 重置信号
-  input w_v_i,           // 写使能信号
-  input [0:0] w_addr_i,  // 写地址
-  input [539:0] w_data_i, // 写数据
-  input r_v_i,           // 读使能信号
-  input [0:0] r_addr_i,  // 读地址
-  output reg [539:0] r_data_o // 读数据
+  input w_clk_i,         // 
+  input w_reset_i,       // 
+  input w_v_i,           // 
+  input [0:0] w_addr_i,  // 
+  input [539:0] w_data_i, // 
+  input r_v_i,           // 
+  input [0:0] r_addr_i,  // 
+  output reg [539:0] r_data_o // 
 );
 
-  // 内存数组
-  reg [539:0] mem [1:0]; // 内存深度为 2，每行 36 位
+  // 
+  reg [539:0] mem [1:0]; //  2� 36 
 
-  // 写逻辑
+  // 
   always @(posedge w_clk_i) begin
     if (w_reset_i) begin
-      // 在复位时清零内存
+      // 
       mem[0] <= 539'b0;
       mem[1] <= 539'b0;
     end else if (w_v_i) begin
-      // 写入数据到指定地址
+      // 
       mem[w_addr_i] <= w_data_i;
     end
   end
 
-  // 读逻辑
+  // 
   always @(posedge w_clk_i) begin
     if (r_v_i) begin
-      // 从指定地址读取数据
+      // 
       r_data_o <= mem[r_addr_i];
     end
   end

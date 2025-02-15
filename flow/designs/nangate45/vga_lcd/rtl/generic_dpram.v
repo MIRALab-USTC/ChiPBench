@@ -142,7 +142,7 @@
 //endmodule
 
 module generic_dpram_11_24(
-    // 读端口
+    // 
     input           rclk,
     input           rrst,
     input           rce,
@@ -150,7 +150,7 @@ module generic_dpram_11_24(
     input  [10:0]   raddr,
     output [23:0]   do,
     
-    // 写端口
+    // 
     input           wclk,
     input           wrst,
     input           wce,
@@ -158,7 +158,7 @@ module generic_dpram_11_24(
     input  [10:0]   waddr,
     input  [23:0]   di
 );
-    // 分割写数据
+    // 
     wire [7:0] di0, di1, di2;
     write_control u_write_control (
         .wclk(wclk),
@@ -172,7 +172,7 @@ module generic_dpram_11_24(
         .di2(di2)
     );
     
-    // 实例化三个 Memory Slice Split 模块
+    //  Memory Slice Split 
     wire [7:0] do0, do1, do2;
     
     memory_slice_8bit_flatten u_mem_slice0 (
@@ -217,7 +217,7 @@ module generic_dpram_11_24(
         .do_slice(do2)
     );
     
-    // 读控制
+    // 
     read_control u_read_control (
         .rclk(rclk),
         .rrst(rrst),
@@ -239,12 +239,12 @@ module read_control(
     input          oe,
     input  [10:0]  raddr,
     
-    // 来自各 Memory Slice Split 的数据
+    //  Memory Slice Split 
     input  [7:0]   do0,
     input  [7:0]   do1,
     input  [7:0]   do2,
     
-    // 输出
+    // 
     output [23:0]  do
 );
     reg [23:0] do_reg;
@@ -268,19 +268,19 @@ module write_control(
     input  [10:0]  waddr,
     input  [23:0]  di,
     
-    // 分割后的数据输出
+    // 
     output [7:0]    di0,
     output [7:0]    di1,
     output [7:0]    di2
 );
-    // 将 24 位数据分割为 3 个 8 位数据
+    //  24  3  8 
     assign di0 = di[7:0];
     assign di1 = di[15:8];
     assign di2 = di[23:16];
 endmodule
 
 module memory_slice_8bit_flatten(
-    // 写端口
+    // 
     input        wclk,
     input        wrst,
     input        wce,
@@ -288,28 +288,28 @@ module memory_slice_8bit_flatten(
     input  [10:0] waddr,
     input  [7:0]  di,
     
-    // 读端口
+    // 
     input        rclk,
     input        rrst,
     input        rce,
     input  [10:0] raddr,
     
-    // 读数据输出
+    // 
     output reg [7:0] do_slice
 );
-    // 内部存储
+    // 
     reg [7:0] mem [2047:0];
     
-    // 写逻辑
+    // 
     always @(posedge wclk) begin
         if (wrst) begin
-            // 可选的复位逻辑
+            // 
         end else if (wce && we) begin
             mem[waddr] <= di;
         end
     end
     
-    // 读逻辑
+    // 
     always @(posedge rclk) begin
         if (rrst) begin
             do_slice <= 8'b0;
@@ -564,7 +564,7 @@ endmodule
 
 
 module memory_slice_8bit_split(
-    // 写端口
+    // 
     input        wclk,
     input        wrst,
     input        wce,
@@ -572,26 +572,26 @@ module memory_slice_8bit_split(
     input  [10:0] waddr,
     input  [7:0]  di,
     
-    // 读端口
+    // 
     input        rclk,
     input        rrst,
     input        rce,
     input  [10:0] raddr,
     
-    // 读数据输出
+    // 
     output [7:0] do_slice
 );
-    // 地址分割
-    wire [1:0] write_select = waddr[10:9];  // 高 2 位选择子模块
-    wire [8:0] local_waddr = waddr[8:0];    // 低 9 位地址
+    // 
+    wire [1:0] write_select = waddr[10:9];  //  2 
+    wire [8:0] local_waddr = waddr[8:0];    //  9 
     
     wire [1:0] read_select = raddr[10:9];
     wire [8:0] local_raddr = raddr[8:0];
     
-    // 子模块数据输出
+    // 
     wire [7:0] do0, do1, do2, do3;
     
-    // 实例化四个子内存模块
+    // 
     memory_block_512x8_split u_mem0 (
         .wclk(wclk),
         .wrst(wrst),
@@ -648,7 +648,7 @@ module memory_slice_8bit_split(
         .do_slice(do3)
     );
     
-    // 选择对应子模块的输出数据
+    // 
     assign do_slice = (read_select == 2'b00) ? do0 :
                       (read_select == 2'b01) ? do1 :
                       (read_select == 2'b10) ? do2 :
@@ -656,36 +656,36 @@ module memory_slice_8bit_split(
 endmodule
 
 module memory_block_512x8(
-    // 写端口
+    // 
     input        wclk,
     input        wrst,
     input        wce,
     input        we,
-    input  [8:0] waddr,  // 9 位地址
+    input  [8:0] waddr,  // 9 
     input  [7:0] di,
     
-    // 读端口
+    // 
     input        rclk,
     input        rrst,
     input        rce,
-    input  [8:0] raddr,  // 9 位地址
+    input  [8:0] raddr,  // 9 
     
-    // 读数据输出
+    // 
     output reg [7:0] do_slice
 );
-    // 内部存储
+    // 
     reg [7:0] mem [511:0];
     
-    // 写逻辑
+    // 
     always @(posedge wclk) begin
         if (wrst) begin
-            // 可选的复位逻辑（根据需要实现）
+            // ��
         end else if (wce && we) begin
             mem[waddr] <= di;
         end
     end
     
-    // 读逻辑
+    // 
     always @(posedge rclk) begin
         if (rrst) begin
             do_slice <= 8'b0;

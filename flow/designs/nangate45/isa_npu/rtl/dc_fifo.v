@@ -15,78 +15,78 @@
 
 module dc_fifo
 #(
-parameter	LOG2N = 6,				// 这是FIFO深度的对数值
-parameter	N = (1<<LOG2N),			// FIFO的深度
-parameter	DATA_WIDTH = 32,		// 数据宽度
-parameter	ADDR_WIDTH = LOG2N,		// 地址宽度
-parameter	SYNC_STAGE = 4			// 同步级数
+parameter	LOG2N = 6,				// FIFO
+parameter	N = (1<<LOG2N),			// FIFO
+parameter	DATA_WIDTH = 32,		// 
+parameter	ADDR_WIDTH = LOG2N,		// 
+parameter	SYNC_STAGE = 4			// 
 )
 (
-input  	wire						aclr,			// 异步复位
-// 写入端口的信号线
-input	wire						wrclock,		// 写时钟
-input	wire	[DATA_WIDTH-1:0]	data,			// 写数据
-input	wire						wrreq,			// 写请求
-output	wire	[ADDR_WIDTH-1:0]	wrusedw,		// 写数据量
-output	wire						wrfull,			// 写满标志
-output	wire						wrempty,		// 写空标志
-// 读取端口的信号线
-input	wire						rdclock,		// 读时钟
-output	reg		[DATA_WIDTH-1:0]	q,				// 读数据
-input	wire						rdreq,			// 读请求
-output	wire	[ADDR_WIDTH-1:0]	rdusedw,		// 读数据量
-output	wire						rdfull,			// 读满标志
-output	wire						rdempty			// 读空标志
+input  	wire						aclr,			// 
+// 
+input	wire						wrclock,		// 
+input	wire	[DATA_WIDTH-1:0]	data,			// 
+input	wire						wrreq,			// 
+output	wire	[ADDR_WIDTH-1:0]	wrusedw,		// 
+output	wire						wrfull,			// 
+output	wire						wrempty,		// 
+// 
+input	wire						rdclock,		// 
+output	reg		[DATA_WIDTH-1:0]	q,				// 
+input	wire						rdreq,			// 
+output	wire	[ADDR_WIDTH-1:0]	rdusedw,		// 
+output	wire						rdfull,			// 
+output	wire						rdempty			// 
 );
 
 /*-------------------------------------------------------------------------*\
 	signals
 \*-------------------------------------------------------------------------*/
 
-// 首先声明一块内存空间
-reg		[DATA_WIDTH-1:0]			dpram	[0:N-1];	// 内存空间，试图转换成DPRAM
-reg		[ADDR_WIDTH:0]				wr_addr;			// 写入地址
-reg		[ADDR_WIDTH:0]				rd_addr;			// 读取地址
+// 
+reg		[DATA_WIDTH-1:0]			dpram	[0:N-1];	// �DPRAM
+reg		[ADDR_WIDTH:0]				wr_addr;			// 
+reg		[ADDR_WIDTH:0]				rd_addr;			// 
 
-/////////////// 然后是gray码
+/////////////// gray
 wire	[ADDR_WIDTH:0]				wr_addr_gray_enc /* synthesis preserve */;	// 1-clock pipeline
 wire	[ADDR_WIDTH:0]				rd_addr_gray_enc /* synthesis preserve */;	// 1-clock pipeline
 
-// 同步时钟域
+// 
 wire	[ADDR_WIDTH:0]				wr_addr_gray_sync /* synthesis preserve */;	// write-gray --> read-clock
 wire	[ADDR_WIDTH:0]				rd_addr_gray_sync /* synthesis preserve */;	// read-gray --> write-clock
 
-// 最后是格雷码译码
+// 
 wire	[ADDR_WIDTH:0]				wr_addr_gray_dec /* synthesis preserve */;	// write-addr --> read-clock
 wire	[ADDR_WIDTH:0]				rd_addr_gray_dec /* synthesis preserve */;	// read-addr --> write-clock
 /*-------------------------------------------------------------------------*\
 	process
 \*-------------------------------------------------------------------------*/
-// 首先是写入地址生成
+// 
 always @(posedge wrclock or posedge aclr)
 	if(aclr==1)
 		wr_addr <= 0;
 	else if(wrreq && !wrfull)
 		wr_addr <= wr_addr + {{(ADDR_WIDTH){1'B0}}, 1'B1};
 		
-// 然后是读取地址生成
+// 
 always @(posedge rdclock or posedge aclr)
 	if(aclr==1)
 		rd_addr <= 0;
 	else if(rdreq && !rdempty)
 		rd_addr <= rd_addr + {{(ADDR_WIDTH){1'B0}}, 1'B1};
 		
-// 现在是内存的行为
-// 写入
+// 
+// 
 always @(posedge wrclock)
 	if(wrreq && !wrfull)
 		dpram[wr_addr[ADDR_WIDTH-1:0]] <= data;
-// 读取
+// 
 always @(*)
 	q = dpram[rd_addr[ADDR_WIDTH-1:0]];
 //
 
-// 然后是要生成一些标志信号
+// 
 assign		wrusedw = (wr_addr - rd_addr_gray_dec + N);
 assign		wrfull 	= (wrusedw>=(N-SYNC_STAGE-4));
 assign		wrempty = (wrusedw==0);
@@ -96,7 +96,7 @@ assign		rdempty = (rdusedw==0);
 /*-------------------------------------------------------------------------*\
 	instantiation
 \*-------------------------------------------------------------------------*/
-// 例化格雷码编码模块	
+// 	
 gray_enc_1p		
 #(
 	.WIDTH(ADDR_WIDTH+1)
@@ -116,7 +116,7 @@ u1_gray_enc_1p(
 	.src(rd_addr),
 	.dst(rd_addr_gray_enc)
 );
-// 例化时钟域同步器
+// 
 sync_dual_clock
 #(
 	.WIDTH(ADDR_WIDTH+1),

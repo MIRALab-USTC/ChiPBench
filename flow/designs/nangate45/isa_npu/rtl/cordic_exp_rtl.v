@@ -1,16 +1,16 @@
-// Õâ¸öÄ£¿éÓÃÓÚÊµÏÖexp()Ö¸ÊıÔËËã
-// »¹ÊÇ»ùÓÚcordicËã·¨
-// Mark: 2018/6/3: ·¢ÏÖ´æÔÚÉÏÒç/ÏÂÒçµÄbug£¡
+// öexp()ı
+// ùcordic
+// Mark: 2018/6/3: /bug
 module cordic_exp_rtl
-#(parameter	DATA_WIDTH = 32,    // Êı¾İÎ»¿í
-  parameter	FRAC_WIDTH = 16,	// Ğ¡Êı²¿·Ö
-  parameter	EPSILON = 16,		// ÊÕÁ²ãĞÖµ
-  parameter ITERATION = 8,  	// µü´ú´ÎÊı
-  parameter ROM_LATENCY = 2,	// romµÄIPºË¶ÁÈ¡ĞèÒªÑÓÊ±
-  parameter	DATA_UNIT = {{(DATA_WIDTH-FRAC_WIDTH-1){1'B0}}, 1'B1, {FRAC_WIDTH{1'B0}}}, // ¹Ì¶¨µÄµ¥Î»1 
-  parameter	DATA_ZERO = {DATA_WIDTH{1'B0}},	// ¹Ì¶¨µÄ0Öµ
-  parameter	DATA_LOF = (FRAC_WIDTH*11)<<(FRAC_WIDTH-4),	// ÏÂÒç ==> Ö±½Ó·µ»Ø0  e^-11 ==> 2^-16, 
-  parameter	DATA_UOF = ((DATA_WIDTH-FRAC_WIDTH-1)*11)<<(FRAC_WIDTH-4)	// ÉÏÒç ==> Ö±½Ó·µ»Ø(2**31-1)  e^10.39 ==> 2^15, 
+#(parameter	DATA_WIDTH = 32,    // ıí
+  parameter	FRAC_WIDTH = 16,	// ı
+  parameter	EPSILON = 16,		// 
+  parameter ITERATION = 8,  	// üúı
+  parameter ROM_LATENCY = 2,	// romIP
+  parameter	DATA_UNIT = {{(DATA_WIDTH-FRAC_WIDTH-1){1'B0}}, 1'B1, {FRAC_WIDTH{1'B0}}}, // 1 
+  parameter	DATA_ZERO = {DATA_WIDTH{1'B0}},	// 0
+  parameter	DATA_LOF = (FRAC_WIDTH*11)<<(FRAC_WIDTH-4),	//  ==> 0  e^-11 ==> 2^-16, 
+  parameter	DATA_UOF = ((DATA_WIDTH-FRAC_WIDTH-1)*11)<<(FRAC_WIDTH-4)	//  ==> (2**31-1)  e^10.39 ==> 2^15, 
 )
 (
 	input	wire								sys_clk, sys_rst_n,
@@ -19,39 +19,39 @@ module cordic_exp_rtl
 	output	reg		signed	[DATA_WIDTH-1:0]	rho
 );
 
-	// ´æ´¢KnµÄÏµÊı±í£¬Ê¹ÓÃPython½Å±¾À´Éú³ÉÏàÓ¦µÄÊıÖµ
+	// KnıíPythonúı
 	wire	[DATA_WIDTH-1:0]	Kn_THETAn_address;
 	wire	[DATA_WIDTH-1:0]	Kn;
 	wire	[DATA_WIDTH-1:0]	THETAn;
 	cordic_factor_exp_rom_ip 	exp_cordic_rom_ip_core	(.address(Kn_THETAn_address),.clock(sys_clk),.q({Kn, THETAn}));
 	 //////////////////////////////////
 
-	// ÒòÎªÒªĞ´³ÉÁ÷Ë®ÏßĞÍµÄCORDICÔËËã
-	// ËùÒÔĞèÒª½¨Á¢Ò»¸ö¾Ş´óµÄregÕóÁĞ
-	reg		signed 	[DATA_WIDTH-1:0]	Xn	[0:ITERATION-1];	// ÒòÎªÊÇÁ÷Ë®Ïß£¬ËùÒÔĞèÒª²»¶ÏµØ¡°ÒÆÎ»¡±µü´úÊäÈëµÄx(Ğ¡Êı²¿·Ö)
-	reg		signed 	[DATA_WIDTH-1:0]	In	[0:ITERATION-1];	// ÒòÎªÊÇÁ÷Ë®Ïß£¬ËùÒÔĞèÒª²»¶ÏµØ¡°ÒÆÎ»¡±µü´úÊäÈëµÄx(ÕûÊı²¿·Ö)
+	// ò÷CORDIC
+	// ùöóregó
+	reg		signed 	[DATA_WIDTH-1:0]	Xn	[0:ITERATION-1];	// ò÷ùüúëx(ı)
+	reg		signed 	[DATA_WIDTH-1:0]	In	[0:ITERATION-1];	// ò÷ùüúëx(ûı)
 	reg		signed 	[DATA_WIDTH-1:0]	Zn	[0:ITERATION-1];
-	reg									LOFn[0:ITERATION-1];	// ÏÂÒç
-	reg									UOFn[0:ITERATION+2];	// ÉÏÒç
-	// µü´ú´ÎÊı£¬ÒòÎªZnÊÇ¿ÉÄÜÖĞÍ¾ÊÕÁ²µÄ£¬ĞèÒª±ê×¢Ê²Ã´Ê±ºòÊÕÁ²ÁË
-	reg				[DATA_WIDTH-1:0]	Nn	[0:ITERATION+1];	// Ò»¸ö³ÌĞòµÄbug£¬ÕâÀïµÄNnÓ¦¸Ã¼ÌĞø´«µİ
-	// »¹Òª¼ÇÂ¼Ğı×ªµÄ½Ç¶È
+	reg									LOFn[0:ITERATION-1];	// 
+	reg									UOFn[0:ITERATION+2];	// 
+	// üúıòZnêò
+	reg				[DATA_WIDTH-1:0]	Nn	[0:ITERATION+1];	// öòbugïNnø
+	// ı
 	reg		signed 	[DATA_WIDTH-1:0]	Tn	[0:ITERATION-1];
-	reg		signed 	[DATA_WIDTH-1:0]	T0n	[0:ITERATION-1];	// ÕâÊÇÒª´ÓROMÀïÃæ¼ÓÔØµÄ
-	reg		signed 	[DATA_WIDTH-1:0]	K0n	[0:ITERATION-1];	// ÕâÊÇÒª´ÓROMÀïÃæ¼ÓÔØµÄ
+	reg		signed 	[DATA_WIDTH-1:0]	T0n	[0:ITERATION-1];	// ROMï
+	reg		signed 	[DATA_WIDTH-1:0]	K0n	[0:ITERATION-1];	// ROMï
 	// 
-	reg		[4:0]	cstate;	// ×´Ì¬¼ÆÊıÆ÷
-	parameter		IDLE = 0;	// ÏĞÖÃ×´Ì¬
-	parameter		LOAD = 1;	// ¼ÓÔØROMÖĞµÄÊı¾İ
-	parameter		COMP = 2;	// Õı³£µÄ¹¤×÷/ÔËËã½×¶Î
-	reg		[DATA_WIDTH-1:0]	timer_in_state;	// Ã¿¸ö½×¶ÎµÄ¼ÆÊıÆ÷
-	reg		[DATA_WIDTH-1:0]	rom_address;	// ¶ÁÈ¡ROMµÄµØÖ·¼ÆÊıÆ÷
-	// cordic µü´úÔËËã + Êı¾İÊäÈë&1/4ÏóÏŞĞ£Õı´¦Àí
+	reg		[4:0]	cstate;	// ı÷
+	parameter		IDLE = 0;	// 
+	parameter		LOAD = 1;	// ROMı
+	parameter		COMP = 2;	// ı÷/
+	reg		[DATA_WIDTH-1:0]	timer_in_state;	// öı÷
+	reg		[DATA_WIDTH-1:0]	rom_address;	// ROMı÷
+	// cordic üú + ıë&1/4óıí
 	always @(posedge sys_clk)
-		// ³õÊ¼»¯
+		// õ
 		if(!sys_rst_n)
 			init_system_task;
-		// ·ñÔò¾ÍÊÇÕı³£µÄµü´ú¼ÆËã
+		// ñòıüú
 		else
 		begin
 			case(cstate)
@@ -62,13 +62,13 @@ module cordic_exp_rtl
 			endcase
 		end
 ///////////////////////////////
-// ÏÂÃæÊÇ¾ßÌåµÄtaskµÄÃèÊö
+// taskö
 integer	n;
-// Ê×ÏÈÊÇÏµÍ³³õÊ¼»¯µÄÃèÊö
+// õö
 task init_system_task;
 begin
-	cstate <= IDLE;	// Ê×ÏÈÇĞ»»µ½ÏĞÖÃ×´Ì¬
-	// È»ºó¸´Î»ËùÓĞµÄ¼Ä´æÆ÷
+	cstate <= IDLE;	// 
+	// óù÷
 	for(n=0; n<ITERATION; n=n+1)
 	begin
 		Xn[n] <= DATA_ZERO;
@@ -79,46 +79,46 @@ begin
 		LOFn[n] <= 0;
 		UOFn[n] <= 0;
 	end
-	// ¼ÆÊıÆ÷¸´Î»
+	// ı÷
 	timer_in_state <= DATA_ZERO;
-	// ¶ÁÈ¡romµÄµØÖ·¼ÆÊıÆ÷ÇåÁã
+	// romı÷
 	rom_address <= 0;
 end
 endtask
 ////////////////////
-// È»ºóÊÇIDLE½×¶Î£¬²»Ö±½Ó½øÈëload½×¶Î£¬
-// Ö÷ÒªÊÇÒòÎªromµÄ¶ÁÈ¡ÊÇÓĞlatencyÊ±¼äµÄ
+// óIDLEøëload
+// ÷òromlatency
 task prepare_load_task;
 begin	
-	// Èç¹ûµÈ´ı¹»ÁË¾ÍÒªÌø³ö£¬½øÈëromÊı¾İ¼ÓÔØ½×¶Î
+	// ûıøöøëromı
 	if(timer_in_state>=(ROM_LATENCY-1))
 	begin
 		cstate <= LOAD;
-		// ¼ÆÊıÆ÷¸´Î»
+		// ı÷
 		timer_in_state <= DATA_ZERO;
 	end
-	// ·ñÔò£¬¾ÍÒª¼ÌĞø¼ÓÔØROMÊı¾İ
+	// ñòøROMı
 	else
 	begin
 		timer_in_state <= timer_in_state+1;
 	end
-	// rom¶ÁÈ¡²»ÒªÍ£
+	// rom
 	rom_address <= rom_address+1;
 end
 endtask
-// È»ºóÊÇLOAD½×¶Î£¬Ö´ĞĞloadÖ¸Áî
+// óLOADloadî
 task execute_load_task;
 begin	
-	// ¼ÓÔØ¹»ÁË£¬¾ÍÒªÌø³ö£¬¿ÉÒÔ¿ªÊ¼¼ÆËãÁË
+	// øö
 	if(timer_in_state>=(ITERATION))
 	begin
 		cstate <= COMP;
-		// ¼ÆÊıÆ÷¸´Î»
+		// ı÷
 		timer_in_state <= DATA_ZERO;
 	end
 	else
 	begin
-		// ·ñÔò£¬¼ÓÔØromÀïÃæµÄÊı¾İ
+		// ñòromïı
 		T0n[timer_in_state] <= THETAn;
 		K0n[timer_in_state] <= Kn;
 		rom_address <= rom_address+1;
@@ -126,43 +126,43 @@ begin
 	end
 end
 endtask
-// ÏÖÔÚÊÇÖØÍ·Ï·£¬¾ÍÊÇÕû¸öcoedicµü´ú¹ı³ÌÁË
+// ûöcoedicüúı
 task execute_comp_task;
 begin
-	// Ê×ÏÈÊÇÊäÈëÊı¾İ
-	// ·Ö¸îÊı¾İµÄÕûÊı - Ğ¡Êı²¿·Ö
+	// ëı
+	// îıûı - ı
 	Xn[0] <= {{(DATA_WIDTH-FRAC_WIDTH){1'B0}}, src_x[FRAC_WIDTH-1:0]};
 	In[0] <= (src_x >>> FRAC_WIDTH);
-	// ÉÏÒç/ÏÂÒçÅĞ±ğ
+	// /ğ
 	LOFn[0] <= src_x < (-DATA_LOF);
 	UOFn[0] <= src_x >= (DATA_UOF);
-	// ³õÊ¼»¯Z = 1
+	// õZ = 1
 	Zn[0] <= DATA_UNIT;
-	// È»ºóN = 0
+	// óN = 0
 	Nn[0] <= DATA_ZERO;
 	// T=0
 	Tn[0] <= DATA_ZERO;
-	// È»ºóÊÇcordicµü´úµÄ¹ı³Ì£¬ÕâÀïÊ¹ÓÃforÑ­»·£¬·½±ãĞ´³ÌĞò£¬×¢Òâ×ÛºÏ½á¹û
+	// ócordicüúıïforòû
 	for(n=ITERATION-1; n>=1; n=n-1)
 	begin
-		// ÊäÈë X & I ĞèÒª²»¶ÏµØÒÆÎ»ÏÂÈ¥
+		// ë X & I 
 		Xn[n] <= Xn[n-1];
 		In[n] <= In[n-1];
-		// Èç¹ûTn[n-1]>Xn[n-1]£¬ÄÇÃ´Ë³Ê±ÕëĞı×ª
+		// ûTn[n-1]>Xn[n-1]ëı
 		if(Tn[n-1]>(Xn[n-1]+EPSILON))
 		begin
 			Zn[n] <= Zn[n-1] - (Zn[n-1]>>>(n));
-			Nn[n] <= Nn[n-1] + 1;	// ¼ÌĞøµü´ú£¬µü´ú´ÎÊı+1
-			Tn[n] <= Tn[n-1] - T0n[n-1];	// ĞŞ¸Ä½Ç¶ÈÖµ
+			Nn[n] <= Nn[n-1] + 1;	// øüúüúı+1
+			Tn[n] <= Tn[n-1] - T0n[n-1];	// 
 		end
-		// Èç¹ûTn[n-1]<Xn[n-1]£¬ÄÇÃ´ÄæÊ±ÕëĞı×ª
+		// ûTn[n-1]<Xn[n-1]ëı
 		else if(Xn[n-1]>(Tn[n-1]+EPSILON))
 		begin
 			Zn[n] <= Zn[n-1] + (Zn[n-1]>>>(n));
-			Nn[n] <= Nn[n-1] + 1;	// ¼ÌĞøµü´ú£¬µü´ú´ÎÊı+1
-			Tn[n] <= Tn[n-1] + T0n[n-1];	// ĞŞ¸Ä½Ç¶ÈÖµ
+			Nn[n] <= Nn[n-1] + 1;	// øüúüúı+1
+			Tn[n] <= Tn[n-1] + T0n[n-1];	// 
 		end
-		// ·ñÔò¾ÍËµÃ÷ÊÕÁ²ÁË£¬Í£Ö¹µü´ú¹ı³Ì
+		// ñò÷üúı
 		else
 		begin
 			Zn[n] <= Zn[n-1];
@@ -173,63 +173,63 @@ begin
 		LOFn[n] <= LOFn[n-1];
 		UOFn[n] <= UOFn[n-1];
 	end
-	// Nn»¹ÔÚ´«µİ
+	// Nn
 	Nn[ITERATION] <= Nn[ITERATION-1];
 	Nn[ITERATION+1] <= Nn[ITERATION];
-	// ÉÏÒçÖ¸±ê»¹ÔÚ´«µİ
+	// ê
 	UOFn[ITERATION] <= UOFn[ITERATION-1];
 	UOFn[ITERATION+1] <= UOFn[ITERATION];
 	UOFn[ITERATION+2] <= UOFn[ITERATION+1];
 end
 endtask
 	//////////////////////////////////////////////////
-	// ×îºó£¬¿¼ÂÇµ½romµÄipºË¶ÁÈ¡£¬ĞèÒª¸ø³öROMµÄ¶ÁÈ¡µØÖ·
+	// îóromipøöROM
 	assign	Kn_THETAn_address = rom_address;
-	// ÓÉÓÚÔÚKn[]ÀïÃæÑ°Ö· + Êä³öĞ£ÕıµÄ³Ë·¨ÔËËã£¬Ê®·ÖÏûºÄ×ÊÔ´£¬Ó°ÏìÊ±Ğò
-	// ËùÒÔÕâÀïÏÈ°Ñ¸÷¸öÊı¾İ¶¼¼Ä´æÒ»ÏÂ£¬ÄÇÃ´ºóÃæµÄ¾ÍÖ»ÊÇ³Ë·¨Ó°ÏìÊ±ĞòÁË
-	reg		[DATA_WIDTH-1:0]	Kn_res [0:1];	// ÊÂÊµÖ¤Ã÷£¬Õâ¸öK0n»¹²»ÈçÖ±½Ó±ä³Éram£¡
+	// Kn[]ï + öıûìò
+	// ùï÷öıóìò
+	reg		[DATA_WIDTH-1:0]	Kn_res [0:1];	// ÷öK0nram
 	reg		[DATA_WIDTH-1:0]	Zn_res [0:1];
 	reg		[DATA_WIDTH-1:0]	Xn_res [0:1];
 	reg		[DATA_WIDTH-1:0]	In_res [0:1];
 	always @(posedge sys_clk)
 	begin
 		Kn_res[0] <= K0n[Nn[ITERATION-1]-1];
-		Zn_res[0] <= LOFn[ITERATION-1]? DATA_ZERO : UOFn[ITERATION-1]? {1'B0, {(DATA_WIDTH-1){1'B1}}} : Zn[ITERATION-1];	// Ôö¼ÓÉÏÒç/ÏÂÒçÖ¸Ê¾
+		Zn_res[0] <= LOFn[ITERATION-1]? DATA_ZERO : UOFn[ITERATION-1]? {1'B0, {(DATA_WIDTH-1){1'B1}}} : Zn[ITERATION-1];	// ö/
 		Xn_res[0] <= Xn[ITERATION-1];
 		In_res[0] <= In[ITERATION-1];
-		// ÎªÁËÊ±ĞòÒ²ÊÇÆ´ÁË
+		// ò
 		Kn_res[1] <= Kn_res[0];
 		Zn_res[1] <= Zn_res[0];
 		Xn_res[1] <= Xn_res[0];
 		In_res[1] <= In_res[0];
 	end
-	// È»ºóÊÇĞ£Õırho£¬ĞèÒªKnÏµÊı
-	// ×¢Òâµ½ÕâÀïµÄKn¶¼ÊÇ0~1µÄÏµÊı£¬ËùÒÔÎÒÃÇ´æµÄÊ±ºò£¬¾¡¹ÜÊÇ32bitµÄsigned±äÁ¿£¬Êµ¼ÊÖĞÓÃµ½ÁË(FRAC_WIDTH)-bit
-	// Òò´Ë£¬×îºóÊä³öµÄÊ±ºò£¬ĞèÒª×öÒ»Ğ©ÅĞ¶ÏµÄ
-	reg		[2*DATA_WIDTH-1:0]	rho_reg [0:1];	// ÕâÊÇĞ£ÕıÏòÁ¿Ä£Êä³öµÄÊ±ºòµÄ¡°Ôİ´æ±äÁ¿¡±£¬ÊÇ64-bitµÄ£¬×îºóÒª½ØµôLSB
-	reg		[DATA_WIDTH-1:0]	x_reg [0:1];		// ÊäÈëÏòÁ¿µÄÒÆÎ»»º´æ£¬ÎªÁËÄÜ¹»ºÍÊä³örho½øĞĞ±È¶Ô
-	// [0] ÊÇÃ»ÓĞÕûÊı²¿·ÖÊ±ºòµÄÊı¾İÖµ£¬ [1]ÊÇÓĞÕûÊı²¿·ÖÒÔºóµÄÊı¾İÖµ
-	wire	[DATA_WIDTH-1:0]	int_part_exp_val;	// ÕûÊı²¿·ÖµÄ exp ÔËËã½á¹ûÊı¾İÖµ
+	// óırhoKnı
+	// ïKn0~1ıùò32bitsigned(FRAC_WIDTH)-bit
+	// òîóöòö
+	reg		[2*DATA_WIDTH-1:0]	rho_reg [0:1];	// ıòöò64-bitîóôLSB
+	reg		[DATA_WIDTH-1:0]	x_reg [0:1];		// ëòörhoø
+	// [0] ûıòı [1]ûıóı
+	wire	[DATA_WIDTH-1:0]	int_part_exp_val;	// ûı exp ûı
 	reg		[DATA_WIDTH-1:0]	x;			
 	always @(posedge sys_clk)
 	begin
-		// Èç¹ûÃ»ÓĞÏòÉÏÒç³ö
+		// ûòö
 		if(UOFn[ITERATION+1]==0)
 		begin
 			if(Nn[ITERATION+1]==0)
 				rho_reg[0] <= Zn_res[1]*DATA_UNIT;			
 			else
-				rho_reg[0] <= Zn_res[1]*Kn_res[1];	// ×¢Òâ£¡ ÕâÀïÊÇÊ±Ğò·Ç³£²îµÄµØ·½£¬ÒªÏë°ì·¨µ÷Õû
+				rho_reg[0] <= Zn_res[1]*Kn_res[1];	//  ïòîëì÷û
 		end
-		// Èç¹ûÏòÉÏÒç³ö
+		// ûòö
 		else 
 			rho_reg[0] <= {1'B0, {(2*DATA_WIDTH-1){1'B1}}};
 		// 
 		x_reg[0] <= Xn_res[1]|(In_res[1]<<<FRAC_WIDTH);
 		////////
-		// ¼ÓÈëÕûÊı²¿·ÖµÄĞ£Õı
+		// ëûıı
 		x_reg[1] <= x_reg[0];
-		// Èç¹ûÃ»ÓĞÏòÉÏÒç³ö
+		// ûòö
 		if(UOFn[ITERATION+2]==0)
 			rho_reg[1] <= rho_reg[0][2*DATA_WIDTH-1:FRAC_WIDTH]*int_part_exp_val;
 		else
@@ -238,6 +238,6 @@ endtask
 		rho <= rho_reg[1][DATA_WIDTH+FRAC_WIDTH-1:FRAC_WIDTH];
 		x <= x_reg[1];
 	end
-	// ´ÓROMÀïÃæ¶Á³öÕûÊı²¿·ÖµÄÖ¸ÊıÔËËã½á¹û	
+	// ROMïöûııû	
 	cordic_int_part_exp_rom_ip	int_part_mdl(.address(In_res[0]+128), .clock(sys_clk), .q(int_part_exp_val));
 endmodule

@@ -1,24 +1,24 @@
 module uart_wr
 #(	
-	parameter	UART_DATA_WIDTH = 8,    // uart Êý¾ÝÎ»¿í
-	parameter	UART_ADDR_WIDTH = 2,		// endpoint-µØÖ·Î»¿í
-	parameter	SYS_UART_DATA_MULT = 4,	// system ºÍ cypress uart µÄÊý¾ÝÎ»¿íµÄ±ÈÀý
-	parameter	SYS_DATA_WIDTH = UART_DATA_WIDTH*SYS_UART_DATA_MULT // system µÄÊý¾ÝÎ»¿í
+	parameter	UART_DATA_WIDTH = 8,    // uart ýí
+	parameter	UART_ADDR_WIDTH = 2,		// endpoint-í
+	parameter	SYS_UART_DATA_MULT = 4,	// system  cypress uart ýíý
+	parameter	SYS_DATA_WIDTH = UART_DATA_WIDTH*SYS_UART_DATA_MULT // system ýí
 )
 (
-	input	wire						sys_clk, sys_rst_n, // ÏµÍ³Ê±ÖÓºÍ¸´Î»ÐÅºÅ
+	input	wire						sys_clk, sys_rst_n, // 
 	/* CYPRESS UART SLAVEFIFO */
 	input	wire						uart_sys_clk, uart_sys_rst_n,
 	input	wire						uart_rxd,
 	output	wire						uart_txd,
 	
-	/* ºÍÍâ½çµÄ½Ó¿Ú */
-	input		[SYS_DATA_WIDTH-1:0]	sys_write_data,			// Òª·¢ËÍµ½ fifoµÄÊý¾Ý
-	input								sys_write_data_valid,	// Òª·¢ËÍµÄÊý¾ÝÓÐÐ§
-	output								sys_write_data_permitted,	// ÔÊÐí·¢ËÍÊý¾Ý
-	output		[UART_DATA_WIDTH-1:0]	sys_read_data,			//  ´Ó fifo ÖÐ»ñÈ¡µÄÊý¾Ý
-	input								sys_read_data_req,		// ´Ó fifo ÖÐ»ñÈ¡µÄÊý¾ÝÊ¹ÄÜ/ÇëÇó
-	output								sys_read_data_permitted		// ÔÊÐí´ÓfifoÖÐ»ñÈ¡Êý¾Ý
+	/*  */
+	input		[SYS_DATA_WIDTH-1:0]	sys_write_data,			//  fifoý
+	input								sys_write_data_valid,	// ý
+	output								sys_write_data_permitted,	// íý
+	output		[UART_DATA_WIDTH-1:0]	sys_read_data,			//   fifo ñý
+	input								sys_read_data_req,		//  fifo ñý/ëó
+	output								sys_read_data_permitted		// ífifoñý
 	);
 	wire								logic_uart_write_data_empty;
 	wire		[SYS_DATA_WIDTH-1:0]	logic_uart_write_data /* synthesis keep */;
@@ -35,10 +35,10 @@ module uart_wr
 	wire								logic_fifo_read_data_req /* synthesis keep */;
 	wire								logic_fifo_read_empty /* synthesis keep */;
 
-	// ºÍÍâ²¿µÄ½Ó¿Ú¸³Öµ
+	// 
 	assign		logic_fifo_write_data = sys_write_data;
 	assign		logic_fifo_write_data_valid = sys_write_data_valid;
-	assign		sys_write_data_permitted = (logic_fifo_write_usedw[5:3]==0);	// Ó¦¸ÃÒªÁô³ö´ó°ë²¿·ÖµÄ¿Õ¼ä£¬ÓÃÓÚ»º³å
+	assign		sys_write_data_permitted = (logic_fifo_write_usedw[5:3]==0);	// ôöóë
 	assign		sys_read_data = logic_fifo_read_data;
 	assign		logic_fifo_read_data_req = sys_read_data_req;
 	assign		sys_read_data_permitted = !logic_fifo_read_empty;
@@ -46,7 +46,7 @@ module uart_wr
 	
 	wire		uart_tx_busy;
 	assign		logic_uart_write_data_req = !uart_tx_busy && !logic_uart_write_data_empty;
-	// uart ×´Ì¬»ú
+	// uart ú
 	uart_rtl			uart_rtl_inst(
 							.clock(uart_sys_clk),
 							.rst(!uart_sys_rst_n),
@@ -60,7 +60,7 @@ module uart_wr
 							.tx_data(logic_uart_write_data)
 						);
 						
-	// È»ºóÀý»¯1¸ö·¢ËÍÊý¾ÝµÄdcfifo
+	// óý1öýdcfifo
 //	alt_fifo_32b_64w		
 	dc_fifo				#(
 							.LOG2N(6),
@@ -78,7 +78,7 @@ module uart_wr
 							.q(logic_uart_write_data),
 							.rdempty(logic_uart_write_data_empty)
 						);	
-	// ÔÙÊÇÀý»¯Ò»¸öÓÃÓÚ½ÓÊÕslavefifoÀïÃæµÄÊý¾ÝµÄdcfifo
+	// ýöslavefifoïýdcfifo
 //	alt_fifo_8b_4w			
 	dc_fifo				#(
 							.LOG2N(4),
