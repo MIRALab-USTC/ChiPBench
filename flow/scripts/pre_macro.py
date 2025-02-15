@@ -59,7 +59,7 @@ for inst in inst_set:
         y_h_list.append(bbox.yMax())
     else:
         # continue
-        inst.setLocation(0,0)
+        inst.setLocation(int(core_area.xMax()/2),int(core_area.yMax()/2))
         inst.setOrient("R0")
 
 
