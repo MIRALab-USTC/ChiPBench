@@ -1,0 +1,18 @@
+{
+    "evaluate_name":"example_multi",
+    "mode":"global",
+    "case_list":
+    [
+        {
+            "config_setting":"flow/designs/nangate45/gcd/config.mk",
+            "def_path":"flow/results/nangate45/gcd/base/3_3_place_gp.odb.def"
+        },
+        {
+            "config_setting":"/workspace/afix/test/ChiPBench/flow/designs/nangate45/jpeg/config.mk",
+            "def_path":"/workspace/afix/test/ChiPBench/flow/results/nangate45/jpeg/base/3_5_place_dp.odb.def"
+        }
+        
+    ],
+    "baseline_data_file":"",
+    "parallel":0
+}
