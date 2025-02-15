@@ -1,0 +1,2230 @@
+VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+UNITS
+    DATABASE MICRONS 2000 ;
+END UNITS
+
+MACRO bsg_mem_p131
+  FOREIGN bsg_mem_p131 0 0 ;
+  CLASS BLOCK ;
+  SIZE 46.34 BY 68.51 ;
+  PIN VSS
+    USE GROUND ;
+    DIRECTION INOUT ;
+    PORT
+      LAYER metal4 ;
+        RECT  1.14 65.715 45.22 65.885 ;
+        RECT  1.14 62.915 45.22 63.085 ;
+        RECT  1.14 60.115 45.22 60.285 ;
+        RECT  1.14 57.315 45.22 57.485 ;
+        RECT  1.14 54.515 45.22 54.685 ;
+        RECT  1.14 51.715 45.22 51.885 ;
+        RECT  1.14 48.915 45.22 49.085 ;
+        RECT  1.14 46.115 45.22 46.285 ;
+        RECT  1.14 43.315 45.22 43.485 ;
+        RECT  1.14 40.515 45.22 40.685 ;
+        RECT  1.14 37.715 45.22 37.885 ;
+        RECT  1.14 34.915 45.22 35.085 ;
+        RECT  1.14 32.115 45.22 32.285 ;
+        RECT  1.14 29.315 45.22 29.485 ;
+        RECT  1.14 26.515 45.22 26.685 ;
+        RECT  1.14 23.715 45.22 23.885 ;
+        RECT  1.14 20.915 45.22 21.085 ;
+        RECT  1.14 18.115 45.22 18.285 ;
+        RECT  1.14 15.315 45.22 15.485 ;
+        RECT  1.14 12.515 45.22 12.685 ;
+        RECT  1.14 9.715 45.22 9.885 ;
+        RECT  1.14 6.915 45.22 7.085 ;
+        RECT  1.14 4.115 45.22 4.285 ;
+        RECT  1.14 1.315 45.22 1.485 ;
+    END
+  END VSS
+  PIN VDD
+    USE POWER ;
+    DIRECTION INOUT ;
+    PORT
+      LAYER metal4 ;
+        RECT  1.14 67.115 45.22 67.285 ;
+        RECT  1.14 64.315 45.22 64.485 ;
+        RECT  1.14 61.515 45.22 61.685 ;
+        RECT  1.14 58.715 45.22 58.885 ;
+        RECT  1.14 55.915 45.22 56.085 ;
+        RECT  1.14 53.115 45.22 53.285 ;
+        RECT  1.14 50.315 45.22 50.485 ;
+        RECT  1.14 47.515 45.22 47.685 ;
+        RECT  1.14 44.715 45.22 44.885 ;
+        RECT  1.14 41.915 45.22 42.085 ;
+        RECT  1.14 39.115 45.22 39.285 ;
+        RECT  1.14 36.315 45.22 36.485 ;
+        RECT  1.14 33.515 45.22 33.685 ;
+        RECT  1.14 30.715 45.22 30.885 ;
+        RECT  1.14 27.915 45.22 28.085 ;
+        RECT  1.14 25.115 45.22 25.285 ;
+        RECT  1.14 22.315 45.22 22.485 ;
+        RECT  1.14 19.515 45.22 19.685 ;
+        RECT  1.14 16.715 45.22 16.885 ;
+        RECT  1.14 13.915 45.22 14.085 ;
+        RECT  1.14 11.115 45.22 11.285 ;
+        RECT  1.14 8.315 45.22 8.485 ;
+        RECT  1.14 5.515 45.22 5.685 ;
+        RECT  1.14 2.715 45.22 2.885 ;
+    END
+  END VDD
+  PIN r_addr_i
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  21.865 68.37 22.005 68.51 ;
+    END
+  END r_addr_i
+  PIN r_data_o[0]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 66.395 46.34 66.465 ;
+    END
+  END r_data_o[0]
+  PIN r_data_o[100]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 18.235 0.07 18.305 ;
+    END
+  END r_data_o[100]
+  PIN r_data_o[101]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 49.035 46.34 49.105 ;
+    END
+  END r_data_o[101]
+  PIN r_data_o[102]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 33.635 0.07 33.705 ;
+    END
+  END r_data_o[102]
+  PIN r_data_o[103]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 12.915 46.34 12.985 ;
+    END
+  END r_data_o[103]
+  PIN r_data_o[104]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  22.985 0 23.125 0.14 ;
+    END
+  END r_data_o[104]
+  PIN r_data_o[105]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  20.185 0 20.325 0.14 ;
+    END
+  END r_data_o[105]
+  PIN r_data_o[106]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 31.675 46.34 31.745 ;
+    END
+  END r_data_o[106]
+  PIN r_data_o[107]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  28.025 68.37 28.165 68.51 ;
+    END
+  END r_data_o[107]
+  PIN r_data_o[108]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 22.715 0.07 22.785 ;
+    END
+  END r_data_o[108]
+  PIN r_data_o[109]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 41.475 0.07 41.545 ;
+    END
+  END r_data_o[109]
+  PIN r_data_o[10]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 63.035 46.34 63.105 ;
+    END
+  END r_data_o[10]
+  PIN r_data_o[110]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 46.795 0.07 46.865 ;
+    END
+  END r_data_o[110]
+  PIN r_data_o[111]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 42.315 46.34 42.385 ;
+    END
+  END r_data_o[111]
+  PIN r_data_o[112]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 38.955 46.34 39.025 ;
+    END
+  END r_data_o[112]
+  PIN r_data_o[113]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 60.235 46.34 60.305 ;
+    END
+  END r_data_o[113]
+  PIN r_data_o[114]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 51.555 0.07 51.625 ;
+    END
+  END r_data_o[114]
+  PIN r_data_o[115]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 36.155 0.07 36.225 ;
+    END
+  END r_data_o[115]
+  PIN r_data_o[116]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 29.435 46.34 29.505 ;
+    END
+  END r_data_o[116]
+  PIN r_data_o[117]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 67.515 0.07 67.585 ;
+    END
+  END r_data_o[117]
+  PIN r_data_o[118]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 22.995 46.34 23.065 ;
+    END
+  END r_data_o[118]
+  PIN r_data_o[119]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  34.745 68.37 34.885 68.51 ;
+    END
+  END r_data_o[119]
+  PIN r_data_o[11]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 31.395 0.07 31.465 ;
+    END
+  END r_data_o[11]
+  PIN r_data_o[120]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 16.835 46.34 16.905 ;
+    END
+  END r_data_o[120]
+  PIN r_data_o[121]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  30.825 0 30.965 0.14 ;
+    END
+  END r_data_o[121]
+  PIN r_data_o[122]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 10.955 46.34 11.025 ;
+    END
+  END r_data_o[122]
+  PIN r_data_o[123]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 14.875 46.34 14.945 ;
+    END
+  END r_data_o[123]
+  PIN r_data_o[124]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 46.235 46.34 46.305 ;
+    END
+  END r_data_o[124]
+  PIN r_data_o[125]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 61.075 46.34 61.145 ;
+    END
+  END r_data_o[125]
+  PIN r_data_o[126]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  36.425 0 36.565 0.14 ;
+    END
+  END r_data_o[126]
+  PIN r_data_o[127]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 19.635 46.34 19.705 ;
+    END
+  END r_data_o[127]
+  PIN r_data_o[128]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 47.635 0.07 47.705 ;
+    END
+  END r_data_o[128]
+  PIN r_data_o[129]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 45.675 46.34 45.745 ;
+    END
+  END r_data_o[129]
+  PIN r_data_o[12]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 8.155 46.34 8.225 ;
+    END
+  END r_data_o[12]
+  PIN r_data_o[130]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  37.545 0 37.685 0.14 ;
+    END
+  END r_data_o[130]
+  PIN r_data_o[13]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  21.865 0 22.005 0.14 ;
+    END
+  END r_data_o[13]
+  PIN r_data_o[14]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 5.355 46.34 5.425 ;
+    END
+  END r_data_o[14]
+  PIN r_data_o[15]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  5.625 0 5.765 0.14 ;
+    END
+  END r_data_o[15]
+  PIN r_data_o[16]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 55.755 46.34 55.825 ;
+    END
+  END r_data_o[16]
+  PIN r_data_o[17]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 22.155 0.07 22.225 ;
+    END
+  END r_data_o[17]
+  PIN r_data_o[18]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  44.265 0 44.405 0.14 ;
+    END
+  END r_data_o[18]
+  PIN r_data_o[19]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  35.305 0 35.445 0.14 ;
+    END
+  END r_data_o[19]
+  PIN r_data_o[1]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  41.465 68.37 41.605 68.51 ;
+    END
+  END r_data_o[1]
+  PIN r_data_o[20]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 48.755 0.07 48.825 ;
+    END
+  END r_data_o[20]
+  PIN r_data_o[21]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 55.475 0.07 55.545 ;
+    END
+  END r_data_o[21]
+  PIN r_data_o[22]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 60.795 0.07 60.865 ;
+    END
+  END r_data_o[22]
+  PIN r_data_o[23]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 23.555 46.34 23.625 ;
+    END
+  END r_data_o[23]
+  PIN r_data_o[24]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 36.715 0.07 36.785 ;
+    END
+  END r_data_o[24]
+  PIN r_data_o[25]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 28.875 46.34 28.945 ;
+    END
+  END r_data_o[25]
+  PIN r_data_o[26]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 48.195 0.07 48.265 ;
+    END
+  END r_data_o[26]
+  PIN r_data_o[27]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  15.145 0 15.285 0.14 ;
+    END
+  END r_data_o[27]
+  PIN r_data_o[28]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 36.155 46.34 36.225 ;
+    END
+  END r_data_o[28]
+  PIN r_data_o[29]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 52.395 46.34 52.465 ;
+    END
+  END r_data_o[29]
+  PIN r_data_o[2]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  39.225 0 39.365 0.14 ;
+    END
+  END r_data_o[2]
+  PIN r_data_o[30]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 54.915 0.07 54.985 ;
+    END
+  END r_data_o[30]
+  PIN r_data_o[31]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  6.745 68.37 6.885 68.51 ;
+    END
+  END r_data_o[31]
+  PIN r_data_o[32]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 9.555 0.07 9.625 ;
+    END
+  END r_data_o[32]
+  PIN r_data_o[33]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 13.475 0.07 13.545 ;
+    END
+  END r_data_o[33]
+  PIN r_data_o[34]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 54.355 0.07 54.425 ;
+    END
+  END r_data_o[34]
+  PIN r_data_o[35]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 30.835 0.07 30.905 ;
+    END
+  END r_data_o[35]
+  PIN r_data_o[36]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  12.345 68.37 12.485 68.51 ;
+    END
+  END r_data_o[36]
+  PIN r_data_o[37]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 64.995 0.07 65.065 ;
+    END
+  END r_data_o[37]
+  PIN r_data_o[38]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  9.545 68.37 9.685 68.51 ;
+    END
+  END r_data_o[38]
+  PIN r_data_o[39]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  20.185 68.37 20.325 68.51 ;
+    END
+  END r_data_o[39]
+  PIN r_data_o[3]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  13.465 68.37 13.605 68.51 ;
+    END
+  END r_data_o[3]
+  PIN r_data_o[40]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 18.235 46.34 18.305 ;
+    END
+  END r_data_o[40]
+  PIN r_data_o[41]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 64.995 46.34 65.065 ;
+    END
+  END r_data_o[41]
+  PIN r_data_o[42]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 6.195 0.07 6.265 ;
+    END
+  END r_data_o[42]
+  PIN r_data_o[43]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  9.545 0 9.685 0.14 ;
+    END
+  END r_data_o[43]
+  PIN r_data_o[44]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 26.915 46.34 26.985 ;
+    END
+  END r_data_o[44]
+  PIN r_data_o[45]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 24.115 0.07 24.185 ;
+    END
+  END r_data_o[45]
+  PIN r_data_o[46]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 53.515 46.34 53.585 ;
+    END
+  END r_data_o[46]
+  PIN r_data_o[47]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 66.395 0.07 66.465 ;
+    END
+  END r_data_o[47]
+  PIN r_data_o[48]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 13.475 46.34 13.545 ;
+    END
+  END r_data_o[48]
+  PIN r_data_o[49]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 35.595 0.07 35.665 ;
+    END
+  END r_data_o[49]
+  PIN r_data_o[4]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 50.155 0.07 50.225 ;
+    END
+  END r_data_o[4]
+  PIN r_data_o[50]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 3.395 46.34 3.465 ;
+    END
+  END r_data_o[50]
+  PIN r_data_o[51]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  26.905 0 27.045 0.14 ;
+    END
+  END r_data_o[51]
+  PIN r_data_o[52]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 34.755 46.34 34.825 ;
+    END
+  END r_data_o[52]
+  PIN r_data_o[53]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  44.265 68.37 44.405 68.51 ;
+    END
+  END r_data_o[53]
+  PIN r_data_o[54]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 40.915 0.07 40.985 ;
+    END
+  END r_data_o[54]
+  PIN r_data_o[55]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 16.835 0.07 16.905 ;
+    END
+  END r_data_o[55]
+  PIN r_data_o[56]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 20.195 46.34 20.265 ;
+    END
+  END r_data_o[56]
+  PIN r_data_o[57]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 37.555 0.07 37.625 ;
+    END
+  END r_data_o[57]
+  PIN r_data_o[58]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 18.795 46.34 18.865 ;
+    END
+  END r_data_o[58]
+  PIN r_data_o[59]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 56.875 46.34 56.945 ;
+    END
+  END r_data_o[59]
+  PIN r_data_o[5]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 30.275 0.07 30.345 ;
+    END
+  END r_data_o[5]
+  PIN r_data_o[60]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 46.795 46.34 46.865 ;
+    END
+  END r_data_o[60]
+  PIN r_data_o[61]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 6.195 46.34 6.265 ;
+    END
+  END r_data_o[61]
+  PIN r_data_o[62]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 5.355 0.07 5.425 ;
+    END
+  END r_data_o[62]
+  PIN r_data_o[63]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 32.235 0.07 32.305 ;
+    END
+  END r_data_o[63]
+  PIN r_data_o[64]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  26.905 68.37 27.045 68.51 ;
+    END
+  END r_data_o[64]
+  PIN r_data_o[65]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 49.595 0.07 49.665 ;
+    END
+  END r_data_o[65]
+  PIN r_data_o[66]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 15.435 46.34 15.505 ;
+    END
+  END r_data_o[66]
+  PIN r_data_o[67]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 59.675 0.07 59.745 ;
+    END
+  END r_data_o[67]
+  PIN r_data_o[68]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  1.705 68.37 1.845 68.51 ;
+    END
+  END r_data_o[68]
+  PIN r_data_o[69]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 50.155 46.34 50.225 ;
+    END
+  END r_data_o[69]
+  PIN r_data_o[6]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 48.195 46.34 48.265 ;
+    END
+  END r_data_o[6]
+  PIN r_data_o[70]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 66.955 0.07 67.025 ;
+    END
+  END r_data_o[70]
+  PIN r_data_o[71]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  2.825 68.37 2.965 68.51 ;
+    END
+  END r_data_o[71]
+  PIN r_data_o[72]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 12.075 0.07 12.145 ;
+    END
+  END r_data_o[72]
+  PIN r_data_o[73]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 45.675 0.07 45.745 ;
+    END
+  END r_data_o[73]
+  PIN r_data_o[74]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 0.875 46.34 0.945 ;
+    END
+  END r_data_o[74]
+  PIN r_data_o[75]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 9.555 46.34 9.625 ;
+    END
+  END r_data_o[75]
+  PIN r_data_o[76]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 26.915 0.07 26.985 ;
+    END
+  END r_data_o[76]
+  PIN r_data_o[77]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 64.155 0.07 64.225 ;
+    END
+  END r_data_o[77]
+  PIN r_data_o[78]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 40.355 46.34 40.425 ;
+    END
+  END r_data_o[78]
+  PIN r_data_o[79]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 58.835 46.34 58.905 ;
+    END
+  END r_data_o[79]
+  PIN r_data_o[7]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  16.265 0 16.405 0.14 ;
+    END
+  END r_data_o[7]
+  PIN r_data_o[80]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 26.075 46.34 26.145 ;
+    END
+  END r_data_o[80]
+  PIN r_data_o[81]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 8.155 0.07 8.225 ;
+    END
+  END r_data_o[81]
+  PIN r_data_o[82]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 47.635 46.34 47.705 ;
+    END
+  END r_data_o[82]
+  PIN r_data_o[83]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  11.225 0 11.365 0.14 ;
+    END
+  END r_data_o[83]
+  PIN r_data_o[84]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 24.115 46.34 24.185 ;
+    END
+  END r_data_o[84]
+  PIN r_data_o[85]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 37.555 46.34 37.625 ;
+    END
+  END r_data_o[85]
+  PIN r_data_o[86]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 56.315 0.07 56.385 ;
+    END
+  END r_data_o[86]
+  PIN r_data_o[87]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 35.595 46.34 35.665 ;
+    END
+  END r_data_o[87]
+  PIN r_data_o[88]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 23.555 0.07 23.625 ;
+    END
+  END r_data_o[88]
+  PIN r_data_o[89]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  40.345 68.37 40.485 68.51 ;
+    END
+  END r_data_o[89]
+  PIN r_data_o[8]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  32.505 0 32.645 0.14 ;
+    END
+  END r_data_o[8]
+  PIN r_data_o[90]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 44.275 46.34 44.345 ;
+    END
+  END r_data_o[90]
+  PIN r_data_o[91]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 24.675 0.07 24.745 ;
+    END
+  END r_data_o[91]
+  PIN r_data_o[92]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 19.355 0.07 19.425 ;
+    END
+  END r_data_o[92]
+  PIN r_data_o[93]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 1.995 46.34 2.065 ;
+    END
+  END r_data_o[93]
+  PIN r_data_o[94]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 8.715 0.07 8.785 ;
+    END
+  END r_data_o[94]
+  PIN r_data_o[95]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  36.425 68.37 36.565 68.51 ;
+    END
+  END r_data_o[95]
+  PIN r_data_o[96]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 39.515 0.07 39.585 ;
+    END
+  END r_data_o[96]
+  PIN r_data_o[97]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 63.035 0.07 63.105 ;
+    END
+  END r_data_o[97]
+  PIN r_data_o[98]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 58.835 0.07 58.905 ;
+    END
+  END r_data_o[98]
+  PIN r_data_o[99]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 44.835 0.07 44.905 ;
+    END
+  END r_data_o[99]
+  PIN r_data_o[9]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 1.995 0.07 2.065 ;
+    END
+  END r_data_o[9]
+  PIN r_v_i
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  28.585 0 28.725 0.14 ;
+    END
+  END r_v_i
+  PIN w_addr_i
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 49.595 46.34 49.665 ;
+    END
+  END w_addr_i
+  PIN w_clk_i
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 28.035 0.07 28.105 ;
+    END
+  END w_clk_i
+  PIN w_data_i[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 34.195 0.07 34.265 ;
+    END
+  END w_data_i[0]
+  PIN w_data_i[100]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 2.835 46.34 2.905 ;
+    END
+  END w_data_i[100]
+  PIN w_data_i[101]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  5.625 68.37 5.765 68.51 ;
+    END
+  END w_data_i[101]
+  PIN w_data_i[102]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 2.835 0.07 2.905 ;
+    END
+  END w_data_i[102]
+  PIN w_data_i[103]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  24.105 68.37 24.245 68.51 ;
+    END
+  END w_data_i[103]
+  PIN w_data_i[104]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  43.145 68.37 43.285 68.51 ;
+    END
+  END w_data_i[104]
+  PIN w_data_i[105]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 11.515 46.34 11.585 ;
+    END
+  END w_data_i[105]
+  PIN w_data_i[106]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 46.235 0.07 46.305 ;
+    END
+  END w_data_i[106]
+  PIN w_data_i[107]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 57.715 46.34 57.785 ;
+    END
+  END w_data_i[107]
+  PIN w_data_i[108]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 30.275 46.34 30.345 ;
+    END
+  END w_data_i[108]
+  PIN w_data_i[109]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 4.235 46.34 4.305 ;
+    END
+  END w_data_i[109]
+  PIN w_data_i[10]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 50.995 46.34 51.065 ;
+    END
+  END w_data_i[10]
+  PIN w_data_i[110]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 16.275 46.34 16.345 ;
+    END
+  END w_data_i[110]
+  PIN w_data_i[111]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 38.955 0.07 39.025 ;
+    END
+  END w_data_i[111]
+  PIN w_data_i[112]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 3.395 0.07 3.465 ;
+    END
+  END w_data_i[112]
+  PIN w_data_i[113]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  15.145 68.37 15.285 68.51 ;
+    END
+  END w_data_i[113]
+  PIN w_data_i[114]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 57.435 0.07 57.505 ;
+    END
+  END w_data_i[114]
+  PIN w_data_i[115]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 30.835 46.34 30.905 ;
+    END
+  END w_data_i[115]
+  PIN w_data_i[116]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  40.345 0 40.485 0.14 ;
+    END
+  END w_data_i[116]
+  PIN w_data_i[117]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 36.995 46.34 37.065 ;
+    END
+  END w_data_i[117]
+  PIN w_data_i[118]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 17.395 0.07 17.465 ;
+    END
+  END w_data_i[118]
+  PIN w_data_i[119]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 10.675 0.07 10.745 ;
+    END
+  END w_data_i[119]
+  PIN w_data_i[11]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  30.825 68.37 30.965 68.51 ;
+    END
+  END w_data_i[11]
+  PIN w_data_i[120]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 7.315 0.07 7.385 ;
+    END
+  END w_data_i[120]
+  PIN w_data_i[121]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 41.475 46.34 41.545 ;
+    END
+  END w_data_i[121]
+  PIN w_data_i[122]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  25.785 68.37 25.925 68.51 ;
+    END
+  END w_data_i[122]
+  PIN w_data_i[123]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  32.505 68.37 32.645 68.51 ;
+    END
+  END w_data_i[123]
+  PIN w_data_i[124]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 20.755 46.34 20.825 ;
+    END
+  END w_data_i[124]
+  PIN w_data_i[125]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 56.875 0.07 56.945 ;
+    END
+  END w_data_i[125]
+  PIN w_data_i[126]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 63.595 0.07 63.665 ;
+    END
+  END w_data_i[126]
+  PIN w_data_i[127]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 63.595 46.34 63.665 ;
+    END
+  END w_data_i[127]
+  PIN w_data_i[128]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 42.315 0.07 42.385 ;
+    END
+  END w_data_i[128]
+  PIN w_data_i[129]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 14.035 0.07 14.105 ;
+    END
+  END w_data_i[129]
+  PIN w_data_i[12]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 26.075 0.07 26.145 ;
+    END
+  END w_data_i[12]
+  PIN w_data_i[130]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 58.275 0.07 58.345 ;
+    END
+  END w_data_i[130]
+  PIN w_data_i[13]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 42.875 46.34 42.945 ;
+    END
+  END w_data_i[13]
+  PIN w_data_i[14]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 40.915 46.34 40.985 ;
+    END
+  END w_data_i[14]
+  PIN w_data_i[15]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 4.795 0.07 4.865 ;
+    END
+  END w_data_i[15]
+  PIN w_data_i[16]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 28.875 0.07 28.945 ;
+    END
+  END w_data_i[16]
+  PIN w_data_i[17]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 27.475 46.34 27.545 ;
+    END
+  END w_data_i[17]
+  PIN w_data_i[18]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 14.035 46.34 14.105 ;
+    END
+  END w_data_i[18]
+  PIN w_data_i[19]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 66.955 46.34 67.025 ;
+    END
+  END w_data_i[19]
+  PIN w_data_i[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 10.115 0.07 10.185 ;
+    END
+  END w_data_i[1]
+  PIN w_data_i[20]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  43.145 0 43.285 0.14 ;
+    END
+  END w_data_i[20]
+  PIN w_data_i[21]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 52.955 0.07 53.025 ;
+    END
+  END w_data_i[21]
+  PIN w_data_i[22]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 24.955 46.34 25.025 ;
+    END
+  END w_data_i[22]
+  PIN w_data_i[23]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  3.945 68.37 4.085 68.51 ;
+    END
+  END w_data_i[23]
+  PIN w_data_i[24]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 29.435 0.07 29.505 ;
+    END
+  END w_data_i[24]
+  PIN w_data_i[25]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  8.425 0 8.565 0.14 ;
+    END
+  END w_data_i[25]
+  PIN w_data_i[26]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  19.065 68.37 19.205 68.51 ;
+    END
+  END w_data_i[26]
+  PIN w_data_i[27]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 43.435 0.07 43.505 ;
+    END
+  END w_data_i[27]
+  PIN w_data_i[28]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 54.355 46.34 54.425 ;
+    END
+  END w_data_i[28]
+  PIN w_data_i[29]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  29.705 0 29.845 0.14 ;
+    END
+  END w_data_i[29]
+  PIN w_data_i[2]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 64.435 46.34 64.505 ;
+    END
+  END w_data_i[2]
+  PIN w_data_i[30]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 33.635 46.34 33.705 ;
+    END
+  END w_data_i[30]
+  PIN w_data_i[31]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 8.715 46.34 8.785 ;
+    END
+  END w_data_i[31]
+  PIN w_data_i[32]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 65.555 46.34 65.625 ;
+    END
+  END w_data_i[32]
+  PIN w_data_i[33]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 7.595 46.34 7.665 ;
+    END
+  END w_data_i[33]
+  PIN w_data_i[34]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  24.105 0 24.245 0.14 ;
+    END
+  END w_data_i[34]
+  PIN w_data_i[35]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  4.505 0 4.645 0.14 ;
+    END
+  END w_data_i[35]
+  PIN w_data_i[36]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 17.395 46.34 17.465 ;
+    END
+  END w_data_i[36]
+  PIN w_data_i[37]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 28.315 46.34 28.385 ;
+    END
+  END w_data_i[37]
+  PIN w_data_i[38]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  10.665 68.37 10.805 68.51 ;
+    END
+  END w_data_i[38]
+  PIN w_data_i[39]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 52.955 46.34 53.025 ;
+    END
+  END w_data_i[39]
+  PIN w_data_i[3]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 3.955 0.07 4.025 ;
+    END
+  END w_data_i[3]
+  PIN w_data_i[40]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 53.515 0.07 53.585 ;
+    END
+  END w_data_i[40]
+  PIN w_data_i[41]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 52.115 0.07 52.185 ;
+    END
+  END w_data_i[41]
+  PIN w_data_i[42]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  2.825 0 2.965 0.14 ;
+    END
+  END w_data_i[42]
+  PIN w_data_i[43]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 15.435 0.07 15.505 ;
+    END
+  END w_data_i[43]
+  PIN w_data_i[44]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 39.515 46.34 39.585 ;
+    END
+  END w_data_i[44]
+  PIN w_data_i[45]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 12.635 0.07 12.705 ;
+    END
+  END w_data_i[45]
+  PIN w_data_i[46]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  37.545 68.37 37.685 68.51 ;
+    END
+  END w_data_i[46]
+  PIN w_data_i[47]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 62.195 46.34 62.265 ;
+    END
+  END w_data_i[47]
+  PIN w_data_i[48]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 60.235 0.07 60.305 ;
+    END
+  END w_data_i[48]
+  PIN w_data_i[49]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  12.345 0 12.485 0.14 ;
+    END
+  END w_data_i[49]
+  PIN w_data_i[4]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 43.715 46.34 43.785 ;
+    END
+  END w_data_i[4]
+  PIN w_data_i[50]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 61.635 46.34 61.705 ;
+    END
+  END w_data_i[50]
+  PIN w_data_i[51]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 40.075 0.07 40.145 ;
+    END
+  END w_data_i[51]
+  PIN w_data_i[52]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 51.555 46.34 51.625 ;
+    END
+  END w_data_i[52]
+  PIN w_data_i[53]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 32.795 46.34 32.865 ;
+    END
+  END w_data_i[53]
+  PIN w_data_i[54]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 15.995 0.07 16.065 ;
+    END
+  END w_data_i[54]
+  PIN w_data_i[55]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  45.385 68.37 45.525 68.51 ;
+    END
+  END w_data_i[55]
+  PIN w_data_i[56]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 65.555 0.07 65.625 ;
+    END
+  END w_data_i[56]
+  PIN w_data_i[57]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  25.785 0 25.925 0.14 ;
+    END
+  END w_data_i[57]
+  PIN w_data_i[58]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 25.515 0.07 25.585 ;
+    END
+  END w_data_i[58]
+  PIN w_data_i[59]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 18.795 0.07 18.865 ;
+    END
+  END w_data_i[59]
+  PIN w_data_i[5]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 32.235 46.34 32.305 ;
+    END
+  END w_data_i[5]
+  PIN w_data_i[60]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 34.755 0.07 34.825 ;
+    END
+  END w_data_i[60]
+  PIN w_data_i[61]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 21.595 46.34 21.665 ;
+    END
+  END w_data_i[61]
+  PIN w_data_i[62]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  13.465 0 13.605 0.14 ;
+    END
+  END w_data_i[62]
+  PIN w_data_i[63]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  42.025 0 42.165 0.14 ;
+    END
+  END w_data_i[63]
+  PIN w_data_i[64]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 38.115 46.34 38.185 ;
+    END
+  END w_data_i[64]
+  PIN w_data_i[65]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  39.225 68.37 39.365 68.51 ;
+    END
+  END w_data_i[65]
+  PIN w_data_i[66]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 58.275 46.34 58.345 ;
+    END
+  END w_data_i[66]
+  PIN w_data_i[67]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 22.155 46.34 22.225 ;
+    END
+  END w_data_i[67]
+  PIN w_data_i[68]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 14.875 0.07 14.945 ;
+    END
+  END w_data_i[68]
+  PIN w_data_i[69]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 1.435 0.07 1.505 ;
+    END
+  END w_data_i[69]
+  PIN w_data_i[6]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  1.705 0 1.845 0.14 ;
+    END
+  END w_data_i[6]
+  PIN w_data_i[70]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 59.675 46.34 59.745 ;
+    END
+  END w_data_i[70]
+  PIN w_data_i[71]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  33.625 68.37 33.765 68.51 ;
+    END
+  END w_data_i[71]
+  PIN w_data_i[72]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 25.515 46.34 25.585 ;
+    END
+  END w_data_i[72]
+  PIN w_data_i[73]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  29.705 68.37 29.845 68.51 ;
+    END
+  END w_data_i[73]
+  PIN w_data_i[74]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 20.195 0.07 20.265 ;
+    END
+  END w_data_i[74]
+  PIN w_data_i[75]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 21.595 0.07 21.665 ;
+    END
+  END w_data_i[75]
+  PIN w_data_i[76]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 6.755 46.34 6.825 ;
+    END
+  END w_data_i[76]
+  PIN w_data_i[77]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  0.585 0 0.725 0.14 ;
+    END
+  END w_data_i[77]
+  PIN w_data_i[78]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 12.075 46.34 12.145 ;
+    END
+  END w_data_i[78]
+  PIN w_data_i[79]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 27.475 0.07 27.545 ;
+    END
+  END w_data_i[79]
+  PIN w_data_i[7]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 44.275 0.07 44.345 ;
+    END
+  END w_data_i[7]
+  PIN w_data_i[80]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 62.195 0.07 62.265 ;
+    END
+  END w_data_i[80]
+  PIN w_data_i[81]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 20.755 0.07 20.825 ;
+    END
+  END w_data_i[81]
+  PIN w_data_i[82]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  17.945 0 18.085 0.14 ;
+    END
+  END w_data_i[82]
+  PIN w_data_i[83]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  6.745 0 6.885 0.14 ;
+    END
+  END w_data_i[83]
+  PIN w_data_i[84]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  8.425 68.37 8.565 68.51 ;
+    END
+  END w_data_i[84]
+  PIN w_data_i[85]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 61.635 0.07 61.705 ;
+    END
+  END w_data_i[85]
+  PIN w_data_i[86]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 1.435 46.34 1.505 ;
+    END
+  END w_data_i[86]
+  PIN w_data_i[87]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  22.985 68.37 23.125 68.51 ;
+    END
+  END w_data_i[87]
+  PIN w_data_i[88]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 34.195 46.34 34.265 ;
+    END
+  END w_data_i[88]
+  PIN w_data_i[89]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 32.795 0.07 32.865 ;
+    END
+  END w_data_i[89]
+  PIN w_data_i[8]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 56.315 46.34 56.385 ;
+    END
+  END w_data_i[8]
+  PIN w_data_i[90]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  19.065 0 19.205 0.14 ;
+    END
+  END w_data_i[90]
+  PIN w_data_i[91]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  33.625 0 33.765 0.14 ;
+    END
+  END w_data_i[91]
+  PIN w_data_i[92]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 6.755 0.07 6.825 ;
+    END
+  END w_data_i[92]
+  PIN w_data_i[93]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 54.915 46.34 54.985 ;
+    END
+  END w_data_i[93]
+  PIN w_data_i[94]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 4.795 46.34 4.865 ;
+    END
+  END w_data_i[94]
+  PIN w_data_i[95]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  17.385 68.37 17.525 68.51 ;
+    END
+  END w_data_i[95]
+  PIN w_data_i[96]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  16.265 68.37 16.405 68.51 ;
+    END
+  END w_data_i[96]
+  PIN w_data_i[97]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 42.875 0.07 42.945 ;
+    END
+  END w_data_i[97]
+  PIN w_data_i[98]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 50.995 0.07 51.065 ;
+    END
+  END w_data_i[98]
+  PIN w_data_i[99]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 10.115 46.34 10.185 ;
+    END
+  END w_data_i[99]
+  PIN w_data_i[9]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 11.515 0.07 11.585 ;
+    END
+  END w_data_i[9]
+  PIN w_reset_i
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 38.115 0.07 38.185 ;
+    END
+  END w_reset_i
+  PIN w_v_i
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  46.27 44.835 46.34 44.905 ;
+    END
+  END w_v_i
+  OBS
+    LAYER metal1 ;
+     RECT  0 -0.085 3.23 68.51 ;
+     RECT  3.23 0 46.34 68.51 ;
+    LAYER metal2 ;
+     RECT  0 0 46.34 68.51 ;
+    LAYER metal3 ;
+     RECT  0 0 46.34 68.51 ;
+    LAYER metal4 ;
+     RECT  0 0 46.34 68.51 ;
+  END
+END bsg_mem_p131
+END LIBRARY

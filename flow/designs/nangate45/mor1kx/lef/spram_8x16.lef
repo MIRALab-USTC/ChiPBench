@@ -1,0 +1,399 @@
+VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+UNITS
+    DATABASE MICRONS 2000 ;
+END UNITS
+
+MACRO spram_8x16
+  FOREIGN spram_8x16 0 0 ;
+  CLASS BLOCK ;
+  SIZE 33.045 BY 48.57 ;
+  PIN VSS
+    USE GROUND ;
+    DIRECTION INOUT ;
+    PORT
+      LAYER metal4 ;
+        RECT  1.14 46.115 31.92 46.285 ;
+        RECT  1.14 43.315 31.92 43.485 ;
+        RECT  1.14 40.515 31.92 40.685 ;
+        RECT  1.14 37.715 31.92 37.885 ;
+        RECT  1.14 34.915 31.92 35.085 ;
+        RECT  1.14 32.115 31.92 32.285 ;
+        RECT  1.14 29.315 31.92 29.485 ;
+        RECT  1.14 26.515 31.92 26.685 ;
+        RECT  1.14 23.715 31.92 23.885 ;
+        RECT  1.14 20.915 31.92 21.085 ;
+        RECT  1.14 18.115 31.92 18.285 ;
+        RECT  1.14 15.315 31.92 15.485 ;
+        RECT  1.14 12.515 31.92 12.685 ;
+        RECT  1.14 9.715 31.92 9.885 ;
+        RECT  1.14 6.915 31.92 7.085 ;
+        RECT  1.14 4.115 31.92 4.285 ;
+        RECT  1.14 1.315 31.92 1.485 ;
+    END
+  END VSS
+  PIN VDD
+    USE POWER ;
+    DIRECTION INOUT ;
+    PORT
+      LAYER metal4 ;
+        RECT  1.14 44.715 31.92 44.885 ;
+        RECT  1.14 41.915 31.92 42.085 ;
+        RECT  1.14 39.115 31.92 39.285 ;
+        RECT  1.14 36.315 31.92 36.485 ;
+        RECT  1.14 33.515 31.92 33.685 ;
+        RECT  1.14 30.715 31.92 30.885 ;
+        RECT  1.14 27.915 31.92 28.085 ;
+        RECT  1.14 25.115 31.92 25.285 ;
+        RECT  1.14 22.315 31.92 22.485 ;
+        RECT  1.14 19.515 31.92 19.685 ;
+        RECT  1.14 16.715 31.92 16.885 ;
+        RECT  1.14 13.915 31.92 14.085 ;
+        RECT  1.14 11.115 31.92 11.285 ;
+        RECT  1.14 8.315 31.92 8.485 ;
+        RECT  1.14 5.515 31.92 5.685 ;
+        RECT  1.14 2.715 31.92 2.885 ;
+    END
+  END VDD
+  PIN clk
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  32.975 6.195 33.045 6.265 ;
+    END
+  END clk
+  PIN din[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  32.975 43.155 33.045 43.225 ;
+    END
+  END din[0]
+  PIN din[10]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  32.975 12.355 33.045 12.425 ;
+    END
+  END din[10]
+  PIN din[11]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 28.315 0.07 28.385 ;
+    END
+  END din[11]
+  PIN din[12]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  4.505 48.43 4.645 48.57 ;
+    END
+  END din[12]
+  PIN din[13]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  32.975 24.675 33.045 24.745 ;
+    END
+  END din[13]
+  PIN din[14]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  22.985 48.43 23.125 48.57 ;
+    END
+  END din[14]
+  PIN din[15]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 34.475 0.07 34.545 ;
+    END
+  END din[15]
+  PIN din[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  32.975 15.435 33.045 15.505 ;
+    END
+  END din[1]
+  PIN din[2]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 9.835 0.07 9.905 ;
+    END
+  END din[2]
+  PIN din[3]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  32.975 36.995 33.045 37.065 ;
+    END
+  END din[3]
+  PIN din[4]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  32.975 18.515 33.045 18.585 ;
+    END
+  END din[4]
+  PIN din[5]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 37.555 0.07 37.625 ;
+    END
+  END din[5]
+  PIN din[6]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 25.235 0.07 25.305 ;
+    END
+  END din[6]
+  PIN din[7]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 46.795 0.07 46.865 ;
+    END
+  END din[7]
+  PIN din[8]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  10.665 48.43 10.805 48.57 ;
+    END
+  END din[8]
+  PIN din[9]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  29.145 48.43 29.285 48.57 ;
+    END
+  END din[9]
+  PIN dout[0]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 15.995 0.07 16.065 ;
+    END
+  END dout[0]
+  PIN dout[10]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  32.975 40.075 33.045 40.145 ;
+    END
+  END dout[10]
+  PIN dout[11]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 19.075 0.07 19.145 ;
+    END
+  END dout[11]
+  PIN dout[12]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  0.585 0 0.725 0.14 ;
+    END
+  END dout[12]
+  PIN dout[13]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 6.755 0.07 6.825 ;
+    END
+  END dout[13]
+  PIN dout[14]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  32.975 33.915 33.045 33.985 ;
+    END
+  END dout[14]
+  PIN dout[15]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  18.505 0 18.645 0.14 ;
+    END
+  END dout[15]
+  PIN dout[1]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 3.675 0.07 3.745 ;
+    END
+  END dout[1]
+  PIN dout[2]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  32.975 9.275 33.045 9.345 ;
+    END
+  END dout[2]
+  PIN dout[3]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  16.825 48.43 16.965 48.57 ;
+    END
+  END dout[3]
+  PIN dout[4]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  32.975 21.595 33.045 21.665 ;
+    END
+  END dout[4]
+  PIN dout[5]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  6.185 0 6.325 0.14 ;
+    END
+  END dout[5]
+  PIN dout[6]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  12.345 0 12.485 0.14 ;
+    END
+  END dout[6]
+  PIN dout[7]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  24.665 0 24.805 0.14 ;
+    END
+  END dout[7]
+  PIN dout[8]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  32.975 27.755 33.045 27.825 ;
+    END
+  END dout[8]
+  PIN dout[9]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal4 ;
+        RECT  30.825 0 30.965 0.14 ;
+    END
+  END dout[9]
+  PIN raddr[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 22.155 0.07 22.225 ;
+    END
+  END raddr[0]
+  PIN raddr[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  32.975 46.235 33.045 46.305 ;
+    END
+  END raddr[1]
+  PIN raddr[2]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 40.635 0.07 40.705 ;
+    END
+  END raddr[2]
+  PIN re
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 43.715 0.07 43.785 ;
+    END
+  END re
+  PIN waddr[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  32.975 3.115 33.045 3.185 ;
+    END
+  END waddr[0]
+  PIN waddr[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 12.915 0.07 12.985 ;
+    END
+  END waddr[1]
+  PIN waddr[2]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  0 31.395 0.07 31.465 ;
+    END
+  END waddr[2]
+  PIN we
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER metal3 ;
+        RECT  32.975 30.835 33.045 30.905 ;
+    END
+  END we
+  OBS
+    LAYER metal1 ;
+     RECT  0 -0.085 3.23 48.57 ;
+     RECT  3.23 0 33.045 48.57 ;
+    LAYER metal2 ;
+     RECT  0 0 33.045 48.57 ;
+    LAYER metal3 ;
+     RECT  0 0 33.045 48.57 ;
+    LAYER metal4 ;
+     RECT  0 0 33.045 48.57 ;
+  END
+END spram_8x16
+END LIBRARY
