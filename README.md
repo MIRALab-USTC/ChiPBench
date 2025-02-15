@@ -4,10 +4,37 @@ This repository contains the code for our manuscript *BENCHMARKING END-TO-END PE
 
 This project benchmarks placement algorithms based on [OpenROAD-flow-scripts](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts).
 
+
+
 ## Dependencies
 
-- [OpenROAD-flow-scripts](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts)
-- Python is used for scripting purposes. Most dependencies are built-in Python libraries, but additional required packages are listed in the `requirements.txt` file.
+This project relies on the following dependencies:
+
+- **OpenROAD**
+
+  - Repository: [OpenROAD](https://github.com/The-OpenROAD-Project/OpenROAD)
+  - Version: `v2.0-17198-g8396d0866`
+  - Commit Hash: `8396d08669f418279c89b5bbd4d7e3f5204d3288`
+
+- **Yosys**
+
+  - Repository: [Yosys](https://github.com/YosysHQ/yosys)
+  - Version: `Yosys 0.45+139`
+  - Commit Hash: `4d581a97d6f0f3e545bcdaa9462b4276fab99fa3`
+
+
+
+
+
+## Installation
+
+
+
+
+
+
+
+
 
 ## Installation
 
