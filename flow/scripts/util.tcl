@@ -27,6 +27,7 @@ proc repair_timing_helper { {hold_margin 1} } {
   append_env_var additional_args SKIP_BUFFER_REMOVAL -skip_buffer_removal 0
   append_env_var additional_args SKIP_LAST_GASP -skip_last_gasp 0
   append_env_var additional_args MATCH_CELL_FOOTPRINT -match_cell_footprint 0
+  append_env_var additional_args MAX_BUFFER_PERCENT -max_buffer_percent 20
   log_cmd repair_timing {*}$additional_args
 }
 

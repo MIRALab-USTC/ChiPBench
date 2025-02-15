@@ -16,7 +16,8 @@ def build_directed_graph(nodes_info, nets):
     for node_name, node_data in nodes_info.items():
         is_reg_node = node_data["is_register"]
         is_macro_node=node_data["isMacro"]
-        G.add_node(node_name,isMacro=is_macro_node,is_register=is_reg_node)
+        is_port_node=node_data["is_port"]
+        G.add_node(node_name,isMacro=is_macro_node,is_register=is_reg_node,is_port=is_port_node)
 
 
     for net in nets:
@@ -28,7 +29,35 @@ def build_directed_graph(nodes_info, nets):
     
     return G
 
+def search_pathsM2C(G,start_node,max_depth=100):
+    paths = []
 
+    def dfs(current_node, path, depth):
+        # Stop searching if exceeding maximum depth
+        if depth > max_depth:
+            return
+        
+        # Add current node to path
+        path.append(current_node)
+
+        # Check if termination condition is met: isMacro=True and pin_type='input'
+        if (G.nodes[current_node].get('is_register', False) ) and depth>0:
+            # Record current complete path and stop searching further
+            paths.append(path.copy())
+            path.pop()
+            return
+        
+        # Continue searching forward
+        for neighbor in G.successors(current_node):
+            # Avoid cycles
+            if neighbor not in path:
+                dfs(neighbor, path, depth + 1)
+
+        # Backtrack
+        path.pop()
+    # Start DFS
+    dfs(start_node, [], 0)
+    return paths
 
 def search_paths_to_macro_no_memo(G, start_node, max_depth=100):
     """
@@ -54,7 +83,7 @@ def search_paths_to_macro_no_memo(G, start_node, max_depth=100):
         path.append(current_node)
 
         # Check if termination condition is met: isMacro=True and pin_type='input'
-        if G.nodes[current_node].get('isMacro', False) and depth>0:
+        if (G.nodes[current_node].get('isMacro', False) or G.nodes[current_node].get('is_port', False)) and depth>0:
             # Record current complete path and stop searching further
             paths.append(path.copy())
             path.pop()
@@ -72,6 +101,8 @@ def search_paths_to_macro_no_memo(G, start_node, max_depth=100):
     # Start DFS
     dfs(start_node, [], 0)
     return paths
+
+
 
 
 def getDataFlow_main(G, macro_names,depth=10):
@@ -117,7 +148,7 @@ def getDataFlow_main(G, macro_names,depth=10):
             if path_num_array[i,j]+path_num_array[j,i] > 0:
                 macro_paths_num_array[i,j] = macro_paths_num_array[j,i] = path_num_array[i,j] + path_num_array[j,i]
                 macro_paths_data_flow_array[i,j] = macro_paths_data_flow_array[j,i] = path_data_flow_array[i,j] + path_data_flow_array[j,i]
-                print(f"macro {i} to macro {j}: {macro_paths_num_array[i,j]}, data_flow: {macro_paths_data_flow_array[i,j]}")
+                print(f"{macro_names[i]} to {macro_names[j]}: {macro_paths_num_array[i,j]}, data_flow: {macro_paths_data_flow_array[i,j]}")
                 
     return macro_paths_num_array, macro_paths_data_flow_array
 

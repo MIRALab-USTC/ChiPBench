@@ -50,6 +50,19 @@ def replace_slash_in_file_content(file_path):
         pass
         #print(f"Path '{file_path}' is not a valid file or not found")
 
+def rm_blockages_process_file(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        content = file.read()
+
+    blockages_pattern = r"BLOCKAGES \d+ ;.*?END BLOCKAGES"
+
+    processed_content = re.sub(blockages_pattern, '', content, flags=re.DOTALL)
+
+    with open(file_path, 'w', encoding='utf-8') as file:
+        file.write(processed_content)
+
+
+
 def copy_and_replace(src, dest):
 
     if os.path.exists(dest):
@@ -218,6 +231,7 @@ def def2db(config_setting,flow_variant,def_path,db_path):
     tmp_def_path_abs=os.path.abspath(tmp_def_path)
     os.system(f"cp {def_path} {tmp_def_path_abs}")
     replace_slash_in_file_content(tmp_def_path_abs)
+    rm_blockages_process_file(tmp_def_path_abs)
     subprocess.run([f"make DESIGN_CONFIG={config_setting} FLOW_VARIANT={flow_variant} TARGET_DEF_PATH={tmp_def_path_abs} TARGET_DB_PATH={db_path} def2db"],shell=True)
     os.system(f"rm {tmp_def_path_abs}")
 

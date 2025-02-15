@@ -709,6 +709,9 @@ evaluate_MacroPlace: macro-pre generate_channels do-floorplan-macro do-place do-
 getMacroMetrics:
 	($(TIME_CMD) $(OPENROAD_CMD) -python $(SCRIPTS_DIR)/getMacroMetrics.py) 2>&1 | tee $(LOG_DIR)/MacroMetrics.log
 
+.PHONY: dataflow
+dataflow:
+	($(TIME_CMD) $(OPENROAD_CMD) -python $(SCRIPTS_DIR)/dataflow.py) 2>&1 | tee $(LOG_DIR)/dataflow.log
 # ==============================================================================
 #  ____  _        _    ____ _____
 # |  _ \| |      / \  / ___| ____|
