@@ -301,7 +301,7 @@ def get_Metric_in(finalJson, routeJson, placedpLog,gproutefile,dr_route_path,mac
     metric = {}
     metric["MHpwl"]=macro["hpwl"]
     metric["Regularity"]=macro["regularity"]
-    metric["DataFlow"]=macro["dataflow"]
+    # metric["DataFlow"]=macro["dataflow"]
     metric["HPWL"] = get_totalHpwl(place)
     metric["Wirelength"] = get_wirelength(route)
     metric["Congestion(V)"],metric["Congestion(H)"],metric["MaxH"],metric["MaxV"],metric["overflow"]=get_congestion(gproute)

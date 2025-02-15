@@ -99,17 +99,17 @@ regularity_um=design_block.dbuToMicrons(regularity)
 macro_json=os.path.join(logs_dir,"macro.json")
 depth=8
 
-dataflow=getdataflow(design_block,depth=depth)
-while dataflow is None or np.isnan(dataflow):
-    depth += 1
-    dataflow = getdataflow(design_block, depth=depth)
+# dataflow=getdataflow(design_block,depth=depth)
+# while dataflow is None or np.isnan(dataflow):
+#     depth += 1
+#     dataflow = getdataflow(design_block, depth=depth)
 
 
 data={}
 data["hpwl"]=hpwl_um
 data["regularity"]=regularity_um
 
-data["dataflow"]=dataflow
+# data["dataflow"]=dataflow
 with open(macro_json,"w") as f:
     json.dump(data,f,indent=4)
 
