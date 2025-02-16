@@ -13,3 +13,5 @@ fi
 "$DIR/DependencyInstaller.sh" -base
 
 sudo -u $SUDO_USER "$DIR/DependencyInstaller.sh" -common
+
+pip install networkx tqdm 

@@ -25,29 +25,64 @@ This project relies on the following dependencies:
 
 
 
-
 ## Installation
 
 
 
 
 
-
-
-
-
-## Installation
+### Install via Docker
 
 ```bash
-git clone --recursive https://github.com/ZhaojieTu/ChiPBench
+docker pull tuzj/chipbench:v1.0
+git clone https://github.com/ZhaojieTu/ChiPBench
 cd ChiPBench
-pip install -r requirements.txt
+docker run -it -v $(pwd):/ChiPBench tuzj/chipbench:v1.0 bash
 ```
 
 
-### OpenROAD-flow-scripts Installation
 
-We utilize the OpenROAD-flow-scripts provided by The-OpenROAD-Project. The installation process is detailed in the [README_OpenROAD](https://github.com/ZhaojieTu/OpenROAD-flow-scripts/blob/master/README.md) or the [official repository](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts).
+
+
+### Install via Pre-built Binaries  
+For certain platforms, you can install OpenROAD and Yosys using pre-built binaries. Before proceeding with the installation, run the following setup script:
+
+```bash
+git clone https://github.com/ZhaojieTu/ChiPBench
+cd ChiPBench
+sudo ./setup/setup.sh
+```
+
+**OpenROAD**  
+
+Pre-built binaries are available for the following platforms:  
+- Ubuntu 20.04 / 22.04  
+- Debian 11  
+
+Download the release: [OpenROAD Release](https://github.com/Precision-Innovations/OpenROAD/releases/tag/2.0-17198-g8396d0866)  
+
+Follow the official installation guide: [Installation Guide](https://openroad-flow-scripts.readthedocs.io/en/latest/user/BuildWithPrebuilt.html#install-openroad)  
+
+**Yosys**  
+
+Download the release: [Yosys Release](https://github.com/YosysHQ/oss-cad-suite-build/releases/tag/2024-11-22)  
+
+Follow the official installation guide: [Installation Guide](https://github.com/YosysHQ/oss-cad-suite-build#installation)  
+
+
+
+
+
+
+### Install from Source  
+
+Building from source requires compiling the code, which can be time-consuming. If you prefer this method, please refer to the official documentation of each project:  
+
+- [OpenROAD](https://github.com/The-OpenROAD-Project/OpenROAD/blob/master/docs/user/Build.md)
+- [Yosys](https://github.com/YosysHQ/yosys?tab=readme-ov-file#building-from-source)
+
+Note: Make sure to use the same commit as mentioned before.
+
 
 
 
@@ -57,95 +92,138 @@ The dataset used in this project is available at [Hugging Face](https://huggingf
 
 The statistics of our dataset:
 
-| Id | Design         | \#Cells | \#Nets  | \#Macros | \#Pins  | \#IOs | \#Edges |
-|----|----------------|---------|---------|----------|---------|-------|---------|
-| 1  | 8051           | 13865   | 16424   | 0        | 50848   | 10    | 16174   |
-| 2  | ariane136      | 175248  | 191081  | 136      | 609834  | 495   | 187911  |
-| 3  | ariane133      | 168551  | 184856  | 132      | 592261  | 495   | 183142  |
-| 4  | bp             | 301030  | 333364  | 24       | 984093  | 1198  | 333364  |
-| 5  | bp\_be         | 50881   | 58428   | 10       | 182949  | 3029  | 58092   |
-| 6  | bp\_fe         | 33206   | 36379   | 11       | 111510  | 2511  | 36203   |
-| 7  | CAN-Bus        | 815     | 935     | 0        | 2637    | 13    | 935     |
-| 8  | DE2\_CCD\_edge | 2333    | 3270    | 0        | 7823    | 64    | 3170    |
-| 9  | dft48          | 48488   | 52575   | 68       | 125501  | 132   | 50654   |
-| 10 | FPGA-CAN       | 140848  | 178913  | 0        | 532024  | 4     | 176472  |
-| 11 | iot shield     | 904     | 1006    | 0        | 2995    | 33    | 974     |
-| 12 | mor1kx         | 104293  | 130743  | 0        | 374983  | 576   | 125979  |
-| 13 | or1200         | 43386   | 32195   | 20       | 97047   | 383   | 31958   |
-| 14 | OV7670\_i2c    | 332     | 340     | 0        | 979     | 29    | 316     |
-| 15 | picorv         | 8851    | 10531   | 0        | 32195   | 409   | 10470   |
-| 16 | serv           | 1291    | 1482    | 0        | 3915    | 306   | 1403    |
-| 17 | sha256         | 10120   | 12283   | 0        | 38758   | 77    | 12176   |
-| 18 | subrisc        | 859382  | 1103295 | 0        | 3359066 | 34    | 1092653 |
-| 19 | swerv\_wrapper | 96435   | 105026  | 28       | 354652  | 1416  | 104565  |
-| 20 | toygpu         | 368081  | 466513  | 0        | 1399167 | 11    | 461675  |
+| Id | Design           | \#Cells | \#Nets | \#Macros | \#Pins  | \#IOs |
+|----|------------------|---------|--------|----------|---------|-------|
+| 1  | ariane133        | 167907  | 197606 | 132      | 979135  | 495   |
+| 2  | ariane136        | 171347  | 201428 | 136      | 1000876 | 495   |
+| 3  | bp\_fe           | 33188   | 39512  | 11       | 185524  | 2511  |
+| 4  | bp\_be           | 51382   | 62228  | 10       | 293276  | 3029  |
+| 5  | bp               | 307055  | 348278 | 24       | 1642427 | 1198  |
+| 6  | swerv\_wrapper   | 98039   | 113582 | 28       | 573688  | 1416  |
+| 7  | bp\_multi        | 152287  | 174170 | 26       | 813050  | 1453  |
+| 8  | vga\_lcd         | 127004  | 151946 | 62       | 706931  | 198   |
+| 9  | dft68            | 41974   | 56217  | 68       | 226420  | 132   |
+| 10 | or1200           | 26667   | 32740  | 36       | 153379  | 383   |
+| 11 | mor1kx           | 68291   | 81398  | 78       | 394210  | 576   |
+| 12 | ethernet         | 35172   | 44964  | 64       | 205739  | 211   |
+| 13 | VeriGPU          | 71082   | 85081  | 12       | 421857  | 134   |
+| 14 | isa\_npu         | 427003  | 548451 | 15       | 2406579 | 93    |
+| 15 | ariane81         | 153873  | 180516 | 81       | 894420  | 495   |
+| 16 | bp\_fe38         | 26859   | 32661  | 38       | 154162  | 2511  |
+| 17 | bp\_be12         | 38393   | 47030  | 12       | 220938  | 3029  |
+| 18 | bp68             | 164039  | 191475 | 68       | 887046  | 1198  |
+| 19 | swerv\_wrapper43 | 95455   | 110902 | 43       | 560088  | 1416  |
+| 20 | bp\_multi57      | 127553  | 146710 | 57       | 680748  | 1453  |
+
+
+
 
 ## Usage
 
-### Benchmarking
 
-To run the benchmarking, follow these steps:
+### 1. Environment Setup
 
-1. Prepare the DEF files that have undergone placement for benchmarking.
-2. Configure the JSON file as described in the [Configuration](#configuration) section.
-3. Run the benchmarking script:
-   ```bash
-    source ./OpenROAD-flow-scripts/env.sh
-    python benchmarking/benchmarking.py config.json
-   ```
+Before running any scripts, you need to set up the required environment variables. There are two methods to do this:
 
-### Configuration
+#### Option 1: Load Environment Variables Manually
 
-Example: `config_macro.json`:
+Run the following command in your terminal:
+```bash
+source env.sh
+```
+
+#### Option 2: Set Environment Variables Permanently
+
+Add the following lines to your `~/.bashrc` to avoid loading `env.sh` every time:
+```bash
+echo 'export OPENROAD_EXE=$(command -v openroad)' >> ~/.bashrc
+echo 'export YOSYS_EXE=$(command -v yosys)' >> ~/.bashrc
+source ~/.bashrc
+```
+
+---
+
+### 2. Benchmarking
+
+The  project supports two methods for running tests: using command line arguments or a JSON configuration file.
+
+#### Method 1: Using Command Line Arguments
+
+
+```bash
+cd ChiPBench
+python3 benchmarking/benchmarking.py --mode={mode} --config_setting={config_setting} --def_path={def_path} --evaluate_name={evaluate_name}
+```
+
+
+**Parameter Details**:
+- `--mode`: Specifies the evaluation mode. Options include:
+  - `macro`: Macro placement evaluation
+  - `global`: Global placement evaluation
+  - `mixsize`: Mixed-size placement evaluation
+- `--config_setting`: Path to the specific design case's configuration file.
+- `--def_path`: Input DEF file that describes the placement.
+- `--evaluate_name`: The name of the evaluation. The output will be stored in `benchmarking_result/{evaluate_name}/metrics.json`.
+
+**Example**:
+```bash
+python3 benchmarking/benchmarking.py --mode=macro --config_setting=flow/designs/nangate45/bp_multi_top/config.mk --def_path=../def/bp_multi_top_sa.def --evaluate_name=sa
+```
+
+The benchmarking results will be saved to:
+```
+benchmarking_result/sa/metrics.json
+```
+
+
+#### Method 2: Using a JSON Configuration File
+
+You can also configure multiple test cases in a JSON file for batch execution.
+```bash
+
+python3 benchmarking/benchmarking.py --config_json={Config_Json}
+```
+
+**Example 1: Single Case Configuration**
+
+Create a JSON file (e.g., `config_macro.json`) with the following content:
 ```json
 {
-    "evaluate_name":"method_name",
-    "mode":"macro",
-    "case":
-    {
-        "ariane133":"ariane133.def",
-        "ariane136":"ariane136.def",
-        "bp":"black_parrot.def",
-        "bp_fe":"bp_fe.def",
-        "bp_be":"bp_be.def",
-        "dft48":"dft48.def",
-        "swerv_wrapper":"swerv_wrapper.def",
-        "or1200":"or1200.def"
-    },
-    "parallel":3
+    "evaluate_name": "example_global",
+    "mode": "global",
+    "config_setting": "flow/designs/nangate45/gcd/config.mk",
+    "def_path": "flow/results/nangate45/gcd/base/3_3_place_gp.odb.def",
+    "parallel": 1
 }
 ```
 
-| JSON Parameter  | Description                                     | Values                                                 |
-|-----------------|-------------------------------------------------|--------------------------------------------------------|
-| evaluate_name   | The name of the evaluation                      | string                                                 |
-| mode            | Specifies if the evaluation is for macro placement ,global placement or mix-sized placement | `macro_place: "macro" or 1`, `global_place: "global" or 2`,  `mixed-size_place: "mixsize" or 3`|
-| case            | Specifies the DEF files for each case to be evaluated; partial evaluation is also allowed | `"case": "case_place.def"`                             |
-| parallel        | Number of cases to run in parallel              | int                                                    |
+**Example 2: Multiple Case Configuration**
 
-### Benchmarking Results
-
-The benchmarking results will be saved in the "benchmarking_result" folder.
-
-The results are organized in the following format:
-```bash
-benchmarking_result
-├── method_name
-│   ├── logs
-│   ├── reports
-│   ├── results
-│   ├── average_result.json
-│   ├── metrics.json
-│   ├── normalized_metrics.json
+When running multiple test cases simultaneously, configure the JSON file as follows:
+```json
+{
+    "evaluate_name": "example_multi",
+    "mode": "macro",
+    "case_list": [
+        {
+            "config_setting": "path/to/config1.mk",
+            "def_path": "path/to/def1.def"
+        },
+        {
+            "config_setting": "path/to/config2.mk",
+            "def_path": "path/to/def2.def"
+        }
+    ],
+    "parallel": 2
+}
 ```
+The `parallel` parameter specifies the number of cases to run simultaneously, allowing you to fully utilize your system resources.
 
-- `logs`: OpenROAD log files for each case
-- `reports`: OpenROAD report files for each case
-- `results`: OpenROAD result files for each case
-- `metrics.json`: Raw metrics for each case
-- `normalized_metrics.json`: Normalized metrics for each case 
-  - Normalization is based on baseline values: `normalized_metric = metric/baseline`
-- `average_result.json`: Average normalized metrics for each case
+
+
+
+
+
 
 
 ## Extra
