@@ -35,7 +35,7 @@ This project relies on the following dependencies:
 
 ```bash
 docker pull tuzj/chipbench:v1.0
-git clone https://github.com/ZhaojieTu/ChiPBench
+git clone https://github.com/MIRALab-USTC/ChiPBench
 cd ChiPBench
 docker run -it -v $(pwd):/ChiPBench tuzj/chipbench:v1.0 bash
 ```
@@ -48,7 +48,7 @@ docker run -it -v $(pwd):/ChiPBench tuzj/chipbench:v1.0 bash
 For certain platforms, you can install OpenROAD and Yosys using pre-built binaries. Before proceeding with the installation, run the following setup script:
 
 ```bash
-git clone https://github.com/ZhaojieTu/ChiPBench
+git clone https://github.com/MIRALab-USTC/ChiPBench
 cd ChiPBench
 sudo ./setup/setup.sh
 ```
