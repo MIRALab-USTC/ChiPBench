@@ -4,6 +4,7 @@ This directory contains additional scripts that might be useful.
 
 - **pl2def.py**: Writes node coordinate information from `.pl` files in the Bookshelf format to `.def` files.
 - **lefdef2bookshelf.py**: Converts LEF/DEF files to the Bookshelf format based on DREAMPlace.
+- **lefdef2bookshelf_or.py**: Converts LEF/DEF files to the Bookshelf format based on OpenROAD.
 
 ## Details
 
@@ -36,3 +37,46 @@ Usage:
 python dreamplace/lefdef2bookshelf.py case1.json
 ```
 - The generated Bookshelf format files will be located in the `benchmarks/` directory. For example, you will find the Bookshelf files in `benchmarks/case1` (the subdirectory name corresponds to the JSON file name).
+
+### **lefdef2bookshelf_or.py**
+
+Converts LEF/DEF files to the Bookshelf format based on OpenROAD.
+
+Usage:
+```bash
+openroad -python -exit lefdef2bookshelf_or.py {json_file} {bookshelf_dir} {benchmark}
+```
+- `json_file`: The JSON configuration file for the benchmark, as same as `lefdef2bookshelf.py`.
+- `bookshelf_dir`: The directory to store the generated Bookshelf format files.
+- `benchmark`: The name of the benchmark.
+
+example:
+```bash
+openroad -python -exit lefdef2bookshelf_or.py swerv_wrapper.json benchmarks/ swerv_wrapper
+```
+
+`swerv_wrapper.json`
+```json
+{
+    "def_input": "./ChiPBench-D/data/swerv_wrapper/def/pre_place.def",
+    "lef_input": [
+        "./ChiPBench-D/data/swerv_wrapper/lef/NangateOpenCellLibrary.tech.lef",
+        "./ChiPBench-D/data/swerv_wrapper/lef/NangateOpenCellLibrary.macro.mod.lef",
+        "./ChiPBench-D/data/swerv_wrapper/lef/fakeram45_2048x39.lef",
+        "./ChiPBench-D/data/swerv_wrapper/lef/fakeram45_256x34.lef",
+        "./ChiPBench-D/data/swerv_wrapper/lef/fakeram45_64x21.lef"
+    ],
+    "verilog_input": "./ChiPBench-D/data/swerv_wrapper/swerv_wrapper.v",
+    "lib_input": [
+        "./ChiPBench-D/data/swerv_wrapper/lib/NangateOpenCellLibrary_typical.lib",
+        "./ChiPBench-D/data/swerv_wrapper/lib/fakeram45_2048x39.lib",
+        "./ChiPBench-D/data/swerv_wrapper/lib/fakeram45_256x34.lib",
+        "./ChiPBench-D/data/swerv_wrapper/lib/fakeram45_64x21.lib"
+    ]
+
+}
+```
+
+file will be generated in benchmarks/swerv_wrapper/
+
+
