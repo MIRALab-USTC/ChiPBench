@@ -460,7 +460,7 @@ def benchmarking(args):
         if "case_list" in config:
             benchmarking_multi(config)
         else: # single case
-            benchmarking_single(config["config_setting"],config["def_path"],config["evaluate_name"],config["mode"],config["baseline_data_file"])
+            benchmarking_single(config["config_setting"],config["def_path"],config["evaluate_name"],config["mode"])
     elif  args.mode is not None:
         print(args.config_setting)
         benchmarking_single(args.config_setting,args.def_path,args.evaluate_name,args.mode,args.baseline_data_file)
