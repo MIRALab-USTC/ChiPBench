@@ -651,13 +651,18 @@ do-copy-mixedsize:
 # do-mix-sized2:
 # 	$(UNSET_AND_MAKE) do-copy-mixsize2 do-3_4_place_resized do-3_5_place_dp do-3_place do-3_place.sdc 
 
+
+.PHONY: macro-pre_MX
+macro-pre_MX:
+	($(TIME_CMD) $(OPENROAD_CMD) -python $(SCRIPTS_DIR)/pre_macro_MXFlow.py) 2>&1 | tee $(LOG_DIR)/pre_macro.log
+
 .PHONY: do-mixedsize-place
 do-mixedsize-place:
 	$(UNSET_AND_MAKE) do-copy-mixedsize do-2_4_floorplan_tapcell do-2_5_floorplan_pdn do-2_floorplan do-copy-mixedsize2 do-3_4_place_resized do-3_5_place_dp do-3_place do-3_place.sdc
 
 .PHONY: evaluate_Mixed-SizePlace
 evaluate_Mixed-SizePlace:
-	$(UNSET_AND_MAKE) do-mixedsize-place do-cts do-route do-finish
+	$(UNSET_AND_MAKE) macro-pre_MX do-mixedsize-place do-cts do-route do-finish
 
 
 .PHONY: do-copy-mixedsize2
@@ -770,8 +775,13 @@ clean_place:
 do-place-global:
 	$(UNSET_AND_MAKE) do-3_4_place_resized do-3_5_place_dp do-3_place do-3_place.sdc
 
+
+.PHONY: macro-pre_macro_GPFlow
+macro-pre_macro_GPFlow:
+	($(TIME_CMD) $(OPENROAD_CMD) -python $(SCRIPTS_DIR)/pre_macro_GPFlow.py) 2>&1 | tee $(LOG_DIR)/pre_macro_GPFlow.log
+
 .PHONY: evaluate_GlobalPlace
-evaluate_GlobalPlace: do-place-global do-cts do-route do-finish
+evaluate_GlobalPlace: macro-pre_macro_GPFlow do-place-global do-cts do-route do-finish
 
 # ==============================================================================
 #   ____ _____ ____

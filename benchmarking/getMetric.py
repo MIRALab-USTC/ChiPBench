@@ -111,7 +111,6 @@ def get_usage(content):
     table_start_index = match.end()
     table_content = content[table_start_index:]
     # Find the Total line and extract the Usage percentage
-        # 修改正则表达式以捕获所有数字
     total_line_pattern = r'Total\s+(\d+)\s+(\d+)\s+(\d+\.\d+)%\s+(\d+)\s*/\s*(\d+)\s*/\s*(\d+)'
     total_match = re.search(total_line_pattern, table_content)
     if not total_match:

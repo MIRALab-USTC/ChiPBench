@@ -40,7 +40,7 @@ def unscale_xy(node_x,node_y, shift_factor, scale_factor):
 
     return x,y
 
-def write2def(pl_dict,def_file,target_filename):
+def write2def(pl_dict,def_file,target_filename,fix_macro=False):
     def_lines = []
     
     with open(def_file, "r") as f:
@@ -73,6 +73,8 @@ def write2def(pl_dict,def_file,target_filename):
                     line = re.sub(
                         r"(.*\) )(N|S|W|E|FN|FS|FW|FE)($| )", r"\1%s\3" % o, line
                     )
+                    if fix_macro:
+                        line = line.replace("PLACED","FIXED")
             def_lines.append(line)
 
     with open(target_filename, "w") as f:
@@ -84,14 +86,14 @@ If the node coordinates in the pl file have been scaled by DreamPlace,
 you can specify shift_factor and scale_factor in the function to unscale them.
 These are generally the params.shift_factor and params.scale_factor in DreamPlace.
 '''
-def pl2def(pl_input,def_input,final_def,shift_factor=[0,0],scale_factor=1):
+def pl2def(pl_input,def_input,final_def,shift_factor=[0,0],scale_factor=1,fix_macro=False):
 
     pl_dict=read_pl(pl_input)
     
     for key in pl_dict:
         pl_dict[key][0],pl_dict[key][1]=unscale_xy(pl_dict[key][0],pl_dict[key][1],shift_factor, scale_factor)
 
-    write2def(pl_dict,def_input,final_def)
+    write2def(pl_dict,def_input,final_def,fix_macro)
 
 
 
@@ -106,9 +108,10 @@ if __name__ == "__main__":
     parser.add_argument('--inputdef', required=True, help='Path to the input .def file')
     parser.add_argument('--outputdef', required=True, help='Path to the output .def file')
 
+    parser.add_argument('--fix_macro', required=False, action='store_true', help='Whether to fix macro')
     args = parser.parse_args()
 
-    pl2def(args.pl, args.inputdef, args.outputdef)
+    pl2def(args.pl, args.inputdef, args.outputdef,fix_macro=args.fix_macro)
 
 
 
