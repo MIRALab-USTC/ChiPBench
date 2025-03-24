@@ -658,7 +658,7 @@ macro-pre_MX:
 
 .PHONY: do-mixedsize-place
 do-mixedsize-place:
-	$(UNSET_AND_MAKE) do-copy-mixedsize do-2_4_floorplan_tapcell do-2_5_floorplan_pdn do-2_floorplan do-copy-mixedsize2 do-3_4_place_resized do-3_5_place_dp do-3_place do-3_place.sdc
+	$(UNSET_AND_MAKE) do-copy-mixedsize getMacroMetrics do-2_4_floorplan_tapcell do-2_5_floorplan_pdn do-2_floorplan do-copy-mixedsize2 do-3_4_place_resized do-3_5_place_dp do-3_place do-3_place.sdc
 
 .PHONY: evaluate_Mixed-SizePlace
 evaluate_Mixed-SizePlace:

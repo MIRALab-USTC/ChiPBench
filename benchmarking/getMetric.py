@@ -298,8 +298,10 @@ def get_Metric_in(finalJson, routeJson, placedpLog,gproutefile,dr_route_path,mac
     #     gproute = file.read()
 
     metric = {}
-    metric["MHpwl"]=macro["hpwl"]
-    metric["Regularity"]=macro["regularity"]
+    if "hpwl" in macro:
+        metric["MHpwl"] = macro["hpwl"]
+    if "regularity" in macro:
+        metric["Regularity"] = macro["regularity"]
     # metric["DataFlow"]=macro["dataflow"]
     metric["HPWL"] = get_totalHpwl(place)
     metric["Wirelength"] = get_wirelength(route)
