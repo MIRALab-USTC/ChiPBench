@@ -328,8 +328,8 @@ def writebookshelf(config_json,bookshelf_dir,benchmark=None,enable=False):
     grid_x = (x_max // grid_num) // 10 * 10
     grid_y = (y_max // grid_num) // 10 * 10
 
-    with open(grid_file,"w") as f:
-        f.write(f'{{"grid_num":{grid_num},"grid_size":({grid_x},{grid_y})}}')
+    # with open(grid_file,"w") as f:
+    #     f.write(f'{{"grid_num":{grid_num},"grid_size":({grid_x},{grid_y})}}')
 
     
 
