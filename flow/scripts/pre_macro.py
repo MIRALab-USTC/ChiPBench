@@ -24,6 +24,8 @@ design.readDb(db_path)
 design_block:odb.dbBlock = design.getBlock()
 core_area:odb.dbBox = design_block.getCoreArea()
 core_area_list = [core_area.xMin(),core_area.yMin(),core_area.xMax(),core_area.yMax()]
+die_area:odb.dbBox = design_block.getDieArea()
+die_area_list = [die_area.xMin(),die_area.yMin(),die_area.xMax(),die_area.yMax()]
 
 print(core_area_list)
 
@@ -71,10 +73,8 @@ y_min=min(y_l_list)
 
 print(x_max,x_min,y_max,y_min)
 
-# if x_max>core_area_list[2] or x_min<core_area_list[0] or y_max>core_area_list[3] or y_min<core_area_list[1]:
-#     print("instance is out of core area")
-# else:
-#     print("instance is within core area")
+if x_max > die_area_list[2] or x_min < die_area_list[0] or y_max > die_area_list[3] or y_min < die_area_list[1]:
+    raise AssertionError("Instance is out of die area: x_max={}, x_min={}, y_max={}, y_min={}, die_area={}".format(x_max, x_min, y_max, y_min, die_area_list))
 
 
 # if x_min<core_area_list[0] and x_max>core_area_list[2]:
