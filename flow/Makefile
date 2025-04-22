@@ -643,6 +643,10 @@ $(eval $(call do-step,2_3_place_mixgp,$(RESULTS_DIR)/2_2_floorplan_io.odb $(RESU
 do-copy-mixedsize:
 	cp $(RESULTS_DIR)/2_3_place_mixgp.odb $(RESULTS_DIR)/2_3_floorplan_macro.odb
 
+
+.PHONY: do-copy-macro2tapcell
+do-copy-macro2tapcell:
+	cp $(RESULTS_DIR)/2_3_floorplan_macro.odb $(RESULTS_DIR)/2_4_floorplan_tapcell.odb
 # .PHONY: do-mix-sized
 # do-mix-sized:
 # 	$(UNSET_AND_MAKE) do-2_3_place_mixgp do-copy-mixsize do-2_5_floorplan_tapcell do-2_6_floorplan_pdn do-2_floorplan 
@@ -658,7 +662,7 @@ macro-pre_MX:
 
 .PHONY: do-mixedsize-place
 do-mixedsize-place:
-	$(UNSET_AND_MAKE) do-copy-mixedsize getMacroMetrics do-2_4_floorplan_tapcell do-2_5_floorplan_pdn do-2_floorplan do-copy-mixedsize2 do-3_4_place_resized do-3_5_place_dp do-3_place do-3_place.sdc
+	$(UNSET_AND_MAKE) do-copy-mixedsize getMacroMetrics do-copy-macro2tapcell do-2_5_floorplan_pdn do-2_floorplan do-copy-mixedsize2 do-3_4_place_resized do-3_5_place_dp do-3_place do-3_place.sdc
 
 .PHONY: evaluate_Mixed-SizePlace
 evaluate_Mixed-SizePlace:
