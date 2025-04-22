@@ -160,7 +160,7 @@ python3 benchmarking/benchmarking.py --mode={mode} --config_setting={config_sett
 - `--mode`: Specifies the evaluation mode. Options include:
   - `macro`: Macro placement evaluation
   - `global`: Global placement evaluation
-  - `mixsize`: Mixed-size placement evaluation
+  - `mixedsize`: Mixed-size placement evaluation
 - `--config_setting`: Path to the specific design case's configuration file.
 - `--def_path`: Input DEF file that describes the placement.
 - `--evaluate_name`: The name of the evaluation. The output will be stored in `benchmarking_result/{evaluate_name}/metrics.json`.
