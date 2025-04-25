@@ -8,7 +8,7 @@ import pandas as pd
 import copy
 
 from getMetric import getMetrics,get_metrics_single
-from run_functioin import run_or_flow,load_makefile_env
+from run_functioin import run_or_flow,load_makefile_env,getMacroMetrics
 
 
 # openroad_metric_path="benchmarking_result/openroad/metrics.json"
@@ -358,6 +358,10 @@ def benchmarking_single_in(config_setting,def_path,evaluate_name,mode,baseline_d
     mode=mode_to_int(mode)
     if def_path:
         run_or_flow(config_setting,evaluate_name,def_path,mode)
+
+    else:
+        getMacroMetrics(config_setting,evaluate_name,def_path,mode)
+
     config_setting_abs=os.path.abspath(config_setting)
     env_vars=load_makefile_env(config_setting_abs,evaluate_name)
     original_dir = os.getcwd()

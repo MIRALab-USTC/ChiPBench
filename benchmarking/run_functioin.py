@@ -263,6 +263,16 @@ def run_or_flow(config_setting,evaluate_name,def_path,mode):
     subprocess.run([f"make DESIGN_CONFIG={config_setting_abs} FLOW_VARIANT={evaluate_name} {flow_cmd}"],shell=True)
     os.chdir(original_dir)  
     
+def getMacroMetrics(config_setting,evaluate_name,def_path,mode):
+
+
+    config_setting_abs=os.path.abspath(config_setting)
+    
+
+    original_dir = os.getcwd()  
+    os.chdir("flow")
+    subprocess.run([f"make DESIGN_CONFIG={config_setting_abs} FLOW_VARIANT={evaluate_name} getMacroMetrics"],shell=True)
+    os.chdir(original_dir)  
 
 # def run_openroad(case_name,def_path,mode,evaluate_name=""):
 #     create_result_dir(case_name)
