@@ -387,7 +387,7 @@ def get_metrics_single(log_path):
     dr_route_path=os.path.join(log_path,"5_2_route.json")
     floorplan_path=os.path.join(log_path,"2_1_floorplan.json")
     macro_path=os.path.join(log_path,"macro.json")
-    if not (os.path.exists(report_path) and os.path.exists(route_path) and os.path.exists(place_path) and os.path.exists(gp_route_path) and os.path.exists(dr_route_path) and os.path.exists(macro_path)):
+    if not (os.path.exists(report_path) and os.path.exists(route_path) and os.path.exists(place_path) and os.path.exists(gp_route_path) and os.path.exists(dr_route_path) ):
         raise FileNotFoundError("OpenROAD flow is not complete. Please check the OpenROAD error messages.")
 
     metric=get_Metric_in(report_path,route_path,place_path,gp_route_path,dr_route_path,macro_path)

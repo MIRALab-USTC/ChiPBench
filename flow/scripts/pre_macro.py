@@ -50,6 +50,8 @@ for inst in inst_set:
             y=round((y+70)/280)*280-70
         elif orient=="MY":
             y=round((y-70)/280)*280+70
+        if y < 0:
+            y = 0
         print(orient)
         # y=round((y-70)/280)*280+70
         inst.setLocation(inst.getLocation()[0],y)
