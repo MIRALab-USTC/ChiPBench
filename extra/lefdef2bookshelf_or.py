@@ -288,7 +288,8 @@ def writebookshelf(config_json,bookshelf_dir,benchmark=None,enable=False):
     for lef_file in lef_files:
         tech.readLef(lef_file)
     design=Design(tech)
-    design.readDef(def_input)
+    design.evalTclString(f"read_def -continue_on_errors {def_input}")
+    # design.readDef(def_input)
     block:odb.dbBlock=design.getBlock()
     if benchmark is None:
         benchmark=block.getName()
